@@ -1,0 +1,4 @@
+-r common.txt
+
+bumpversion==0.5.3
+bpython==0.18
