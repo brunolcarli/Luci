@@ -31,3 +31,19 @@ class Query:
 
         return None
 
+    @staticmethod
+    def get_text_sentiment(message):
+        """
+        Request LISA to extract the text sentiment polarity from message.
+        """
+        query = f'''
+        query{{
+            sentimentExtraction(text: {json.dumps(message)})
+        }}
+        '''
+        request = requests.post(LISA_URL, json={'query': query})
+
+        if request.status_code == 200:
+            return json.loads(request.text)
+
+        return None

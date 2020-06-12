@@ -21,3 +21,23 @@ def validate_text_offense(text):
     else:
         # Otherwise return the value calculated by LISA
         return is_offensive
+
+
+def extract_sentiment(text):
+    """
+    Extracts sentiment polarity from text, returning a integer value
+    between -1 and 1. In any failure case, consider it neutral (0).
+
+    param : text : <str>
+    return : <int>
+    """
+    request_sentiment = Query.get_text_sentiment(text)
+    if not request_sentiment:
+        return 0
+
+    try:
+        polarity = request_sentiment['data']['sentimentExtraction']
+    except KeyError:
+        return 0
+    else:
+        return polarity
