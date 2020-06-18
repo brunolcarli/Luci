@@ -6,7 +6,7 @@ from discord.ext import commands
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
                                  positive_answers, negative_answers)
-from core.utils import validate_text_offense, extract_sentiment
+from core.utils import validate_text_offense, extract_sentiment, answer_intention
 from luci.settings import __version__, SELF_ID
 
 
@@ -31,6 +31,11 @@ def on_mention(message, polarity):
         # Theres no message just a mention
         got_my_attention = ['oi', 'chora', 'diga']
         return choice(got_my_attention)
+
+    # if already know the intention
+    intention_response = answer_intention(message)
+    if intention_response:
+        return intention_response
 
     # Verify if is a question
     if '?' in message:

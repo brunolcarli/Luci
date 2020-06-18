@@ -2,6 +2,8 @@
 Módulo para os vetores de mensagens que a LUCI pode utilizar para montar
 mensagens de saida.
 """
+from core.enums import Intentions
+
 
 # Vetor de lero-lero
 propositions = [
@@ -641,3 +643,48 @@ blame = [
     'Eu não sei do que se trata todo esse problema, mas tenho certeza que deve ser sua culpa.',
 ]
 
+intention_vectors = [
+    {'text': 'apresente-se', 'intention': Intentions.WHO_AM_I},
+    {'text': 'quem é você', 'intention': Intentions.WHO_AM_I},
+    {'text': 'o que é você', 'intention': Intentions.WHAT_AM_I},
+    {'text': 'quantos anos você tem', 'intention': Intentions.MY_AGE},
+    {'text': 'quantos anos vc tem', 'intention': Intentions.MY_AGE},
+    {'text': 'qts anos você tem', 'intention': Intentions.MY_AGE},
+    {'text': 'qts anos vc tem', 'intention': Intentions.MY_AGE},
+    {'text': 'qual sua idade', 'intention': Intentions.MY_AGE},
+    {'text': 'qual seu gênero', 'intention': Intentions.MY_GENDER},
+    {'text': 'você é menina ou menino', 'intention': Intentions.MY_GENDER},
+    {'text': 'você é menino ou menina', 'intention': Intentions.MY_GENDER},
+    {'text': 'vc é menina ou menino', 'intention': Intentions.MY_GENDER},
+    {'text': 'vc é menino ou menina', 'intention': Intentions.MY_GENDER},
+    {'text': 'como você se sente', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como você está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
+]
+
+intention_responses = {
+    Intentions.WHO_AM_I: [
+        'Oi, sou Luci. Sou menina e tenho 8 anos!',
+        'Prazer, me chamo Luci. Sou menina e tenho 8 anos!',
+        'Oie, sou Luci. Sou uma menina, tenho 8 anos.'
+    ],
+    Intentions.WHAT_AM_I: [
+        'Sou uma criança ué!',
+        'Sou uma menina.'
+    ],
+    Intentions.MY_PURPOSE: [
+        'Não sei ainda, talvez, eu queira ser astronauta.'
+    ],
+    Intentions.HOW_IM_FEELING: [
+        'Não sei, ainda.'
+    ],  # TODO: get_feeling()
+    Intentions.MY_AGE: [
+        'Tenho oito anos.',
+        'Eu tenho oito aninhos.',
+        'Tenho só 8 anos.'
+    ],
+    Intentions.MY_GENDER: [
+        'Sou uma menina',
+        'Eu sou menina',
+        'Sou uma princesa!'
+    ]
+}

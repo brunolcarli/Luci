@@ -1,5 +1,6 @@
+from random import choice
 from core.external_requests import Query
-
+from core.output_vectors import intention_responses, intention_vectors
 
 def validate_text_offense(text):
     """
@@ -41,3 +42,15 @@ def extract_sentiment(text):
         return 0
     else:
         return polarity
+
+
+def answer_intention(text):
+    """
+    Responde de acordo com a intenção identificada, se identificada, do contrário
+    retorna None.
+    """
+    for sample in intention_vectors:
+        if sample['text'].lower() in text.lower() or text.lower() in sample['text'].lower():
+            return choice(intention_responses[sample['intention']])
+
+    return None
