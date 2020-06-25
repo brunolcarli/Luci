@@ -148,7 +148,7 @@ async def quote(bot, *args):
         )
 
     server = make_hash(bot.guild.name, bot.guild.id)
-    payload = Mutations.create_quote(message, server.decode('utf-8'))
+    payload = Mutation.create_quote(message, server.decode('utf-8'))
     client = get_gql_client(API_URL)
 
     try:
