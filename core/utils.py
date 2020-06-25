@@ -1,6 +1,10 @@
+import base64
 from random import choice
+from gql import Client
+from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
 from core.output_vectors import intention_responses, intention_vectors
+
 
 def validate_text_offense(text):
     """
@@ -54,3 +58,36 @@ def answer_intention(text):
             return choice(intention_responses[sample['intention']])
 
     return None
+
+
+def make_hash(descriptor, _id):
+    """
+    Criptografa um descritor e um id em uma hash base64
+    args:
+        descriptor : <str>
+        id: <int> || <str>
+    return: <str>
+    """
+    return base64.b64encode(b'%s' % f'{descriptor}:{_id}'.encode('utf-8'))
+
+
+def get_gql_client(url, auth=None):
+    """
+    Retorna um client de execução de requisições graphql.
+    param : auth : <str> : hash de autorização.
+    """
+    if not auth:
+        transport = RequestsHTTPTransport(url=url, use_json=True)
+    else:
+        headers = {
+            'content-type': 'application/json',
+            'auth': '{}'.format(auth)
+        }
+        transport = RequestsHTTPTransport(
+            url=url,
+            use_json=True,
+            headers=headers
+    )
+
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+    return client

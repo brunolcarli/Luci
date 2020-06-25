@@ -646,6 +646,20 @@ blame = [
 intention_vectors = [
     {'text': 'apresente-se', 'intention': Intentions.WHO_AM_I},
     {'text': 'quem é você', 'intention': Intentions.WHO_AM_I},
+    {'text': 'quem é vc', 'intention': Intentions.WHO_AM_I},
+    {'text': 'qual seu nome', 'intention':  Intentions.WHO_AM_I},
+    {'text': 'como você se chama', 'intention': Intentions.WHO_AM_I},
+    {'text': 'como é seu nome', 'intention': Intentions.WHO_AM_I},
+    {'text': 'como vc se chama', 'intention': Intentions.WHO_AM_I},
+    {'text': 'como chama-se', 'intention': Intentions.WHO_AM_I},
+    {'text': 'diga oi', 'intention': Intentions.WHO_AM_I},
+    {'text': 'diga olá', 'intention': Intentions.WHO_AM_I},
+    {'text': 'quem és tu', 'intention': Intentions.WHO_AM_I},
+    {'text': 'qual teu nome', 'intention': Intentions.WHO_AM_I},
+    {'text': 'qual seu vulgo', 'intention': Intentions.WHO_AM_I},
+    {'text': 'como é que se chama', 'intention': Intentions.WHO_AM_I},
+    {'text': 'seu nome por gentileza', 'intention': Intentions.WHO_AM_I},
+    {'text': 'poderia me informar seu nome', 'intention': Intentions.WHO_AM_I},
     {'text': 'o que é você', 'intention': Intentions.WHAT_AM_I},
     {'text': 'quantos anos você tem', 'intention': Intentions.MY_AGE},
     {'text': 'quantos anos vc tem', 'intention': Intentions.MY_AGE},
@@ -659,6 +673,17 @@ intention_vectors = [
     {'text': 'vc é menino ou menina', 'intention': Intentions.MY_GENDER},
     {'text': 'como você se sente', 'intention': Intentions.HOW_IM_FEELING},
     {'text': 'como você está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como sente-se', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como você está', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como está', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'tudo bem', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'td bem', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'td bem com vc', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como está passando', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como vai', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como tem passado', 'intention': Intentions.HOW_IM_FEELING},
+    {'text': 'como é que vai', 'intention': Intentions.HOW_IM_FEELING},
 ]
 
 intention_responses = {
@@ -669,7 +694,8 @@ intention_responses = {
     ],
     Intentions.WHAT_AM_I: [
         'Sou uma criança ué!',
-        'Sou uma menina.'
+        'Sou uma menina.',
+        'Sou uma princesa',
     ],
     Intentions.MY_PURPOSE: [
         'Não sei ainda, talvez, eu queira ser astronauta.'
