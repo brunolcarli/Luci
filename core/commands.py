@@ -1,3 +1,4 @@
+import pickle
 from random import choice, randint
 
 import discord
@@ -10,8 +11,16 @@ from core.external_requests import Query, Mutation
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
                         make_hash, get_gql_client)
 from luci.settings import __version__, SELF_ID, API_URL
+import spacy
 
 
+nlp = spacy.load('pt')
+global_intention_recognizer = pickle.load(
+    open('luci/models/global_intentions', 'rb')
+)
+myself_intention_recognizer = pickle.load(
+    open('luci/models/myself_intentions', 'rb')
+)
 client = commands.Bot(command_prefix='!')
 
 
@@ -161,3 +170,12 @@ async def quote(bot, *args):
     embed = discord.Embed(color=0x1E1E1E, type="rich")
     embed.add_field(name='Quote salvo:', value=quote.get('response'), inline=True)
     return await bot.send('Feito:', embed=embed)
+
+
+@client.command(aliases=['x'])
+async def baz(bot, *args):
+    text = ' '.join(i for i in args)
+    print(text)
+    v = nlp(text)
+
+    return await bot.send(myself_intention_recognizer.predict([v.vector]))
