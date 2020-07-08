@@ -17,7 +17,7 @@ class GlobalIntentions(Enum):
     GOOD_INTENTION = 'good_intention'
 
 
-class BadIntentions(Eum):
+class BadIntentions(Enum):
     """
     Enumerates types of bad intentions.
     """
