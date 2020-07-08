@@ -7,3 +7,4 @@ gql==0.2.0
 wandb==0.8.25
 numpy==1.18.5
 scikit-learn==0.22.2
+spacy==2.3.0
