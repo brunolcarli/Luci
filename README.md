@@ -21,3 +21,26 @@ LUCI is a conversational tamabotchi for discord.
 
 
 Project under development.
+
+
+## Quem?
+
+- Luci é um bot;
+- Luci reconhece-se como um criança que possui oita anos de idade;
+- Luci reconhece seu gênero com feminino;
+
+## Objetivos a cumprir
+
+- Ela deve reconhecer quem ela é!;
+- Ela deve reconher membros do servidor!;
+- Ela deve reconhecer boas intenções;
+- Ela deve reconhecer más intenções;
+- Ela deve reconhecer perguntas!;
+- Ela deve reconhecer frases positivas e negativas;
+- Ela deve reconhecer frases ofensivas;
+- Luci deve possuir emoções próprias, que variam de acordo com sua interação com membros  deum servidor;
+- Humor variável:
+    + Fica entediada quando não há mensagens no servidor;
+    + Fica com medo se estiver muito tempo sozinha ou for muito ofendida;
+    + Fica alegre quando tem muitos amigos e muitas mensagens positivas no servidor;
+    + Fica triste quando nao tem amigos e muitas mensagens negativas no servidor;
