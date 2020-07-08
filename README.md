@@ -12,7 +12,7 @@
 
 <div align="center">
 
-> [![Version badge](https://img.shields.io/badge/version-0.0.4-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
+> [![Version badge](https://img.shields.io/badge/version-0.0.5-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 [![Docs Link](https://badgen.net/badge/docs/github_wiki?icon=github)](https://github.com/brunolcarli/Luci/wiki)
 
 LUCI is a conversational tamabotchi for discord.
@@ -21,3 +21,26 @@ LUCI is a conversational tamabotchi for discord.
 
 
 Project under development.
+
+
+## Quem?
+
+- Luci é um bot;
+- Luci reconhece-se como um criança que possui oita anos de idade;
+- Luci reconhece seu gênero com feminino;
+
+## Objetivos a cumprir
+
+- Ela deve reconhecer quem ela é!;
+- Ela deve reconher membros do servidor!;
+- Ela deve reconhecer boas intenções;
+- Ela deve reconhecer más intenções;
+- Ela deve reconhecer perguntas!;
+- Ela deve reconhecer frases positivas e negativas;
+- Ela deve reconhecer frases ofensivas;
+- Luci deve possuir emoções próprias, que variam de acordo com sua interação com membros  de um servidor;
+- Humor variável:
+    + Fica entediada quando não há mensagens no servidor;
+    + Fica com medo se estiver muito tempo sozinha ou for muito ofendida;
+    + Fica alegre quando tem muitos amigos e muitas mensagens positivas no servidor;
+    + Fica triste quando nao tem amigos e muitas mensagens negativas no servidor;
