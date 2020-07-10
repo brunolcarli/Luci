@@ -2,7 +2,7 @@ install:
 	pip3 install -r luci/requirements/development.txt
 
 run:
-	python3 main.py run
+	python3 main.py
 
 
 repl_runner:
@@ -11,8 +11,15 @@ repl_runner:
 	make run
 
 train:
-	python3 main.py train
+	python3 manage.py train
 
 
 no_free_lunch:
-	python3 main.py no_free_lunch
+	python3 manage.py no_free_lunch
+
+
+test:
+	python3 -m unittest discover
+
+help:
+	python3 manage.py help
