@@ -1,10 +1,14 @@
 import base64
+import pickle
 from random import choice
+import spacy
 from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
 from core.output_vectors import intention_responses, intention_vectors
 
+
+nlp = spacy.load('pt')
 
 def validate_text_offense(text):
     """
@@ -91,3 +95,22 @@ def get_gql_client(url, auth=None):
 
     client = Client(transport=transport, fetch_schema_from_transport=False)
     return client
+
+
+def get_text_vector(text):
+    """
+    Receives a string text input and returns its vector.
+    """
+    return nlp(text).vector
+
+
+def load_model(fpath):
+    """
+    Loads a trained machine learning model.
+
+    param : fpath: <str> : file path to the model
+    """
+    with open(fpath, 'rb') as trained_model:
+        model = pickle.load(trained_model)
+
+    return model
