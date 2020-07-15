@@ -1,5 +1,6 @@
 install:
-	pip3 install -r luci/requirements/development.txt
+	pip3 install --no-binary :all -r luci/requirements/development.txt
+	python3 -m spacy download pt
 
 run:
 	python3 main.py
