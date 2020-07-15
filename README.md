@@ -26,7 +26,7 @@ Project under development.
 ## Quem?
 
 - Luci é um bot;
-- Luci reconhece-se como um criança que possui oita anos de idade;
+- Luci reconhece-se como um criança que possui oito anos de idade;
 - Luci reconhece seu gênero com feminino;
 
 ## Objetivos a cumprir
