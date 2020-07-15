@@ -15,12 +15,7 @@ import spacy
 
 
 nlp = spacy.load('pt')
-global_intention_recognizer = pickle.load(
-    open('luci/models/global_intentions', 'rb')
-)
-myself_intention_recognizer = pickle.load(
-    open('luci/models/myself_intentions', 'rb')
-)
+
 client = commands.Bot(command_prefix='!')
 
 
@@ -172,10 +167,10 @@ async def quote(bot, *args):
     return await bot.send('Feito:', embed=embed)
 
 
-@client.command(aliases=['x'])
-async def baz(bot, *args):
-    text = ' '.join(i for i in args)
-    print(text)
-    v = nlp(text)
+# @client.command(aliases=['x'])
+# async def baz(bot, *args):
+#     text = ' '.join(i for i in args)
+#     print(text)
+#     v = nlp(text)
 
-    return await bot.send(myself_intention_recognizer.predict([v.vector]))
+#     return await bot.send(myself_intention_recognizer.predict([v.vector]))
