@@ -25,7 +25,7 @@ class TestMyFriendsIntentionClassifier(unittest.TestCase):
 
     def test_predict_users_i_like(self):
         self.assertEqual(
-            get_my_friends_intention(get_text_vector('Vc gosta do fulano?')),
+            get_my_friends_intention(get_text_vector('Vc tem amizade com fulano?')),
             AboutMyFriends.USERS_I_LIKE
         )
         self.assertEqual(
