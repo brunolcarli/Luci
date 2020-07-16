@@ -1,9 +1,10 @@
 import pickle
-from random import choice, randint
+from random import choice, randint, random
 
 import discord
 from discord.ext import commands
 
+from core.classifiers import naive_response
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
                                  positive_answers, negative_answers)
@@ -23,32 +24,12 @@ def on_mention(message, polarity):
     """
     Process messages that mention Luci on chat.
     """
-    # verify if is a thanks message
-    thanks = [
-        'obrigado', 'obrigada', 'agradecido', 'valeu', 'vlw', 'obgd', 'obg'
-    ]
-    # TODO: Move to output vectors module
-    thanks_response = ['disponha!', 'por nada!']
 
-    if any(word for word in message.lower().split() if word in thanks):
-        return choice(thanks_response)
-
-    if len(message) < 25:
-        # Theres no message just a mention
-        got_my_attention = ['oi', 'chora', 'diga']
-        return choice(got_my_attention)
-
-    # if already know the intention
-    intention_response = answer_intention(message)
-    if intention_response:
-        return intention_response
+    value = (randint(0, 100) * .30) / 3 + random() * choice([1, -1])
 
     # Verify if is a question
     if '?' in message:
-        # TODO implement a better handler, til there, 
-        # just say dont know or some blabla based on random value
-        value = randint(1, 9)
-        if 1 < value <= 3:
+        if value >= 9.2:
             random_tought = ''.join(choice(i) for i in propositions)
             random_tought_2 = ''.join(choice(i) for i in propositions)
 
@@ -57,19 +38,25 @@ def on_mention(message, polarity):
                        f'{random_tought_2} Viajei né?'
             return response
 
-        elif 4 < value <= 6:
-            return ''.join(choice(i) for i in insufficiency_recognition)
-
-        else:
+        elif 5 <= value < 9.2:
+            return naive_response(message)
+          
+        elif 0 < value < 2:
             return ''.join(choice(i) for i in opinions)
 
-    # Answers based on text polarity
-    if polarity < 0:
-        return ''.join(choice(i) for i in negative_answers)
-    elif polarity > 0:
-        return ''.join(choice(i) for i in positive_answers)
+        else:
+            return ''.join(choice(i) for i in insufficiency_recognition)
+    
+    if 2 <= value < 3:
+        # Answers based on text polarity
+        if polarity < 0:
+            return ''.join(choice(i) for i in negative_answers)
+        elif polarity > 0:
+            return ''.join(choice(i) for i in positive_answers)
+        else:
+            return choice(indifference)
     else:
-        return choice(indifference)
+        return naive_response(message)
 
 
 @client.event
@@ -92,8 +79,10 @@ async def on_message(message):
 
     # Verify if message is offensive
     is_offensive = validate_text_offense(text)
-    if is_offensive:
-        await channel.send(f'{message.author.mention} {choice(offended)}')
+
+    # 50% chance to not answer
+    if is_offensive and choice([True, False]):
+        return await channel.send(f'{message.author.mention} {choice(offended)}')
 
     # Verify text polarity
     text_polarity = extract_sentiment(text)
