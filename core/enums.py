@@ -81,6 +81,5 @@ class StuffILike(Enum):
     """
     FOOD = 'food'
     MUSIC = 'music'
-    PLAYING = 'playing'
+    SPORTS_AND_PLAYING = 'sports_and_playing'
     TRAVELING = 'traveling'
-    SPORTS = 'sports'

@@ -791,14 +791,12 @@ intention_responses = {
     GlobalIntentions.STUFF_I_LIKE: {
         StuffILike.FOOD: ['Gosto de pizza'],
         StuffILike.MUSIC: ['Acho que gosto de... Heavy Metal', 'Slayeeeer'],
-        StuffILike.PLAYING: [
+        StuffILike.SPORTS_AND_PLAYING: [
             'Não sei jogar muitas coisas',
-            'Meu pai disse que vai me ensianr a jogar quando eu for mais crescida.'
-        ],
-        StuffILike.TRAVELING: ['Só viajo na internet'],
-        StuffILike.SPORTS: [
+            'Meu pai disse que vai me ensianr a jogar quando eu for mais crescida.',
             'Acho que não pratico nenhum esporte ainda',
             'Radical'
-        ]
+        ],
+        StuffILike.TRAVELING: ['Só viajo na internet'],
     }
 }

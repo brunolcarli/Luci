@@ -41,9 +41,8 @@ class Intentions:
     stuff_i_like_intentions = {
         1: StuffILike.FOOD,
         2: StuffILike.MUSIC,
-        3: StuffILike.PLAYING, 
+        3: StuffILike.SPORTS_AND_PLAYING, 
         4: StuffILike.TRAVELING,
-        5: StuffILike.SPORTS
     }
 
     good_intentions = {
