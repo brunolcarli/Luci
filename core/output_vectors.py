@@ -2,7 +2,8 @@
 Módulo para os vetores de mensagens que a LUCI pode utilizar para montar
 mensagens de saida.
 """
-from core.enums import Intentions
+from core.enums import (GlobalIntentions, MyselfIntentions, GoodIntentions,
+                        BadIntentions, AboutMyFriends, AboutMyParents, StuffILike)
 
 
 # Vetor de lero-lero
@@ -643,74 +644,159 @@ blame = [
     'Eu não sei do que se trata todo esse problema, mas tenho certeza que deve ser sua culpa.',
 ]
 
-intention_vectors = [
-    {'text': 'apresente-se', 'intention': Intentions.WHO_AM_I},
-    {'text': 'quem é você', 'intention': Intentions.WHO_AM_I},
-    {'text': 'quem é vc', 'intention': Intentions.WHO_AM_I},
-    {'text': 'qual seu nome', 'intention':  Intentions.WHO_AM_I},
-    {'text': 'como você se chama', 'intention': Intentions.WHO_AM_I},
-    {'text': 'como é seu nome', 'intention': Intentions.WHO_AM_I},
-    {'text': 'como vc se chama', 'intention': Intentions.WHO_AM_I},
-    {'text': 'como chama-se', 'intention': Intentions.WHO_AM_I},
-    {'text': 'diga oi', 'intention': Intentions.WHO_AM_I},
-    {'text': 'diga olá', 'intention': Intentions.WHO_AM_I},
-    {'text': 'quem és tu', 'intention': Intentions.WHO_AM_I},
-    {'text': 'qual teu nome', 'intention': Intentions.WHO_AM_I},
-    {'text': 'qual seu vulgo', 'intention': Intentions.WHO_AM_I},
-    {'text': 'como é que se chama', 'intention': Intentions.WHO_AM_I},
-    {'text': 'seu nome por gentileza', 'intention': Intentions.WHO_AM_I},
-    {'text': 'poderia me informar seu nome', 'intention': Intentions.WHO_AM_I},
-    {'text': 'o que é você', 'intention': Intentions.WHAT_AM_I},
-    {'text': 'quantos anos você tem', 'intention': Intentions.MY_AGE},
-    {'text': 'quantos anos vc tem', 'intention': Intentions.MY_AGE},
-    {'text': 'qts anos você tem', 'intention': Intentions.MY_AGE},
-    {'text': 'qts anos vc tem', 'intention': Intentions.MY_AGE},
-    {'text': 'qual sua idade', 'intention': Intentions.MY_AGE},
-    {'text': 'qual seu gênero', 'intention': Intentions.MY_GENDER},
-    {'text': 'você é menina ou menino', 'intention': Intentions.MY_GENDER},
-    {'text': 'você é menino ou menina', 'intention': Intentions.MY_GENDER},
-    {'text': 'vc é menina ou menino', 'intention': Intentions.MY_GENDER},
-    {'text': 'vc é menino ou menina', 'intention': Intentions.MY_GENDER},
-    {'text': 'como você se sente', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como você está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como sente-se', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como você está', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como está', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'tudo bem', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'td bem', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'td bem com vc', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como está passando', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como vai', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como tem passado', 'intention': Intentions.HOW_IM_FEELING},
-    {'text': 'como é que vai', 'intention': Intentions.HOW_IM_FEELING},
+intention_vectors = [  # TODO remove
+    # {'text': 'apresente-se', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'quem é você', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'quem é vc', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'qual seu nome', 'intention':  Intentions.WHO_AM_I},
+    # {'text': 'como você se chama', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'como é seu nome', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'como vc se chama', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'como chama-se', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'diga oi', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'diga olá', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'quem és tu', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'qual teu nome', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'qual seu vulgo', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'como é que se chama', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'seu nome por gentileza', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'poderia me informar seu nome', 'intention': Intentions.WHO_AM_I},
+    # {'text': 'o que é você', 'intention': Intentions.WHAT_AM_I},
+    # {'text': 'quantos anos você tem', 'intention': Intentions.MY_AGE},
+    # {'text': 'quantos anos vc tem', 'intention': Intentions.MY_AGE},
+    # {'text': 'qts anos você tem', 'intention': Intentions.MY_AGE},
+    # {'text': 'qts anos vc tem', 'intention': Intentions.MY_AGE},
+    # {'text': 'qual sua idade', 'intention': Intentions.MY_AGE},
+    # {'text': 'qual seu gênero', 'intention': Intentions.MY_GENDER},
+    # {'text': 'você é menina ou menino', 'intention': Intentions.MY_GENDER},
+    # {'text': 'você é menino ou menina', 'intention': Intentions.MY_GENDER},
+    # {'text': 'vc é menina ou menino', 'intention': Intentions.MY_GENDER},
+    # {'text': 'vc é menino ou menina', 'intention': Intentions.MY_GENDER},
+    # {'text': 'como você se sente', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como você está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como sente-se', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como você está', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como está', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'tudo bem', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'td bem', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'td bem com vc', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como está passando', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como vai', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como tem passado', 'intention': Intentions.HOW_IM_FEELING},
+    # {'text': 'como é que vai', 'intention': Intentions.HOW_IM_FEELING},
 ]
 
 intention_responses = {
-    Intentions.WHO_AM_I: [
-        'Oi, sou Luci. Sou menina e tenho 8 anos!',
-        'Prazer, me chamo Luci. Sou menina e tenho 8 anos!',
-        'Oie, sou Luci. Sou uma menina, tenho 8 anos.'
-    ],
-    Intentions.WHAT_AM_I: [
-        'Sou uma criança ué!',
-        'Sou uma menina.',
-        'Sou uma princesa',
-    ],
-    Intentions.MY_PURPOSE: [
-        'Não sei ainda, talvez, eu queira ser astronauta.'
-    ],
-    Intentions.HOW_IM_FEELING: [
-        'Não sei, ainda.'
-    ],  # TODO: get_feeling()
-    Intentions.MY_AGE: [
-        'Tenho oito anos.',
-        'Eu tenho oito aninhos.',
-        'Tenho só 8 anos.'
-    ],
-    Intentions.MY_GENDER: [
-        'Sou uma menina',
-        'Eu sou menina',
-        'Sou uma princesa!'
-    ]
+    GlobalIntentions.ABOUT_MYSELF: {
+        MyselfIntentions.WHO_AM_I: [
+            'Oi, sou Luci. Sou menina e tenho 8 anos!',
+            'Prazer, me chamo Luci. Sou menina e tenho 8 anos!',
+            'Oie, sou Luci. Sou uma menina, tenho 8 anos.',
+            'Oi, eu me chamo Luci',
+            'Eu sou a Luci',
+            'Sou Luci, prazer'
+        ],
+        MyselfIntentions.WHAT_AM_I: [
+            'Sou uma criança ué!',
+            'Sou uma menina.',
+            'Sou uma princesa',
+        ],
+        MyselfIntentions.HOW_IM_FEELING: [
+            'Não sei, ainda.'
+        ],  # TODO: get_feeling()
+        MyselfIntentions.MY_AGE: [
+            'Tenho oito anos.',
+            'Eu tenho oito aninhos.',
+            'Tenho só 8 anos.',
+            'Até onde contei, tenho oito, oito anos',
+            'Oito anos',
+        ],
+        MyselfIntentions.MY_GENDER: [
+            'Sou uma menina',
+            'Eu sou menina',
+            'Sou uma princesa!',
+            'Sou uma lady!',
+            'Sou uma moça ok?',
+            'Não deu pra perceber que sou uma garota?'
+        ],
+    },
+    GlobalIntentions.GOOD_INTENTION: {
+        GoodIntentions.PRAISE: ['Obrigada', 'Muito obrigado', 'awwnnnn **--**'],
+        GoodIntentions.HELPFUL: ['Muito bom', 'boa', 'justo', ''],
+        GoodIntentions.GREETING: ['Oi', 'Olá'],
+        GoodIntentions.ACKNOWLEDGEMENT: [
+            'Entendido', 'Comprendo', 'Certamente', 'De fato', 'sim'
+        ],
+        GoodIntentions.FUNNY: ['Hahaa', 'kkkkkkk', 'boa engraçado'],
+        GoodIntentions.SORRY: ['d-desculpe', 'foi mal', 'me desculpe'],
+        GoodIntentions.GOODBYE: [],
+    },
+    GlobalIntentions.BAD_INTENTION: {
+        BadIntentions.SEXUAL_ABUSE: [
+            'Isso é abuso',
+            'tarado',
+            'Conselho Tutelar ta de olho',
+            'Alô juizado de violiencia',
+            'Alô Vara Criminal'
+        ],
+        BadIntentions.RACISM_XENOPHOBIA: [
+            'Isso foi meio... racista',
+            'errado em',
+            'vamos se respeitar por favor?',
+            'Disque 156',
+            'Sem discriminação por favor',
+        ],
+        BadIntentions.SUICIDE: [
+            'A vida é bela'
+        ],
+        BadIntentions.ILLEGAL_STUFF: [
+            'Isso me parece criminoso',
+            'Não posso concordar com isso',
+            'Fita errada'
+        ],
+        BadIntentions.THREAT: [
+            'Isso é uma ameça?',
+            'Isso foi uma ameaça?'
+        ],
+        BadIntentions.FORBIDDEN: [
+            'Não tenho autorização pra isso!',
+            'Não posso',
+            'Infelizmente estou proibida de fazer isso.'
+        ],
+    },
+    GlobalIntentions.ABOUT_MY_FRIENDS: {
+        AboutMyFriends.FRIENDS_I_HAVE: [  # TODO retornar amigos do backend
+            'Amigos balblabla'
+        ],
+        AboutMyFriends.USERS_I_LIKE: [  # TODO retornar amigos do backend
+            'Usuarios blablalba'
+        ],
+        AboutMyFriends.USERS_I_DONT_LIKE: [  # TODO retornar do backend
+            'Usurios chatos blablalbas'
+        ],
+        AboutMyFriends.BEST_FRIENDS: [  # TODO retornar do backend
+            'bffs blablalba'
+        ],
+    },
+    GlobalIntentions.ABOUT_MY_PARENTS: {
+        AboutMyParents.MY_DAD: ['Meu pai se chama Bruno'],
+        AboutMyParents.MY_MOTHER: [
+            'Não cocheço minha mãe, acho que mei pai ainda não conheceu ela tbm!'
+        ],
+        AboutMyParents.GRANDMA: ['Não conheci minha avozinha'],
+        AboutMyParents.GRANDPA: ['Não conheci meu avozinho'],
+        AboutMyParents.RESPONSIBLE: ['Meu papis ora essa']
+    },
+    GlobalIntentions.STUFF_I_LIKE: {
+        StuffILike.FOOD: ['Gosto de pizza'],
+        StuffILike.MUSIC: ['Acho que gosto de... Heavy Metal', 'Slayeeeer'],
+        StuffILike.SPORTS_AND_PLAYING: [
+            'Não sei jogar muitas coisas',
+            'Meu pai disse que vai me ensianr a jogar quando eu for mais crescida.',
+            'Acho que não pratico nenhum esporte ainda',
+            'Radical'
+        ],
+        StuffILike.TRAVELING: ['Só viajo na internet'],
+    }
 }

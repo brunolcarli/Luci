@@ -22,10 +22,8 @@ class BadIntentions(Enum):
     Enumerates types of bad intentions.
     """
     SEXUAL_ABUSE = 'sex_abuse'
-    VERBAL_OFFENSE = 'verbal_offense'
-    RACISM = 'racism'
-    XENOPHOBIA = 'xenophobia'
-    NIHILISM = 'nihilism'
+    RACISM_XENOPHOBIA = 'xenophobia_and_xenophobia'
+    SUICIDE = 'suicide'
     ILLEGAL_STUFF = 'illegal_stuff'
     THREAT = 'threat'
     FORBIDDEN = 'forbidden'
@@ -37,9 +35,11 @@ class GoodIntentions(Enum):
     """
     PRAISE = 'praise'
     HELPFUL = 'helpful'
-    GRETTING = 'greeting'
+    GREETING = 'greeting'
     ACKNOWLEDGEMENT = 'acknowledgment'
     FUNNY = 'funny'
+    SORRY = 'sorry'
+    GOODBYE = 'goodbye'
 
 
 class MyselfIntentions(Enum):
@@ -54,13 +54,32 @@ class MyselfIntentions(Enum):
     MY_GENDER = 'mygender'
 
 
-# TODO: define the other intentions
+class AboutMyParents(Enum):
+    """
+    Enumerates intentions refering to Luci parentship.
+    """
+    MY_MOTHER = 'my_mother'
+    MY_DAD = 'my_dad'
+    GRANDPA = 'grandpa'
+    GRANDMA = 'grandma'
+    RESPONSIBLE = 'responsible'
 
 
-class Intentions(Enum):  # TODO: remove this
-    WHO_AM_I = 'whoami'
-    WHAT_AM_I = 'whatami'
-    MY_PURPOSE = 'mypurpose'
-    HOW_IM_FEELING = 'howimfeeling'
-    MY_AGE = 'myage'
-    MY_GENDER = 'mygender'
+class AboutMyFriends(Enum):
+    """
+    Enumerates intentions refering to Luci's friendship.
+    """
+    FRIENDS_I_HAVE = 'friends_i_have'
+    USERS_I_LIKE = 'users_i_like'
+    USERS_I_DONT_LIKE = 'users_i_dont_like'
+    BEST_FRIENDS = 'best_friends'
+
+
+class StuffILike(Enum):
+    """
+    Enumerates stuff Luci may like.
+    """
+    FOOD = 'food'
+    MUSIC = 'music'
+    SPORTS_AND_PLAYING = 'sports_and_playing'
+    TRAVELING = 'traveling'
