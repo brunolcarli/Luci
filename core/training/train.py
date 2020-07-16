@@ -1,3 +1,4 @@
+from os import listdir
 import pickle
 import logging
 import json
@@ -15,7 +16,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-from core.training.training_data import IntentionSamples
 from luci.settings import LISA_URL
 
 
@@ -65,32 +65,47 @@ def train_bot():
     Train all Luci models.
     """
     logging.info('Training global intentions')
-    train_global_intentions()
-    logging.info('done!')
+    samples = train_global_intentions()
+    logging.info(f'done! Trained {samples} samples.')
 
     logging.info('Training myself intentions')
-    train_myself_intentions()
-    logging.info('done!')
+    samples = train_myself_intentions()
+    logging.info(f'done! Trained {samples} samples.')
 
     logging.info('Training bad intentions')
-    train_bad_intentions()
-    logging.info('done!')
+    samples = train_bad_intentions()
+    logging.info(f'done! Trained {samples} samples.')
 
     logging.info('Training good intentions')
-    train_good_intentions()
-    logging.info('done!')
+    samples = train_good_intentions()
+    logging.info(f'done! Trained {samples} samples.')
 
     logging.info('Training friends intentions')
-    train_about_my_friends_intentions()
-    logging.info('done!')
+    samples = train_about_my_friends_intentions()
+    logging.info(f'done! Trained {samples} samples.')
 
     logging.info('Training parents intentions')
-    train_about_my_parents_intentions()
-    logging.info('done!')
+    samples = train_about_my_parents_intentions()
+    logging.info(f'done! Trained {samples} samples.')
 
     logging.info('Training stuff i like intentions')
-    train_stuff_i_like_intentions()
-    logging.info('done!')
+    samples = train_stuff_i_like_intentions()
+    logging.info(f'done! Trained {samples} samples.')
+
+
+def get_data_from_json(path):
+    datasets = listdir(path)
+    samples = []
+    targets = []
+
+    for dataset in datasets:
+        with open(f'{path}{dataset}') as f:
+            raw_data = json.load(f)
+            for data in raw_data:
+                samples.append(nlp(data['text']).vector)
+                targets.append(data['intention'])
+
+    return samples, targets
 
 
 @Halo(text='Training global intentions', spinner='dots')
@@ -99,17 +114,15 @@ def train_global_intentions():
     Train a Logistic Regression model to recognize Luci global intentions.
     """
     model = LogisticRegression(max_iter=1000)
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.global_intent_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.global_intent_samples]
-    )
+    path = 'core/training/json/intentions/global_intentions/'
+    samples, targets = get_data_from_json(path)
 
     model.fit(samples, targets)
     with open('luci/models/global_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
+
+    # returns the number o data samples learned
+    return len(targets)
 
 
 @Halo(text='Training myself intentions', spinner='dots')
@@ -118,17 +131,14 @@ def train_myself_intentions():
     Train a KNeighborsClassifier model to recognize Luci global intentions.
     """
     model = KNeighborsClassifier(leaf_size=25, p=1)
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.myself_intent_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.myself_intent_samples]
-    )
+    path = 'core/training/json/intentions/about_myself/'
+    samples, targets = get_data_from_json(path)
 
     model.fit(samples, targets)
     with open('luci/models/myself_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
+
+    return len(targets)
 
 
 @Halo(text='Training bad intentions', spinner='dots')
@@ -137,17 +147,14 @@ def train_bad_intentions():
     Train a SVC model to recognize bad intentions.
     """
     model = SVC()
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.bad_intentions_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.bad_intentions_samples]
-    )
+    path = 'core/training/json/intentions/bad_intentions/'
+    samples, targets = get_data_from_json(path)
 
     model.fit(samples, targets)
     with open('luci/models/bad_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
+
+    return len(targets)
 
 
 @Halo(text='Training good intentions', spinner='dots')
@@ -156,17 +163,14 @@ def train_good_intentions():
     Train a Logistic Regression model to recognize good intentions.
     """
     model = LogisticRegression(max_iter=1000)
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.good_intentions_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.good_intentions_samples]
-    )
+    path = 'core/training/json/intentions/good_intentions/'
+    samples, targets = get_data_from_json(path)
 
     model.fit(samples, targets)
     with open('luci/models/good_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
+
+    return len(targets)
 
 
 @Halo(text='Training friends intentions', spinner='dots')
@@ -175,17 +179,14 @@ def train_about_my_friends_intentions():
     Train a Logistic Regression model to recognize friendship intentions.
     """
     model = LogisticRegression(max_iter=1000)
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.my_friends_intents_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.my_friends_intents_samples]
-    )
-
+    path = 'core/training/json/intentions/about_friends/'
+    samples, targets = get_data_from_json(path)
+    
     model.fit(samples, targets)
     with open('luci/models/friends_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
+
+    return len(targets)
 
 
 @Halo(text='Training parents intentions', spinner='dots')
@@ -194,17 +195,14 @@ def train_about_my_parents_intentions():
     Train a Logistic Regression model to recognize parentship intentions.
     """
     model = LogisticRegression(max_iter=1000)
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.my_parents_intents_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.my_parents_intents_samples]
-    )
+    path = 'core/training/json/intentions/about_parents/'
+    samples, targets = get_data_from_json(path)
 
     model.fit(samples, targets)
     with open('luci/models/parents_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
+
+    return len(targets)
 
 
 @Halo(text='Training stuff i like intentions', spinner='dots')
@@ -213,18 +211,14 @@ def train_stuff_i_like_intentions():
     Train a Logistic Regression model to recognize stuff Luci likes intentions.
     """
     model = LogisticRegression(max_iter=1000)
-    samples = [nlp(sample['text']).vector
-               for sample in IntentionSamples.stuff_i_like_intents_samples]
-
-    targets = np.array(
-        [sample['intention']
-         for sample in IntentionSamples.stuff_i_like_intents_samples]
-    )
+    path = 'core/training/json/intentions/stuff_i_like/'
+    samples, targets = get_data_from_json(path)
 
     model.fit(samples, targets)
     with open('luci/models/stuff_i_like_intentions', 'wb') as fpath:
         pickle.dump(model, fpath)
 
+    return len(targets)
 
 def no_free_lunch():
     """
@@ -234,20 +228,13 @@ def no_free_lunch():
     param: data : <list> os np.Array;
     param: targets :np.Array
     """
-    class_attrs = [sample for sample in dir(IntentionSamples)
-                    if not sample.startswith('__')]
+    path = 'core/training/json/intentions/'
+    dirs = listdir(path)
+    for dir_ in dirs:
+        data, targets = get_data_from_json(f'{path}{dir_}/')
 
-    logging.info('_'*50)
-    for attribute in class_attrs:
-
-        logging.info(f'Testing training data on {attribute}')
+        logging.info(f'Testing training data on {dir_}')
         logging.info('_'*50)
-        samples = getattr(IntentionSamples, attribute)
-
-        data = [nlp(sample['text']).vector for sample in samples]
-        targets = np.array(
-            [sample['intention'] for sample in samples]
-        )
 
         X_train, X_test , y_train, y_test = train_test_split(
             data, targets, random_state=0
@@ -282,6 +269,9 @@ def no_free_lunch():
             logging.info(f'{model.__name__:22} test set score: {np.mean(y_pred == y_test):.2f}')
             logging.info(f'Precision score: {precision_score}')
             logging.info(f'f1 score: {f1_score}')
+        
+        logging.info(f'Number of Test Samples: {len(X_train)}')
+        logging.info(f'Total Samples: {len(targets)}')
 
         logging.info('_'*50)
 
