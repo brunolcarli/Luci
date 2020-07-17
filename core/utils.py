@@ -1,5 +1,14 @@
+import base64
+import pickle
+from random import choice
+import spacy
+from gql import Client
+from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
+from core.output_vectors import intention_responses, intention_vectors
 
+
+nlp = spacy.load('pt')
 
 def validate_text_offense(text):
     """
@@ -41,3 +50,67 @@ def extract_sentiment(text):
         return 0
     else:
         return polarity
+
+
+def answer_intention(text):
+    """
+    Responde de acordo com a intenção identificada, se identificada, do contrário
+    retorna None.
+    """
+    for sample in intention_vectors:
+        if sample['text'].lower() in text.lower() or text.lower() in sample['text'].lower():
+            return choice(intention_responses[sample['intention']])
+
+    return None
+
+
+def make_hash(descriptor, _id):
+    """
+    Criptografa um descritor e um id em uma hash base64
+    args:
+        descriptor : <str>
+        id: <int> || <str>
+    return: <str>
+    """
+    return base64.b64encode(b'%s' % f'{descriptor}:{_id}'.encode('utf-8'))
+
+
+def get_gql_client(url, auth=None):
+    """
+    Retorna um client de execução de requisições graphql.
+    param : auth : <str> : hash de autorização.
+    """
+    if not auth:
+        transport = RequestsHTTPTransport(url=url, use_json=True)
+    else:
+        headers = {
+            'content-type': 'application/json',
+            'auth': '{}'.format(auth)
+        }
+        transport = RequestsHTTPTransport(
+            url=url,
+            use_json=True,
+            headers=headers
+    )
+
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+    return client
+
+
+def get_text_vector(text):
+    """
+    Receives a string text input and returns its vector.
+    """
+    return nlp(text).vector
+
+
+def load_model(fpath):
+    """
+    Loads a trained machine learning model.
+
+    param : fpath: <str> : file path to the model
+    """
+    with open(fpath, 'rb') as trained_model:
+        model = pickle.load(trained_model)
+
+    return model

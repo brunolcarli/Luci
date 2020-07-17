@@ -3,6 +3,7 @@ Defines requests, queries and connections to external platforms and services.
 """
 import json
 import requests
+from gql import gql
 from luci.settings import LISA_URL
 
 
@@ -47,3 +48,39 @@ class Query:
             return json.loads(request.text)
 
         return None
+
+    @staticmethod
+    def get_quotes(server):
+        """
+        Solicita os quotes de um servidor.
+        """
+        query = f'''
+        query {{
+            botQuotes(server: "{server}")
+        }}
+        '''
+        return gql(query)
+
+
+class Mutation:
+    """
+    Operações graphql de criação e alteração de dados.
+    """
+
+    @staticmethod
+    def create_quote(message, server):
+        """
+        Solicita a criação de uma mensagem para um servidor.
+        """
+        mutation = f'''
+        mutation {{
+            botCreateQuote(input:{{
+                quote:"{message}"
+                server: "{server}"
+            }}){{
+                response
+            }}
+        }}
+        '''
+        return gql(mutation)
+

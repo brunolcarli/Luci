@@ -1,5 +1,10 @@
+discord==1.0.1
 
-discord.py==1.2.2
 python-decouple==3.1
 requests==2.22.0
 flask==1.1.2
+gql==0.2.0
+wandb==0.8.25
+numpy==1.18.5
+scikit-learn==0.23.1
+spacy==2.3.0

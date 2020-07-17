@@ -1,0 +1,17 @@
+[
+    {"text": "Vc gosta de maçã?", "intention": 1},
+    {"text": "O que vc gosta de comer?", "intention": 1},
+    {"text": "Olá", "intention": 3},
+    {"text": "Olá, tudo bem?", "intention": 3},
+    {"text": "Oi", "intention": 3},
+    {"text": "e ai", "intention": 3},
+    {"text": "eae", "intention": 3},
+    {"text": "iai", "intention": 3},
+    {"text": "ehuahuehuahu", "intention": 5},
+    {"text": "hahahahaha", "intention": 5},
+    {"text": "Você entende o que quero dizer", "intention": 4},
+    {"text": "entende o que digo?", "intention": 4},
+    {"text": "me entende?", "intention": 4},
+    {"text": "vc compreende", "intention": 4},
+    {"text": "espero que tenha entendido", "intention": 4}
+]
