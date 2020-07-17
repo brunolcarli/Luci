@@ -1,0 +1,7 @@
+[
+    {"text": "vc é menino?", "intention": 5},
+    {"text": "vc é homem?", "intention": 5},
+    {"text": "qual o seu sexo?", "intention": 5},
+    {"text": "qual o seu gênero?", "intention": 5},
+    {"text": "qual é o seu nome?", "intention": 2}
+]

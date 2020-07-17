@@ -1,0 +1,7 @@
+[
+    {"text": "qual sua cor favorita?", "intention": 4},
+    {"text": "qual seu tipo de música favorito?", "intention": 4},
+    {"text": "qual seu genero musical preferido?", "intention": 4},
+    {"text": "você tem pai?", "intention": 3},
+    {"text": "quem criou vc?", "intention": 3}
+]
