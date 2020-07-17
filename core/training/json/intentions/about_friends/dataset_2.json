@@ -1,4 +1,17 @@
 [
     {"text": "melhores amigos", "intention": 4},
-    {"text": "vamos ser amigos", "intention": 1}
+    {"text": "vamos ser amigos", "intention": 1},
+    {"text": "Vc tem amizade com fulano?", "intention": 2},
+    {"text": "o q vc acha do ciclano?", "intention": 2},
+    {"text": "Vc não gosta do fulano?", "intention": 3},
+    {"text": "vc não gosta dele?", "intention": 3},
+    {"text": "acho q vc n gosta dele", "intention": 3},
+    {"text": "vc odeia ele?", "intention": 3},
+    {"text": "quer ser meu amigo?", "intention": 4},
+    {"text": "somos amigos?", "intention": 4},
+    {"text": "que tal sermos amigos?", "intention": 4},
+    {"text": "eu também odeio ele", "intention": 3},
+    {"text": "voce despreza ele?", "intention": 3},
+    {"text": "Nós somos amigos né?", "intention": 1},
+    {"text": "vc tem mtos amigos?", "intention": 1}
 ]
