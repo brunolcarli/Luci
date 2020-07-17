@@ -14,7 +14,7 @@
 
 > [![Version badge](https://img.shields.io/badge/version-0.1.0-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 [![Docs Link](https://badgen.net/badge/docs/github_wiki?icon=github)](https://github.com/brunolcarli/Luci/wiki)
-[![test badge](https://img.shields.io/badge/test-failing-red.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
+[![test badge](https://img.shields.io/badge/test-passing-green.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 
 LUCI is a conversational tamabotchi for discord.
 
