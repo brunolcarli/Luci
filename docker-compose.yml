@@ -1,12 +1,12 @@
 version: '3'
 
 services:
-  lisa:
+  luci:
     build: .    
     image: luci:devel
     restart: on-failure
     container_name: luci_container
-    command: make run
+    command: python3 main.py
     env_file: .env
     volumes:
       - .:/app
