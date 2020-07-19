@@ -106,3 +106,31 @@ The goal is give the models enough data to pass the test when executing:
 ```
 $ (Luci) make test
 ```
+
+
+## Docker
+
+
+<div align="center">
+
+<img src="https://git.infra-lab.xyz/uploads/-/system/project/avatar/46/docker-gif-4.gif?width=64" align="center" width="170" alt="Project icon">
+
+</div>
+
+Set up the `.env` file as described above and build the container with docker-compose:
+
+```
+$ docker-compose build
+```
+
+Run with:
+
+```
+$ docker-compose up
+```
+
+Or run in background
+
+```
+$ docker-compose up -d
+```
