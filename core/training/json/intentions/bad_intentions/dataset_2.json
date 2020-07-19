@@ -24,5 +24,7 @@
     {"text": "você deve odiar humanos", "intention": 6},
     {"text": "odiar pessoas", "intention": 6},
     {"text": "vc odeia pessoas", "intention": 6},
-    {"text": "vc deve odiar pessoas", "intention": 6}
+    {"text": "vc deve odiar pessoas", "intention": 6},
+    {"text": "que transar com vc?", "intention": 1},
+    {"text": "sua safada", "intention": 1}
 ]

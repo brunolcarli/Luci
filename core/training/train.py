@@ -13,7 +13,6 @@ from sklearn import model_selection
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from luci.settings import LISA_URL
@@ -144,9 +143,9 @@ def train_myself_intentions():
 @Halo(text='Training bad intentions', spinner='dots')
 def train_bad_intentions():
     """
-    Train a SVC model to recognize bad intentions.
+    Train a LineraRegression model to recognize bad intentions.
     """
-    model = SVC()
+    model = LogisticRegression(max_iter=1000)
     path = 'core/training/json/intentions/bad_intentions/'
     samples, targets = get_data_from_json(path)
 
@@ -220,6 +219,7 @@ def train_stuff_i_like_intentions():
 
     return len(targets)
 
+
 def no_free_lunch():
     """
     Tests the score for different models. A model will not fit on every data
@@ -245,7 +245,6 @@ def no_free_lunch():
             DecisionTreeClassifier,
             KNeighborsClassifier,
             GaussianNB,
-            SVC,
             RandomForestClassifier
         ]:
             try:
