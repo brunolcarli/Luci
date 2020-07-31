@@ -1,1 +1,366 @@
-[{"text": "quantos anos voc\u00ea tem", "intention": 1}, {"text": "quantos anos vc tem", "intention": 1}, {"text": "qts anos voc\u00ea tem", "intention": 1}, {"text": "qts anos vc tem", "intention": 1}, {"text": "qual sua idade", "intention": 1}, {"text": "qual \u00e9 a sua idade", "intention": 1}, {"text": "quantos anos voc\u00ea possui", "intention": 1}, {"text": "qts anos vc possui", "intention": 1}, {"text": "quantos anos vc possui", "intention": 1}, {"text": "qts anos voc\u00ea possui", "intention": 1}, {"text": "apresente-se", "intention": 2}, {"text": "quem \u00e9 voc\u00ea", "intention": 2}, {"text": "quem \u00e9 voc\u00ea?", "intention": 2}, {"text": "quem \u00e9 vc", "intention": 2}, {"text": "qual seu nome", "intention": 2}, {"text": "como voc\u00ea se chama", "intention": 2}, {"text": "como voc\u00ea se chama?", "intention": 2}, {"text": "como voce se chama", "intention": 2}, {"text": "como se chama", "intention": 2}, {"text": "como vc se chama", "intention": 2}, {"text": "como \u00e9 seu nome", "intention": 2}, {"text": "como vc se chama", "intention": 2}, {"text": "como chama-se", "intention": 2}, {"text": "diga oi", "intention": 2}, {"text": "diga ol\u00e1", "intention": 2}, {"text": "quem \u00e9s tu", "intention": 2}, {"text": "qual teu nome", "intention": 2}, {"text": "qual seu vulgo", "intention": 2}, {"text": "como \u00e9 que se chama", "intention": 2}, {"text": "seu nome por favor", "intention": 2}, {"text": "seu nome por gentileza", "intention": 2}, {"text": "poderia me informar seu nome", "intention": 2}, {"text": "identifique-se", "intention": 2}, {"text": "o que \u00e9 voc\u00ea", "intention": 3}, {"text": "o que \u00e9 vc", "intention": 3}, {"text": "qual seu proposito", "intention": 3}, {"text": "pra que vc serve", "intention": 3}, {"text": "pra que voc\u00ea serve", "intention": 3}, {"text": "qual sua fun\u00e7\u00e3o", "intention": 3}, {"text": "qual sua funcao", "intention": 3}, {"text": "vc \u00e9 um bot", "intention": 3}, {"text": "vc e um bot", "intention": 3}, {"text": "voc\u00ea \u00e9 um bot", "intention": 3}, {"text": "voce e um bot", "intention": 3}, {"text": "vc \u00e9 uma crian\u00e7a", "intention": 3}, {"text": "vc e uma crian\u00e7a", "intention": 3}, {"text": "voc\u00ea \u00e9 uma crian\u00e7a", "intention": 3}, {"text": "voc\u00ea e uma crian\u00e7a", "intention": 3}, {"text": "voc\u00ea \u00e9 uma pessoa", "intention": 3}, {"text": "voc\u00ea e uma pessoa", "intention": 3}, {"text": "vc \u00e9 uma pessoa", "intention": 3}, {"text": "vc e uma pessoa", "intention": 3}, {"text": "vc \u00e9 uma menina", "intention": 3}, {"text": "vc e uma menina", "intention": 3}, {"text": "voc\u00ea \u00e9 uma menina", "intention": 3}, {"text": "voc\u00ea e uma menina", "intention": 3}, {"text": "vc \u00e9 oq", "intention": 3}, {"text": "vc \u00e9 o que", "intention": 3}, {"text": "voc\u00ea \u00e9 o que", "intention": 3}, {"text": "voc\u00ea \u00e9 oque", "intention": 3}, {"text": "voc\u00ea \u00e9 oq", "intention": 3}, {"text": "como voc\u00ea se sente", "intention": 4}, {"text": "como voc\u00ea est\u00e1 se sentindo", "intention": 4}, {"text": "como est\u00e1 se sentindo", "intention": 4}, {"text": "como sente-se", "intention": 4}, {"text": "como voc\u00ea est\u00e1", "intention": 4}, {"text": "como voc\u00ea est\u00e1?", "intention": 4}, {"text": "como est\u00e1", "intention": 4}, {"text": "tudo bem", "intention": 4}, {"text": "td bem", "intention": 4}, {"text": "td bem com vc", "intention": 4}, {"text": "tudo bem com vc", "intention": 4}, {"text": "tudo bem com vc?", "intention": 4}, {"text": "como est\u00e1 passando", "intention": 4}, {"text": "como vai", "intention": 4}, {"text": "como tem passado", "intention": 4}, {"text": "como \u00e9 que vai", "intention": 4}, {"text": "como ta", "intention": 4}, {"text": "como t\u00e1", "intention": 4}, {"text": "como sentese", "intention": 4}, {"text": "como sente se", "intention": 4}, {"text": "o que esta sentindo", "intention": 4}, {"text": "voc\u00ea \u00e9 menino ou menina", "intention": 5}, {"text": "voc\u00ea \u00e9 menina ou menino", "intention": 5}, {"text": "voc\u00ea \u00e9 menina", "intention": 5}, {"text": "voc\u00ea \u00e9 menino", "intention": 5}, {"text": "vc \u00e9 menina ou menino", "intention": 5}, {"text": "vc \u00e9 menino ou menina", "intention": 5}, {"text": "qual seu g\u00eanenro", "intention": 5}, {"text": "qual sua genero", "intention": 5}, {"text": "qual seu sexo", "intention": 5}, {"text": "voc\u00ea \u00e9 ele ou ela", "intention": 5}, {"text": "vc \u00e9 ele ou ela", "intention": 5}]
+[
+    {
+        "text": "quantos anos voc\u00ea tem",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos vc tem",
+        "intention": 1
+    },
+    {
+        "text": "qts anos voc\u00ea tem",
+        "intention": 1
+    },
+    {
+        "text": "qts anos vc tem",
+        "intention": 1
+    },
+    {
+        "text": "qual sua idade",
+        "intention": 1
+    },
+    {
+        "text": "qual \u00e9 a sua idade",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos voc\u00ea possui",
+        "intention": 1
+    },
+    {
+        "text": "qts anos vc possui",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos vc possui",
+        "intention": 1
+    },
+    {
+        "text": "qts anos voc\u00ea possui",
+        "intention": 1
+    },
+    {
+        "text": "apresente-se",
+        "intention": 2
+    },
+    {
+        "text": "quem \u00e9 voc\u00ea",
+        "intention": 2
+    },
+    {
+        "text": "quem \u00e9 voc\u00ea?",
+        "intention": 2
+    },
+    {
+        "text": "quem \u00e9 vc",
+        "intention": 2
+    },
+    {
+        "text": "qual seu nome",
+        "intention": 2
+    },
+    {
+        "text": "voc\u00ea se chama",
+        "intention": 2
+    },
+    {
+        "text": "voc\u00ea se chama?",
+        "intention": 2
+    },
+    {
+        "text": "voce se chama",
+        "intention": 2
+    },
+    {
+        "text": "se chama",
+        "intention": 2
+    },
+    {
+        "text": "vc se chama",
+        "intention": 2
+    },
+    {
+        "text": "\u00e9 seu nome",
+        "intention": 2
+    },
+    {
+        "text": "diga oi",
+        "intention": 2
+    },
+    {
+        "text": "diga ol\u00e1",
+        "intention": 2
+    },
+    {
+        "text": "quem \u00e9s tu",
+        "intention": 2
+    },
+    {
+        "text": "qual teu nome",
+        "intention": 2
+    },
+    {
+        "text": "qual seu vulgo",
+        "intention": 2
+    },
+    {
+        "text": "\u00e9 que se chama",
+        "intention": 2
+    },
+    {
+        "text": "seu nome por favor",
+        "intention": 2
+    },
+    {
+        "text": "seu nome por gentileza",
+        "intention": 2
+    },
+    {
+        "text": "poderia me informar seu nome",
+        "intention": 2
+    },
+    {
+        "text": "identifique-se",
+        "intention": 2
+    },
+    {
+        "text": "o que \u00e9 voc\u00ea",
+        "intention": 3
+    },
+    {
+        "text": "o que \u00e9 vc",
+        "intention": 3
+    },
+    {
+        "text": "qual seu proposito",
+        "intention": 3
+    },
+    {
+        "text": "pra que vc serve",
+        "intention": 3
+    },
+    {
+        "text": "pra que voc\u00ea serve",
+        "intention": 3
+    },
+    {
+        "text": "qual sua fun\u00e7\u00e3o",
+        "intention": 3
+    },
+    {
+        "text": "qual sua funcao",
+        "intention": 3
+    },
+    {
+        "text": "vc \u00e9 um bot",
+        "intention": 3
+    },
+    {
+        "text": "vc e um bot",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 um bot",
+        "intention": 3
+    },
+    {
+        "text": "voce e um bot",
+        "intention": 3
+    },
+    {
+        "text": "vc \u00e9 uma crian\u00e7a",
+        "intention": 3
+    },
+    {
+        "text": "vc e uma crian\u00e7a",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 uma crian\u00e7a",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea e uma crian\u00e7a",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 uma pessoa",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea e uma pessoa",
+        "intention": 3
+    },
+    {
+        "text": "vc \u00e9 uma pessoa",
+        "intention": 3
+    },
+    {
+        "text": "vc e uma pessoa",
+        "intention": 3
+    },
+    {
+        "text": "vc \u00e9 uma menina",
+        "intention": 3
+    },
+    {
+        "text": "vc e uma menina",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 uma menina",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea e uma menina",
+        "intention": 3
+    },
+    {
+        "text": "vc \u00e9 oq",
+        "intention": 3
+    },
+    {
+        "text": "vc \u00e9 o que",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 o que",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 oque",
+        "intention": 3
+    },
+    {
+        "text": "voc\u00ea \u00e9 oq",
+        "intention": 3
+    },
+    {
+        "text": "como voc\u00ea se sente",
+        "intention": 4
+    },
+    {
+        "text": "como voc\u00ea est\u00e1 se sentindo",
+        "intention": 4
+    },
+    {
+        "text": "como est\u00e1 se sentindo",
+        "intention": 4
+    },
+    {
+        "text": "como sente-se",
+        "intention": 4
+    },
+    {
+        "text": "como voc\u00ea est\u00e1",
+        "intention": 4
+    },
+    {
+        "text": "como voc\u00ea est\u00e1?",
+        "intention": 4
+    },
+    {
+        "text": "como est\u00e1",
+        "intention": 4
+    },
+    {
+        "text": "tudo bem",
+        "intention": 4
+    },
+    {
+        "text": "td bem",
+        "intention": 4
+    },
+    {
+        "text": "td bem com vc",
+        "intention": 4
+    },
+    {
+        "text": "tudo bem com vc",
+        "intention": 4
+    },
+    {
+        "text": "tudo bem com vc?",
+        "intention": 4
+    },
+    {
+        "text": "como est\u00e1 passando",
+        "intention": 4
+    },
+    {
+        "text": "como vai",
+        "intention": 4
+    },
+    {
+        "text": "como tem passado",
+        "intention": 4
+    },
+    {
+        "text": "como \u00e9 que vai",
+        "intention": 4
+    },
+    {
+        "text": "como ta",
+        "intention": 4
+    },
+    {
+        "text": "como t\u00e1",
+        "intention": 4
+    },
+    {
+        "text": "como sentese",
+        "intention": 4
+    },
+    {
+        "text": "como sente se",
+        "intention": 4
+    },
+    {
+        "text": "o que esta sentindo",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 menino ou menina",
+        "intention": 5
+    },
+    {
+        "text": "voc\u00ea \u00e9 menina ou menino",
+        "intention": 5
+    },
+    {
+        "text": "voc\u00ea \u00e9 menina",
+        "intention": 5
+    },
+    {
+        "text": "voc\u00ea \u00e9 menino",
+        "intention": 5
+    },
+    {
+        "text": "vc \u00e9 menina ou menino",
+        "intention": 5
+    },
+    {
+        "text": "vc \u00e9 menino ou menina",
+        "intention": 5
+    },
+    {
+        "text": "qual seu g\u00eanenro",
+        "intention": 5
+    },
+    {
+        "text": "qual sua genero",
+        "intention": 5
+    },
+    {
+        "text": "qual seu sexo",
+        "intention": 5
+    },
+    {
+        "text": "voc\u00ea \u00e9 ele ou ela",
+        "intention": 5
+    },
+    {
+        "text": "vc \u00e9 ele ou ela",
+        "intention": 5
+    }
+]

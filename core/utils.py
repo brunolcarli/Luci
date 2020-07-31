@@ -101,7 +101,9 @@ def get_text_vector(text):
     """
     Receives a string text input and returns its vector.
     """
-    return nlp(text).vector
+    # return nlp(text).vector
+    tokens = nlp(text)
+    return sum([token.vector for token in tokens])
 
 
 def load_model(fpath):

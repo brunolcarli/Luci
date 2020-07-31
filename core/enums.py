@@ -8,11 +8,8 @@ class GlobalIntentions(Enum):
     which each one have their specificities and contexts.
     """
     ABOUT_MYSELF = 'about_myself'
-    ABOUT_MY_FRIENDS = 'about_my_friends'
-    ABOUT_THE_SERVER = 'about_the_server'
-    ABOUT_THE_CHANNEL = 'about_the_channel'
-    ABOUT_MY_PARENTS = 'about_my_parents'
-    STUFF_I_LIKE = 'stuff_i_like'
+    CORRECTION = 'correction'
+    TASK = 'task'
     BAD_INTENTION = 'bad_intention'
     GOOD_INTENTION = 'good_intention'
 

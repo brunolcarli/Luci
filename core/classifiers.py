@@ -1,8 +1,81 @@
+import logging
+import math
 from random import choice
 from core.utils import answer_intention, get_text_vector, load_model
 from core.intentions import Intentions
 from core.enums import GlobalIntentions
 from core.output_vectors import intention_responses
+
+
+class Perceptron:
+  def __init__(self):
+    self.wi = 1
+    self.wj = 1
+
+  def receive(self, X):
+    """
+    param X: <list> : Vector containing (xi, xj)
+    """
+    try:
+      xi, xj = X
+    except ValueError:
+      xi, xj = 0, 0
+
+    return self.process(xi, xj)
+
+  def process(self, xi, xj):
+    """
+    param xi : <int> : Value for student handwork
+    param hj : <int> : Value for student final test
+    """
+    result = (self.wi * xi) + (self.wj * xj) - 51
+
+    # return self.step_function(result)
+    return int(abs(self.output(result)))
+
+  def step_function(self, y):
+    """
+    param y: <float> : equation result
+    """
+    prediction = 1 if int(abs(y)) <= 1 else 0
+    logging.info('-'*90)
+    logging.info(int(y))
+    print(int(abs(y)))
+    logging.info('-'*90)
+    return self.output(prediction)
+
+  def output(self, value):
+    """
+    returns the perceptron prediction on the received inputs
+    """
+
+    return value
+
+
+class InputNeuron:
+    def receive(self, inputed_word_vec, response_vec):
+        return self.process(inputed_word_vec, response_vec)
+        
+    def minimize(self, v):
+        return math.sqrt(sum([p**2 for p in v]))
+
+    def distance(self, x, y):
+        return math.sqrt(sum([(p - q)**2 for p, q in zip(x, y)]))
+
+    def process(self, x, y):
+        input_position = self.minimize(x)
+        response_distance = self.distance(x, y)
+
+        return (input_position, response_distance)
+    
+    
+class NeuralNetwork:
+    def __init__(self):
+        self.input_layer = InputNeuron()
+        self.hidden_layer = Perceptron()
+
+    def execute(self, x, y):
+        return self.hidden_layer.receive(self.input_layer.receive(x, y))
 
 
 def classifiers_map():

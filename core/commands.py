@@ -1,16 +1,17 @@
+import logging
 import pickle
 from random import choice, randint, random
 
 import discord
 from discord.ext import commands
 
-from core.classifiers import naive_response
+from core.classifiers import naive_response, NeuralNetwork
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
                                  positive_answers, negative_answers)
 from core.external_requests import Query, Mutation
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
-                        make_hash, get_gql_client)
+                        make_hash, get_gql_client, get_text_vector)
 from luci.settings import __version__, SELF_ID, API_URL
 import spacy
 
@@ -20,43 +21,85 @@ nlp = spacy.load('pt')
 client = commands.Bot(command_prefix='!')
 
 
+def get_pol_response(polarity):
+    # Answers based on text polarity
+    if polarity < 0:
+        return ''.join(choice(i) for i in negative_answers)
+    elif polarity > 0:
+        return ''.join(choice(i) for i in positive_answers)
+    else:
+        return choice(indifference)
+
+
+def get_random_blablabla():
+    random_tought = ''.join(choice(i) for i in propositions)
+    random_tought_2 = ''.join(choice(i) for i in propositions)
+
+    response = f'{choice(opinions[0])}. '\
+               f'{random_tought} '\
+               f'{random_tought_2}. Mas posso estar errada.'
+    return response
+
+
 def on_mention(message, polarity):
     """
     Process messages that mention Luci on chat.
     """
+    logging.info(message)
+    nn = NeuralNetwork()
+    intention_response = naive_response(message)
 
-    value = (randint(0, 100) * .30) / 3 + random() * choice([1, -1])
+    pol_response = get_pol_response(polarity)
+    blablabla = get_random_blablabla()
+    dunno = ''.join(choice(i) for i in insufficiency_recognition)
 
-    # Verify if is a question
-    if '?' in message:
-        if value >= 9.2:
-            random_tought = ''.join(choice(i) for i in propositions)
-            random_tought_2 = ''.join(choice(i) for i in propositions)
+    input_vector = get_text_vector(message)
+    response_vector = get_text_vector(intention_response)
+    pol_vector = get_text_vector(pol_response)
+    blablabla_vector = get_text_vector(blablabla)
+    dunno_vector = get_text_vector(dunno)
 
-            response = f'{choice(opinions[0])}. '\
-                       f'{random_tought} '\
-                       f'{random_tought_2} Viajei né?'
-            return response
+    possibilities = {
+        nn.execute(input_vector, response_vector): intention_response,
+        nn.execute(input_vector, pol_vector): pol_response,
+        nn.execute(input_vector, blablabla_vector): blablabla,
+        nn.execute(input_vector, dunno_vector): dunno
+    }
+    print(possibilities)
 
-        elif 5 <= value < 9.2:
-            return naive_response(message)
+    return possibilities[min(possibilities.keys())]
+
+
+    # # Verify if is a question
+    # if '?' in message:
+    #     if value >= 9.2:
+    #         random_tought = ''.join(choice(i) for i in propositions)
+    #         random_tought_2 = ''.join(choice(i) for i in propositions)
+
+    #         response = f'{choice(opinions[0])}. '\
+    #                    f'{random_tought} '\
+    #                    f'{random_tought_2} Viajei né?'
+    #         return response
+
+    #     elif 5 <= value < 9.2:
+    #         return naive_response(message)
           
-        elif 0 < value < 2:
-            return ''.join(choice(i) for i in opinions)
+    #     elif 0 < value < 2:
+    #         return ''.join(choice(i) for i in opinions)
 
-        else:
-            return ''.join(choice(i) for i in insufficiency_recognition)
+    #     else:
+    #         return ''.join(choice(i) for i in insufficiency_recognition)
     
-    if 2 <= value < 3:
-        # Answers based on text polarity
-        if polarity < 0:
-            return ''.join(choice(i) for i in negative_answers)
-        elif polarity > 0:
-            return ''.join(choice(i) for i in positive_answers)
-        else:
-            return choice(indifference)
-    else:
-        return naive_response(message)
+    # if 2 <= value < 3:
+    #     # Answers based on text polarity
+    #     if polarity < 0:
+    #         return ''.join(choice(i) for i in negative_answers)
+    #     elif polarity > 0:
+    #         return ''.join(choice(i) for i in positive_answers)
+    #     else:
+    #         return choice(indifference)
+    # else:
+    #     return naive_response(message)
 
 
 @client.event
@@ -88,8 +131,11 @@ async def on_message(message):
     text_polarity = extract_sentiment(text)
 
     # process @Luci mentions
-    if str(channel.guild.me.id) in text:
-        response = on_mention(text, text_polarity)
+    mention = str(channel.guild.me.id)
+    if mention in text:
+        pos = text.find(mention)
+        text = (text[:pos] + text[pos+len(mention):]).strip()
+        response = on_mention(text.encode('utf-8').decode('utf-8'), text_polarity)
         if response:
             return await channel.send(f'{message.author.mention} {response}')
 

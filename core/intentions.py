@@ -8,11 +8,10 @@ from core.enums import (GlobalIntentions, MyselfIntentions, AboutMyFriends,
 class Intentions:
     global_intentions = {
         1: GlobalIntentions.ABOUT_MYSELF,
-        2: GlobalIntentions.ABOUT_MY_FRIENDS,
-        3: GlobalIntentions.ABOUT_MY_PARENTS,
-        4: GlobalIntentions.STUFF_I_LIKE,
-        5: GlobalIntentions.GOOD_INTENTION,
-        6: GlobalIntentions.BAD_INTENTION
+        2: GlobalIntentions.CORRECTION,
+        3: GlobalIntentions.TASK,
+        4: GlobalIntentions.GOOD_INTENTION,
+        5: GlobalIntentions.BAD_INTENTION
     }
 
     about_myself_intentions = {
@@ -23,27 +22,6 @@ class Intentions:
         5: MyselfIntentions.MY_GENDER,
     }
 
-    about_my_parents_intentions = {
-        1: AboutMyParents.MY_MOTHER,
-        2: AboutMyParents.MY_DAD,
-        3: AboutMyParents.GRANDPA,
-        4: AboutMyParents.GRANDMA,
-        5: AboutMyParents.RESPONSIBLE
-    }
-
-    about_my_friends_intentions = {
-        1: AboutMyFriends.FRIENDS_I_HAVE,
-        2: AboutMyFriends.USERS_I_LIKE,
-        3: AboutMyFriends.USERS_I_DONT_LIKE,
-        4: AboutMyFriends.BEST_FRIENDS
-    }
-
-    stuff_i_like_intentions = {
-        1: StuffILike.FOOD,
-        2: StuffILike.MUSIC,
-        3: StuffILike.SPORTS_AND_PLAYING, 
-        4: StuffILike.TRAVELING,
-    }
 
     good_intentions = {
         1: GoodIntentions.PRAISE,
@@ -61,14 +39,14 @@ class Intentions:
         3: BadIntentions.SUICIDE,
         4: BadIntentions.ILLEGAL_STUFF,
         5: BadIntentions.THREAT,
-        6: BadIntentions.FORBIDDEN
+        6: BadIntentions.FORBIDDEN,
     }
 
-    specific_intentions = {
-        GlobalIntentions.ABOUT_MYSELF: about_myself_intentions,
-        GlobalIntentions.ABOUT_MY_FRIENDS: about_my_friends_intentions,
-        GlobalIntentions.ABOUT_MY_PARENTS: about_my_parents_intentions,
-        GlobalIntentions.STUFF_I_LIKE: stuff_i_like_intentions,
-        GlobalIntentions.BAD_INTENTION: bad_intentions,
-        GlobalIntentions.GOOD_INTENTION: good_intentions,
-    }
+    # specific_intentions = {
+    #     GlobalIntentions.ABOUT_MYSELF: about_myself_intentions,
+    #     GlobalIntentions.ABOUT_MY_FRIENDS: about_my_friends_intentions,
+    #     GlobalIntentions.ABOUT_MY_PARENTS: about_my_parents_intentions,
+    #     GlobalIntentions.STUFF_I_LIKE: stuff_i_like_intentions,
+    #     GlobalIntentions.BAD_INTENTION: bad_intentions,
+    #     GlobalIntentions.GOOD_INTENTION: good_intentions,
+    # }

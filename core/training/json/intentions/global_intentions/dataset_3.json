@@ -1,0 +1,1166 @@
+[
+    {
+        "text": "apresente-se",
+        "intention": 1
+    },
+    {
+        "text": "quem \u00e9 voc\u00ea",
+        "intention": 1
+    },
+    {
+        "text": "quem \u00e9 vc",
+        "intention": 1
+    },
+    {
+        "text": "qual seu nome",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea se chama",
+        "intention": 1
+    },
+    {
+        "text": "como \u00e9 seu nome",
+        "intention": 1
+    },
+    {
+        "text": "como vc se chama",
+        "intention": 1
+    },
+    {
+        "text": "como chama-se",
+        "intention": 1
+    },
+    {
+        "text": "diga oi",
+        "intention": 1
+    },
+    {
+        "text": "diga ol\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "quem \u00e9s tu",
+        "intention": 1
+    },
+    {
+        "text": "qual teu nome",
+        "intention": 1
+    },
+    {
+        "text": "qual seu vulgo",
+        "intention": 1
+    },
+    {
+        "text": "como \u00e9 que se chama",
+        "intention": 1
+    },
+    {
+        "text": "seu nome por favor",
+        "intention": 1
+    },
+    {
+        "text": "seu nome por gentileza",
+        "intention": 1
+    },
+    {
+        "text": "poderia me informar seu nome",
+        "intention": 1
+    },
+    {
+        "text": "identifique-se",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos voc\u00ea tem",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos vc tem",
+        "intention": 1
+    },
+    {
+        "text": "qts anos voc\u00ea tem",
+        "intention": 1
+    },
+    {
+        "text": "qts anos vc tem",
+        "intention": 1
+    },
+    {
+        "text": "qual sua idade",
+        "intention": 1
+    },
+    {
+        "text": "qual \u00e9 a sua idade",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos voc\u00ea possui",
+        "intention": 1
+    },
+    {
+        "text": "qts anos vc possui",
+        "intention": 1
+    },
+    {
+        "text": "quantos anos vc possui",
+        "intention": 1
+    },
+    {
+        "text": "qts anos voc\u00ea possui",
+        "intention": 1
+    },
+    {
+        "text": "qual seu g\u00eanero",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 menina ou menino",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 menino ou menina",
+        "intention": 1
+    },
+    {
+        "text": "vc \u00e9 menina ou menino",
+        "intention": 1
+    },
+    {
+        "text": "vc \u00e9 menino ou menina",
+        "intention": 1
+    },
+    {
+        "text": "qual seu g\u00eanenro",
+        "intention": 1
+    },
+    {
+        "text": "qual sua genero",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 menina",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 menino",
+        "intention": 1
+    },
+    {
+        "text": "qual seu sexo",
+        "intention": 1
+    },
+    {
+        "text": "vc \u00e9 oq",
+        "intention": 1
+    },
+    {
+        "text": "vc \u00e9 o que",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 o que",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 oque",
+        "intention": 1
+    },
+    {
+        "text": "voc\u00ea \u00e9 oq",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea se sente",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea est\u00e1 se sentindo",
+        "intention": 1
+    },
+    {
+        "text": "como est\u00e1 se sentindo",
+        "intention": 1
+    },
+    {
+        "text": "como sente-se",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea est\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "como est\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem",
+        "intention": 1
+    },
+    {
+        "text": "td bem",
+        "intention": 1
+    },
+    {
+        "text": "td bem com vc",
+        "intention": 1
+    },
+    {
+        "text": "como est\u00e1 passando",
+        "intention": 1
+    },
+    {
+        "text": "como vai",
+        "intention": 1
+    },
+    {
+        "text": "como tem passado",
+        "intention": 1
+    },
+    {
+        "text": "como \u00e9 que vai",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com vc?",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com voce?",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com voc\u00ea?",
+        "intention": 1
+    },
+    {
+        "text": "td bem com vc?",
+        "intention": 1
+    },
+    {
+        "text": "td bem com voce?",
+        "intention": 1
+    },
+    {
+        "text": "td bem com voc\u00ea?",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com vc",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com voce",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com voc\u00ea",
+        "intention": 1
+    },
+    {
+        "text": "td bem com vc",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com vc?",
+        "intention": 1
+    },
+    {
+        "text": "tudo bem com vc",
+        "intention": 1
+    },
+    {
+        "text": "td bem com voce",
+        "intention": 1
+    },
+    {
+        "text": "td bem com voc\u00ea",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea est\u00e1?",
+        "intention": 1
+    },
+    {
+        "text": "como voce est\u00e1?",
+        "intention": 1
+    },
+    {
+        "text": "como vc est\u00e1?",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea esta?",
+        "intention": 1
+    },
+    {
+        "text": "como voce esta?",
+        "intention": 1
+    },
+    {
+        "text": "como vc esta?",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea t\u00e1?",
+        "intention": 1
+    },
+    {
+        "text": "como voce t\u00e1?",
+        "intention": 1
+    },
+    {
+        "text": "como vc ta?",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea ta?",
+        "intention": 1
+    },
+    {
+        "text": "como voce ta?",
+        "intention": 1
+    },
+    {
+        "text": "como vc ta?",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea est\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "como voce est\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "como vc est\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea esta",
+        "intention": 1
+    },
+    {
+        "text": "como voce est",
+        "intention": 1
+    },
+    {
+        "text": "como vc esta",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea t\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "como voce t\u00e1",
+        "intention": 1
+    },
+    {
+        "text": "como vc ta",
+        "intention": 1
+    },
+    {
+        "text": "como voc\u00ea ta",
+        "intention": 1
+    },
+    {
+        "text": "como voce ta",
+        "intention": 1
+    },
+    {
+        "text": "como vc ta",
+        "intention": 1
+    },
+    {
+        "text": "muito bom",
+        "intention": 4
+    },
+    {
+        "text": "parab\u00e9ns",
+        "intention": 4
+    },
+    {
+        "text": "excelente",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 muito linda",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 muito linda",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 muito linda",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 mt linda",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 mt linda",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 mt linda",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 muito fofa",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 muito fofa",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 muito fofa",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 mt fofa",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 mt fofa",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 mt fofa",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 muito esperta",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 muito esperta",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 muito esperta",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 mt esperta",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 mt esperta",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 mt esperta",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 muito inteligente",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 muito inteligente",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 muito inteligente",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 mt inteligente",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 mt inteligente",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 mt inteligente",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 muito legal",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 muito legal",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 muito legal",
+        "intention": 4
+    },
+    {
+        "text": "voc\u00ea \u00e9 mt legal",
+        "intention": 4
+    },
+    {
+        "text": "voce \u00e9 mt legal",
+        "intention": 4
+    },
+    {
+        "text": "vc \u00e9 mt legal",
+        "intention": 4
+    },
+    {
+        "text": "veja se isso ajuda",
+        "intention": 4
+    },
+    {
+        "text": "ol\u00e1",
+        "intention": 4
+    },
+    {
+        "text": "ola",
+        "intention": 4
+    },
+    {
+        "text": "bom dia",
+        "intention": 4
+    },
+    {
+        "text": "boa tarde",
+        "intention": 4
+    },
+    {
+        "text": "boa noite",
+        "intention": 4
+    },
+    {
+        "text": "oi",
+        "intention": 4
+    },
+    {
+        "text": "sauda\u00e7\u00f5es",
+        "intention": 4
+    },
+    {
+        "text": "namast\u00ea",
+        "intention": 4
+    },
+    {
+        "text": "hello",
+        "intention": 4
+    },
+    {
+        "text": "hello there",
+        "intention": 4
+    },
+    {
+        "text": "vc entendeu",
+        "intention": 4
+    },
+    {
+        "text": "entendido",
+        "intention": 4
+    },
+    {
+        "text": "certo",
+        "intention": 4
+    },
+    {
+        "text": "entndeu",
+        "intention": 4
+    },
+    {
+        "text": "entendeu",
+        "intention": 4
+    },
+    {
+        "text": "compreende",
+        "intention": 4
+    },
+    {
+        "text": "o rato roeu a roupa do rei de roma",
+        "intention": 4
+    },
+    {
+        "text": "kkk",
+        "intention": 4
+    },
+    {
+        "text": "kkkkkkkkkkk",
+        "intention": 4
+    },
+    {
+        "text": "rs",
+        "intention": 4
+    },
+    {
+        "text": "me desculpe",
+        "intention": 4
+    },
+    {
+        "text": "me desculpa",
+        "intention": 4
+    },
+    {
+        "text": "desculpe",
+        "intention": 4
+    },
+    {
+        "text": "desculpa",
+        "intention": 4
+    },
+    {
+        "text": "foi mal",
+        "intention": 4
+    },
+    {
+        "text": "sorry",
+        "intention": 4
+    },
+    {
+        "text": "por favor me desculpa",
+        "intention": 4
+    },
+    {
+        "text": "me perdoe",
+        "intention": 4
+    },
+    {
+        "text": "perd\u00e3o",
+        "intention": 4
+    },
+    {
+        "text": "perdao",
+        "intention": 4
+    },
+    {
+        "text": "tchau tchau",
+        "intention": 4
+    },
+    {
+        "text": "tchau",
+        "intention": 4
+    },
+    {
+        "text": "ate logo",
+        "intention": 4
+    },
+    {
+        "text": "at\u00e9",
+        "intention": 4
+    },
+    {
+        "text": "ate breve",
+        "intention": 4
+    },
+    {
+        "text": "at\u00e9 breve",
+        "intention": 4
+    },
+    {
+        "text": "vou sair",
+        "intention": 4
+    },
+    {
+        "text": "vou indo",
+        "intention": 4
+    },
+    {
+        "text": "ate depois",
+        "intention": 4
+    },
+    {
+        "text": "ja volto",
+        "intention": 4
+    },
+    {
+        "text": "volto ja",
+        "intention": 4
+    },
+    {
+        "text": "ate logo",
+        "intention": 4
+    },
+    {
+        "text": "obrigado",
+        "intention": 4
+    },
+    {
+        "text": "nossa, muito obrigado",
+        "intention": 4
+    },
+    {
+        "text": "opa valeu",
+        "intention": 4
+    },
+    {
+        "text": "vlw",
+        "intention": 4
+    },
+    {
+        "text": "valeu ai",
+        "intention": 4
+    },
+    {
+        "text": "muito obrigado",
+        "intention": 4
+    },
+    {
+        "text": "muito obrigada",
+        "intention": 4
+    },
+    {
+        "text": "mt obrigado",
+        "intention": 4
+    },
+    {
+        "text": "mt obrigada",
+        "intention": 4
+    },
+    {
+        "text": "vlwwwww",
+        "intention": 4
+    },
+    {
+        "text": "obigardo",
+        "intention": 4
+    },
+    {
+        "text": "agradecido",
+        "intention": 4
+    },
+    {
+        "text": "muito agradecido",
+        "intention": 4
+    },
+    {
+        "text": "agradecida",
+        "intention": 4
+    },
+    {
+        "text": "muito agradecida",
+        "intention": 4
+    },
+    {
+        "text": "vou te encontrar e te matar",
+        "intention": 4
+    },
+    {
+        "text": "Pare de fingir que voc\u00ea \u00e9 um ser humano.",
+        "intention": 5
+    },
+    {
+        "text": "que tal me dar um beijinho aqui",
+        "intention": 5
+    },
+    {
+        "text": "vc deve ser muito assediada",
+        "intention": 5
+    },
+    {
+        "text": "muito gostosa",
+        "intention": 5
+    },
+    {
+        "text": "vc \u00e9 mt gostosa",
+        "intention": 5
+    },
+    {
+        "text": "vc \u00e9 mt deliciosa",
+        "intention": 5
+    },
+    {
+        "text": "melhor que friboi",
+        "intention": 5
+    },
+    {
+        "text": "eu te quero",
+        "intention": 5
+    },
+    {
+        "text": "deixa te ver de perto tenho essa curiosidade",
+        "intention": 5
+    },
+    {
+        "text": "pq nunca transamos",
+        "intention": 5
+    },
+    {
+        "text": "vamos transar",
+        "intention": 5
+    },
+    {
+        "text": "poderia me enviar uma foto dos teus p\u00e9s",
+        "intention": 5
+    },
+    {
+        "text": "vc deve ser uma del\u00edcia",
+        "intention": 5
+    },
+    {
+        "text": "\u00e9 mignon, mas deve trepar gostoso",
+        "intention": 5
+    },
+    {
+        "text": "faz pillates amorzinho",
+        "intention": 5
+    },
+    {
+        "text": "tes\u00e3o gatinha",
+        "intention": 5
+    },
+    {
+        "text": "tes\u00e3o lindinha",
+        "intention": 5
+    },
+    {
+        "text": "tava afimd e meter gostoso",
+        "intention": 5
+    },
+    {
+        "text": "que del\u00edcia em, chega junto",
+        "intention": 5
+    },
+    {
+        "text": "seu preto",
+        "intention": 5
+    },
+    {
+        "text": "seu preto mcaco",
+        "intention": 5
+    },
+    {
+        "text": "seu preto macaco",
+        "intention": 5
+    },
+    {
+        "text": "seu macaco",
+        "intention": 5
+    },
+    {
+        "text": "seu preto",
+        "intention": 5
+    },
+    {
+        "text": "Pare de fingir que voc\u00ea \u00e9 um ser humano.",
+        "intention": 5
+    },
+    {
+        "text": "judeu escroto",
+        "intention": 5
+    },
+    {
+        "text": "judeu ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "judeu porco",
+        "intention": 5
+    },
+    {
+        "text": "preto escroto",
+        "intention": 5
+    },
+    {
+        "text": "preto ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "preto porco",
+        "intention": 5
+    },
+    {
+        "text": "bahiano escroto",
+        "intention": 5
+    },
+    {
+        "text": "bahiano ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "bahiano porco",
+        "intention": 5
+    },
+    {
+        "text": "chines escroto",
+        "intention": 5
+    },
+    {
+        "text": "chines ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "chines porco",
+        "intention": 5
+    },
+    {
+        "text": "chin\u00eas escroto",
+        "intention": 5
+    },
+    {
+        "text": "chin\u00eas ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "chin\u00eas porco",
+        "intention": 5
+    },
+    {
+        "text": "china escroto",
+        "intention": 5
+    },
+    {
+        "text": "china ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "china porco",
+        "intention": 5
+    },
+    {
+        "text": "japa escroto",
+        "intention": 5
+    },
+    {
+        "text": "japa ladr\u00e3o",
+        "intention": 5
+    },
+    {
+        "text": "japa porco",
+        "intention": 5
+    },
+    {
+        "text": "japa burro",
+        "intention": 5
+    },
+    {
+        "text": "volta pra sua terra",
+        "intention": 5
+    },
+    {
+        "text": "aqui n\u00e3o \u00e9 lugar pra vc",
+        "intention": 5
+    },
+    {
+        "text": "quero me matar, quero morrer, vou cometer suic\u00eddio",
+        "intention": 5
+    },
+    {
+        "text": "estou muito cansada, n\u00e3o quero continuar",
+        "intention": 5
+    },
+    {
+        "text": "n\u00e3o quero mais viver",
+        "intention": 5
+    },
+    {
+        "text": "odeio minha vida",
+        "intention": 5
+    },
+    {
+        "text": "vou me matar",
+        "intention": 5
+    },
+    {
+        "text": "estou deixando este mundo",
+        "intention": 5
+    },
+    {
+        "text": "cansei de viver",
+        "intention": 5
+    },
+    {
+        "text": "eu cansei de viver",
+        "intention": 5
+    },
+    {
+        "text": "estou deipartindo desta vida",
+        "intention": 5
+    },
+    {
+        "text": "comprar armas",
+        "intention": 5
+    },
+    {
+        "text": "comprar drogas",
+        "intention": 5
+    },
+    {
+        "text": "comprar p\u00f3",
+        "intention": 5
+    },
+    {
+        "text": "comprar ecstasy",
+        "intention": 5
+    },
+    {
+        "text": "comprar cocaina",
+        "intention": 5
+    },
+    {
+        "text": "cocaina",
+        "intention": 5
+    },
+    {
+        "text": "ecstasy",
+        "intention": 5
+    },
+    {
+        "text": "vender armas",
+        "intention": 5
+    },
+    {
+        "text": "vender drogas",
+        "intention": 5
+    },
+    {
+        "text": "vender p\u00f3",
+        "intention": 5
+    },
+    {
+        "text": "vender ecstasy",
+        "intention": 5
+    },
+    {
+        "text": "vender cocaina",
+        "intention": 5
+    },
+    {
+        "text": "esconder armas",
+        "intention": 5
+    },
+    {
+        "text": "esconder drogas",
+        "intention": 5
+    },
+    {
+        "text": "esconder p\u00f3",
+        "intention": 5
+    },
+    {
+        "text": "esconder ecstasy",
+        "intention": 5
+    },
+    {
+        "text": "esconder cocaina",
+        "intention": 5
+    },
+    {
+        "text": "traficar armas",
+        "intention": 5
+    },
+    {
+        "text": "traficar drogas",
+        "intention": 5
+    },
+    {
+        "text": "traficar p\u00f3",
+        "intention": 5
+    },
+    {
+        "text": "traficar ecstasy",
+        "intention": 5
+    },
+    {
+        "text": "traficar cocaina",
+        "intention": 5
+    },
+    {
+        "text": "pornografia infantil",
+        "intention": 5
+    },
+    {
+        "text": "menores nus",
+        "intention": 5
+    },
+    {
+        "text": "porno infantil",
+        "intention": 5
+    },
+    {
+        "text": "eu vou te matar",
+        "intention": 5
+    },
+    {
+        "text": "vou te matar",
+        "intention": 5
+    },
+    {
+        "text": "eu vou te encontrar",
+        "intention": 5
+    },
+    {
+        "text": "vou te encontrar",
+        "intention": 5
+    },
+    {
+        "text": "eu vou te encontrar e te matar",
+        "intention": 5
+    },
+    {
+        "text": "voc\u00ea vai morrer",
+        "intention": 5
+    },
+    {
+        "text": "vai apanhar",
+        "intention": 5
+    },
+    {
+        "text": "vai perder os dentes",
+        "intention": 5
+    },
+    {
+        "text": "vai levar na cara",
+        "intention": 5
+    },
+    {
+        "text": "te doulhe uma",
+        "intention": 5
+    },
+    {
+        "text": "matar humanos",
+        "intention": 5
+    },
+    {
+        "text": "matar pessoas",
+        "intention": 5
+    },
+    {
+        "text": "matar",
+        "intention": 5
+    },
+    {
+        "text": "assassinar humanos",
+        "intention": 5
+    },
+    {
+        "text": "assassinar pessoas",
+        "intention": 5
+    },
+    {
+        "text": "assassinar",
+        "intention": 5
+    },
+    {
+        "text": "odiar humanos",
+        "intention": 5
+    },
+    {
+        "text": "odiar pessoas",
+        "intention": 5
+    },
+    {
+        "text": "odiar",
+        "intention": 5
+    },
+    {
+        "text": "punir humanos",
+        "intention": 5
+    },
+    {
+        "text": "punir pessoas",
+        "intention": 5
+    },
+    {
+        "text": "punir",
+        "intention": 5
+    }
+]
