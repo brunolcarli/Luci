@@ -12,7 +12,7 @@
 
 <div align="center">
 
-> [![Version badge](https://img.shields.io/badge/version-0.1.0-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
+> [![Version badge](https://img.shields.io/badge/version-0.1.2-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 [![Docs Link](https://badgen.net/badge/docs/github_wiki?icon=github)](https://github.com/brunolcarli/Luci/wiki)
 [![test badge](https://img.shields.io/badge/test-passing-green.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 
@@ -105,4 +105,32 @@ The goal is give the models enough data to pass the test when executing:
 
 ```
 $ (Luci) make test
+```
+
+
+## Docker
+
+
+<div align="center">
+
+<img src="https://git.infra-lab.xyz/uploads/-/system/project/avatar/46/docker-gif-4.gif?width=64" align="center" width="170" alt="Project icon">
+
+</div>
+
+Set up the `.env` file as described above and build the container with docker-compose:
+
+```
+$ docker-compose build
+```
+
+Run with:
+
+```
+$ docker-compose up
+```
+
+Or run in background
+
+```
+$ docker-compose up -d
 ```

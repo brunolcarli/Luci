@@ -8,3 +8,4 @@ wandb==0.8.25
 numpy==1.18.5
 scikit-learn==0.23.1
 spacy==2.3.0
+docker-compose==1.26.2

@@ -3,7 +3,7 @@ LUCI settings module.
 """
 from decouple import config
 
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 
 TOKEN = config('TOKEN', '')
 API_URL = config('BOT_API', '')

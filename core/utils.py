@@ -1,3 +1,4 @@
+import re
 import base64
 import pickle
 from random import choice
@@ -114,3 +115,13 @@ def load_model(fpath):
         model = pickle.load(trained_model)
 
     return model
+
+
+def remove_id(string):
+    """
+    Remove characteres between the delimiters "<" and ">"
+    """
+    string = re.sub(r'<(?<=\<)(.*?)(?=\>)>', '', string).lstrip()
+    # lstrip() to remove leading whitespaces
+                    
+    return string
