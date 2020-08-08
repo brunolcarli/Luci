@@ -72,7 +72,7 @@ $ (Luci) make run
 
 The bot is trained over a serie of .`json` datasets on `core/training/json/intentions/`.
 
-For each intention directory there are located a serie of `dataset_x.json` qhere `x` is a sequence number of the train dataset. You can create a new one containing the text and training target label on the following shape:
+For each intention directory there are located a serie of `dataset_x.json` where `x` is a sequence number of the train dataset. You can create a new one containing the text and training target label on the following shape:
 
 ```json
 [
