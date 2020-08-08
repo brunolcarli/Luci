@@ -12,7 +12,7 @@
 
 <div align="center">
 
-> [![Version badge](https://img.shields.io/badge/version-0.1.2-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
+> [![Version badge](https://img.shields.io/badge/version-0.1.3-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 [![Docs Link](https://badgen.net/badge/docs/github_wiki?icon=github)](https://github.com/brunolcarli/Luci/wiki)
 [![test badge](https://img.shields.io/badge/test-passing-green.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 
@@ -49,7 +49,6 @@ Create a `.env` file and add the following content:
 ```
 TOKEN=<your_test_bot_token>
 LISA_URL=<lisa_url>
-BOT_API=<quotes_api_url>
 BACKEND_URL=None
 SETTINGS_MODULE=development
 ```
@@ -58,7 +57,7 @@ You should configure your own environment cloning both lisa and bot api:
 
 - `LISA_URl` is required since the bot requests text offense and sentiment to the service API.
 
-- `BOT_API` is only required for quoting commands. This may be removed on future versions, since it is planed to be merged on the ~~undeveloped yet~ `BACKEND_URL`
+- `BACKEND_URL` is the long range memory storage (AKA database) which is a separated service.
 
 Note: If `SETTINGS_MODULE=production` the bot will run on a flask server instance.
 
@@ -72,7 +71,7 @@ $ (Luci) make run
 
 The bot is trained over a serie of .`json` datasets on `core/training/json/intentions/`.
 
-For each intention directory there are located a serie of `dataset_x.json` qhere `x` is a sequence number of the train dataset. You can create a new one containing the text and training target label on the following shape:
+For each intention directory there are located a serie of `dataset_x.json` where `x` is a sequence number of the train dataset. You can create a new one containing the text and training target label on the following shape:
 
 ```json
 [

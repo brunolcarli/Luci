@@ -56,9 +56,32 @@ class Query:
         """
         query = f'''
         query {{
-            botQuotes(server: "{server}")
+            quotes(reference: "{server}"){{
+                quote
+            }}
         }}
         '''
+
+        return gql(query)
+
+
+    @staticmethod
+    def get_emotions(server):
+        """
+        Solicita o estado emocional em um server ao backend.
+        """
+        query = f'''
+        query emotions{{
+            emotions(reference: "{server}"){{
+                reference
+                pleasantness
+                attention
+                sensitivity
+                aptitude
+            }}
+        }}
+        '''
+
         return gql(query)
 
 
@@ -68,19 +91,52 @@ class Mutation:
     """
 
     @staticmethod
-    def create_quote(message, server):
+    def create_quote(message, server, author):
         """
         Solicita a criação de uma mensagem para um servidor.
         """
         mutation = f'''
         mutation {{
-            botCreateQuote(input:{{
+            create_quote(input:{{
                 quote:"{message}"
-                server: "{server}"
+                reference: "{server}"
+                author: "{author}"
             }}){{
-                response
+                quote{{
+                    id
+                    quote
+                    reference
+                    author
+                }}
             }}
         }}
         '''
+
         return gql(mutation)
 
+    @staticmethod
+    def update_emotion(server, pleasantness=0, aptitude=0, attention=0, sensitivity=0):
+        """
+        Solicita a atualização do humor da luci em um servidor ao backend.
+        """
+        mutation = f'''
+        mutation update{{
+        emotion_update(input:{{
+            reference: "{server}"
+            pleasantness: {pleasantness}
+            aptitude: {aptitude}
+            attention: {attention}
+            sensitivity: {sensitivity}
+        }}) {{
+            emotion{{
+                reference
+                pleasantness
+                attention
+                sensitivity
+                aptitude
+                }}
+            }}
+        }}
+        '''
+
+        return gql(mutation)
