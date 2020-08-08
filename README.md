@@ -49,7 +49,6 @@ Create a `.env` file and add the following content:
 ```
 TOKEN=<your_test_bot_token>
 LISA_URL=<lisa_url>
-BOT_API=<quotes_api_url>
 BACKEND_URL=None
 SETTINGS_MODULE=development
 ```
@@ -58,7 +57,7 @@ You should configure your own environment cloning both lisa and bot api:
 
 - `LISA_URl` is required since the bot requests text offense and sentiment to the service API.
 
-- `BOT_API` is only required for quoting commands. This may be removed on future versions, since it is planed to be merged on the ~~undeveloped yet~ `BACKEND_URL`
+- `BACKEND_URL` is the long range memory storage (AKA database) which is a separated service.
 
 Note: If `SETTINGS_MODULE=production` the bot will run on a flask server instance.
 
