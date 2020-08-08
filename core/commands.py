@@ -11,7 +11,7 @@ from core.output_vectors import (offended, insufficiency_recognition,
 from core.external_requests import Query, Mutation
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
                         make_hash, get_gql_client, remove_id)
-from luci.settings import __version__, SELF_ID, API_URL
+from luci.settings import __version__, BACKEND_URL
 
 
 nlp = spacy.load('pt')
@@ -49,7 +49,7 @@ async def on_message(message):
 @client.command(aliases=['v'])
 async def version(discord):
     """
-    Pinga o bot para teste sua execução
+    Pinga o luci pra ver se está acordada.
     """
     await discord.send(__version__)
 
@@ -61,51 +61,51 @@ async def random_quote(bot):
     """
     server = make_hash(bot.guild.name, bot.guild.id)
     payload = Query.get_quotes(server.decode('utf-8'))
-    client = get_gql_client(API_URL)
+    client = get_gql_client(BACKEND_URL)
 
     try:
         response = client.execute(payload)
     except Exception as err:
         print(f'Erro: {str(err)}\n\n')
-        return await bot.send('Erro')
+        return await bot.send('Buguei')
 
-    quotes = response.get('botQuotes')
+    quotes = response.get('quotes')
     if not quotes:
-        return await bot.send('Ainda não há registros de quotes neste servidor')
+        return await bot.send('Ainda não aprendi quotes neste servidor')
 
-    chosen_quote = choice(quotes)
-    embed = discord.Embed(color=0x1E1E1E, type="rich")
-    embed.add_field(name='Quote:', value=chosen_quote, inline=True)
-    return await bot.send('Lembra disso:', embed=embed)
+    chosen_quote = choice([quote['quote'] for quote in quotes])
+
+    return await bot.send(chosen_quote)
 
 
 @client.command(aliases=['q', 'sq', 'save_quote'])
 async def quote(bot, *args):
     """
-    Retorna um quote aleatório.
+    Ensina um novo quote à Luci
     """
     message = ' '.join(word for word in args)
+    author = bot.author.name
 
     if not message:
         return await bot.send(
             'Por favor insira uma mensagem.\nExemplo:\n'\
-            '``` --quote my name is bond, vagabond ```'
+            '``` !quote my name is bond, vagabond ```'
         )
 
     server = make_hash(bot.guild.name, bot.guild.id)
-    payload = Mutation.create_quote(message, server.decode('utf-8'))
-    client = get_gql_client(API_URL)
+    payload = Mutation.create_quote(message, server.decode('utf-8'), author)
+    client = get_gql_client(BACKEND_URL)
 
     try:
         response = client.execute(payload)
     except Exception as err:
         print(f'Erro: {str(err)}\n\n')
-        return await bot.send('Erro')
+        return await bot.send('Buguei')
 
-    quote = response.get('botCreateQuote')
+    quote = response['create_quote'].get('quote')
     embed = discord.Embed(color=0x1E1E1E, type="rich")
-    embed.add_field(name='Quote salvo:', value=quote.get('response'), inline=True)
-    return await bot.send('Feito:', embed=embed)
+    embed.add_field(name='Entendi:', value=quote.get('quote'), inline=True)
+    return await bot.send('Ok:', embed=embed)
 
 
 @client.command(aliases=['lero', 'lr', 'bl', 'blah', 'ps'])

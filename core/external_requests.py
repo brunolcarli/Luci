@@ -56,7 +56,9 @@ class Query:
         """
         query = f'''
         query {{
-            botQuotes(server: "{server}")
+            quotes(reference: "{server}"){{
+                quote
+            }}
         }}
         '''
         return gql(query)
@@ -68,17 +70,23 @@ class Mutation:
     """
 
     @staticmethod
-    def create_quote(message, server):
+    def create_quote(message, server, author):
         """
         Solicita a criação de uma mensagem para um servidor.
         """
         mutation = f'''
         mutation {{
-            botCreateQuote(input:{{
+            create_quote(input:{{
                 quote:"{message}"
-                server: "{server}"
+                reference: "{server}"
+                author: "{author}"
             }}){{
-                response
+                quote{{
+                    id
+                    quote
+                    reference
+                    author
+                }}
             }}
         }}
         '''
