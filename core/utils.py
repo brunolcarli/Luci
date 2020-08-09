@@ -132,15 +132,21 @@ def get_wiki(text):
     """
     Return a list of explanations for a each term inputed.
     """
+    error_response = ['N-não..', 'Não sei...']
     data = Query.get_pos(text)
+
     wiki = wikipedia
     wiki.set_lang('pt')
 
     if not data:
-        return ['N-não..', 'Não sei...']
+        return error_response
 
     tokens = [token['token'] for token in data['data']['partOfSpeech']
               if token['description'] == 'substantivo']
 
-    return [wiki.summary(token) for token in tokens]
+    try:
+        response = [wiki.summary(token) for token in tokens]
+    except wiki.DisambiguationError:
+        response = error_response
 
+    return response
