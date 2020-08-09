@@ -146,7 +146,7 @@ def get_wiki(text):
 
     try:
         response = [wiki.summary(token) for token in tokens]
-    except wiki.DisambiguationError:
+    except (wiki.DisambiguationError, wiki.exceptions.PageError):
         response = error_response
 
     return response
