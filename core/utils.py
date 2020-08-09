@@ -3,6 +3,7 @@ import base64
 import pickle
 from random import choice
 import spacy
+import wikipedia
 from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
@@ -10,6 +11,7 @@ from core.output_vectors import intention_responses, intention_vectors
 
 
 nlp = spacy.load('pt')
+
 
 def validate_text_offense(text):
     """
@@ -126,13 +128,19 @@ def remove_id(string):
                     
     return string
 
+def get_wiki(text):
+    """
+    Return a list of explanations for a each term inputed.
+    """
+    data = Query.get_pos(text)
+    wiki = wikipedia
+    wiki.set_lang('pt')
 
-def get_emoji(bot, emoji_name):
-    """
-    retorna um emoji no do server pelo nome no formato que o bot precisa
-    para entregar o emoji na mensagem.
-    """
-    emoji_badge = ''.join(
-        f'<:{e.name}:{e.id}>' for e in bot.guild.emojis if e.name == emoji_name
-    )
-    return emoji_badge
+    if not data:
+        return ['N-não..', 'Não sei...']
+
+    tokens = [token['token'] for token in data['data']['partOfSpeech']
+              if token['description'] == 'substantivo']
+
+    return [wiki.summary(token) for token in tokens]
+

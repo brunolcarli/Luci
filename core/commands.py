@@ -11,7 +11,7 @@ from core.output_vectors import (offended, insufficiency_recognition,
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
-                        make_hash, get_gql_client, remove_id, get_emoji)
+                        make_hash, get_gql_client, remove_id, get_wiki)
 from luci.settings import __version__, BACKEND_URL
 
 
@@ -193,3 +193,12 @@ async def listen(bot, *args):
         return await bot.send(''.join(choice(i) for i in negative_answers))
     else:
         return await bot.send(choice(indifference))
+
+
+@client.command(aliases=['?', 'wiki'])
+async def question(bot, *args):
+    text = ' '.join(i for i in args)
+    responses = get_wiki(text)
+
+    for response in responses:
+        await bot.send(response)
