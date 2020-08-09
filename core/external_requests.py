@@ -84,6 +84,26 @@ class Query:
 
         return gql(query)
 
+    @staticmethod
+    def get_pos(text):
+        """
+        Solicita o PART OF SPEECH de um texto para LISA.
+        """
+        query = f'''
+        query{{
+            partOfSpeech(text: "{text}") {{
+                token
+                description
+            }}
+        }}
+        '''
+        request = requests.post(LISA_URL, json={'query': query})
+
+        if request.status_code == 200:
+            return json.loads(request.text)
+
+        return ''
+
 
 class Mutation:
     """
