@@ -241,8 +241,10 @@ async def user_status(bot):
         )
 
     # consulta os membros no backend
-    user_id = mentions[0].id
-    payload = Query.get_user_by_id(user_id)
+    server = make_hash(bot.message.guild.name, bot.message.guild.id).decode('utf-8')
+    user_id = make_hash(server, mentions[0].id).decode('utf-8')
+
+    payload = Query.get_user(user_id)
     gql_client = get_gql_client(BACKEND_URL)
     try:
         response = gql_client.execute(payload)

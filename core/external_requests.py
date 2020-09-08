@@ -105,13 +105,13 @@ class Query:
         return ''
 
     @staticmethod
-    def get_user_by_id(user_id):
+    def get_user(reference):
         """
         Consulta um usuário por id de membro da guilda.
         """
         query = f'''
         query {{
-        users(user_id: "{user_id}") {{
+        users(reference: "{reference}") {{
             reference
             name
             friendshipness
