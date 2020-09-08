@@ -7,7 +7,8 @@ import wikipedia
 from gql import Client
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
-from core.output_vectors import intention_responses, intention_vectors
+from core.output_vectors import (intention_responses, intention_vectors, opinions,
+                                 propositions)
 
 
 nlp = spacy.load('pt')
@@ -44,6 +45,7 @@ def extract_sentiment(text):
     return : <int>
     """
     request_sentiment = Query.get_text_sentiment(text)
+
     if not request_sentiment:
         return 0
 
@@ -52,7 +54,9 @@ def extract_sentiment(text):
     except KeyError:
         return 0
     else:
-        return polarity
+        return polarity if polarity else 0
+
+    return 0
 
 
 def answer_intention(text):
@@ -128,6 +132,7 @@ def remove_id(string):
                     
     return string
 
+
 def get_wiki(text):
     """
     Return a list of explanations for a each term inputed.
@@ -144,9 +149,42 @@ def get_wiki(text):
     tokens = [token['token'] for token in data['data']['partOfSpeech']
               if token['description'] == 'substantivo']
 
+    if len(tokens) > 3:
+        return [get_random_blahblahblah()]
+
     try:
         response = [wiki.summary(token) for token in tokens]
     except (wiki.DisambiguationError, wiki.exceptions.PageError):
         response = error_response
+
+    return response
+
+
+def extract_user_id(hash_id):
+    """
+    Extrai o id de membro da hash 'reference' do usuario.
+    A hash é uma string base64.
+    A hash contém dois dados (server_id, user_id), retorna-se apenas o user_id.
+
+    param : hash_id : <str>
+    return : <int>
+    """
+    _, uid = base64.b64decode(hash_id.encode('utf-8')).decode('utf-8').split(':')
+
+    return int(uid)
+
+
+def get_random_blahblahblah():
+    """
+    Retorna um papo filosófico aleatório.
+
+    return: <str>
+    """
+    random_tought = ''.join(choice(i) for i in propositions)
+    random_tought_2 = ''.join(choice(i) for i in propositions)
+
+    response = f'{choice(opinions[0])}. '\
+               f'{random_tought} '\
+               f'{random_tought_2} Viajei né?'
 
     return response
