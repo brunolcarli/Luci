@@ -11,7 +11,8 @@ from core.output_vectors import (offended, insufficiency_recognition,
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
-                        make_hash, get_gql_client, remove_id, get_wiki)
+                        make_hash, get_gql_client, remove_id, get_wiki,
+                        get_random_blahblahblah, extract_user_id)
 from luci.settings import __version__, BACKEND_URL
 
 
@@ -38,14 +39,23 @@ async def on_message(message):
     text = message.content
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
-
-    # updates luci humor based on the message content
+    user_name = message.author.name
     new_humor = change_humor_values(text_pol, is_offensive)
+    friendshipness = -0.5 + text_pol if is_offensive else text_pol
 
-    server = make_hash(message.guild.name, message.guild.id)
+    server = make_hash(message.guild.name, message.guild.id).decode('utf-8')
+    user_id = make_hash(server, message.author.id).decode('utf-8')
     gql_client = get_gql_client(BACKEND_URL)
 
-    payload = Mutation.update_emotion(server=server.decode('utf-8'), **new_humor)
+    # Atualiza o humor da Luci
+    payload = Mutation.update_emotion(server=server, **new_humor)
+    try:
+        response = gql_client.execute(payload)
+    except Exception as err:
+        print(f'Erro: {str(err)}\n\n')
+
+    # Atualiza o humor status do usuario
+    payload = Mutation.update_user(user_id, user_name, friendshipness, new_humor)
     try:
         response = gql_client.execute(payload)
     except Exception as err:
@@ -63,7 +73,7 @@ async def on_message(message):
 @client.command(aliases=['v'])
 async def version(discord):
     """
-    Pinga o luci pra ver se está acordada.
+    Pinga o luci pra ver se está acordada, retornando a versão do sistema.
     """
     await discord.send(__version__)
 
@@ -173,17 +183,22 @@ async def quote(bot, *args):
 
 @client.command(aliases=['lero', 'lr', 'bl', 'blah', 'ps'])
 async def prosa(bot):
-    random_tought = ''.join(choice(i) for i in propositions)
-    random_tought_2 = ''.join(choice(i) for i in propositions)
-
-    response = f'{choice(opinions[0])}. '\
-               f'{random_tought} '\
-               f'{random_tought_2} Viajei né?'
-    return await bot.send(response)
+    """
+    Luci responde com um pensamento filosófico aleatório.
+    """
+    
+    return await bot.send(get_random_blahblahblah())
 
 
 @client.command(aliases=['lst', 'ls'])
 async def listen(bot, *args):
+    """
+    Conta algo à Luci para que a mesma responda com base da polaridade da
+    mensagem.
+
+    - Uso:
+         !listen Fui a feira e moça da barraca me tratou super mal.
+    """
     text = ' '.join(token for token  in args)
 
     text_polarity = extract_sentiment(text)
@@ -197,8 +212,88 @@ async def listen(bot, *args):
 
 @client.command(aliases=['?', 'wiki'])
 async def question(bot, *args):
+    """
+    Pergunta algo à luci. Ela buscará os substantivos da frase e consultará seu
+    significado na wikipedia.
+
+    - Uso:
+          !? O que é um príncipe?
+    """
     text = ' '.join(i for i in args)
     responses = get_wiki(text)
 
     for response in responses:
         await bot.send(response)
+
+
+@client.command(aliases=['u', 'ust', 'user'])
+async def user_status(bot):
+    """
+    Verifica o relatório de afeição que Luci possui de um determinado membro.
+
+    Uso:
+        !user @Username
+    """
+    mentions = bot.message.mentions
+    if not mentions:
+        return await bot.send(
+            'Não sei de quem vc está falando. Marca ele tipo @Fulano.'
+        )
+
+    # consulta os membros no backend
+    user_id = mentions[0].id
+    payload = Query.get_user_by_id(user_id)
+    gql_client = get_gql_client(BACKEND_URL)
+    try:
+        response = gql_client.execute(payload)
+    except Exception as err:
+        print(f'Erro: {str(err)}\n\n')
+        return
+
+    data = response.get('users', [])
+    if not data:
+        return await bot.send('Acho que não c-conheço... Desculpa.')
+
+    # monta a resposta
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    name = data[0].get('name')
+    friendshipness = data[0].get('friendshipness', 0)
+    emotions = data[0].get('emotion_resume', {})
+    user_id = extract_user_id(data[0]['reference'])
+
+    # url do avatar do cidadão
+    user = bot.guild._members.get(user_id)
+    avatar_url = f'{user.avatar_url.BASE}/avatars/{user.id}/{user.avatar}'
+
+    if not user:
+        return await bot.send('Acho que não c-conheço... Desculpa.')
+
+    pleasantness_status = EmotionHourglass.get_pleasantness(
+        emotions["pleasantness"]
+    )
+    pleasantness = f':heart_decoration: {emotions["pleasantness"]:.2f} '\
+                    f'| status: {pleasantness_status}'
+
+    attention_status = EmotionHourglass.get_attention(
+        emotions["attention"]
+    )
+    attention = f':yin_yang: {emotions["attention"]:.2f} | status: {attention_status}'
+
+    sensitivity_status = EmotionHourglass.get_sensitivity(
+        emotions["sensitivity"]
+    )
+    sensitivity = f':place_of_worship: {emotions["sensitivity"]:.2f} | ' \
+                    f'status: {sensitivity_status}'
+
+    aptitude_status = EmotionHourglass.get_aptitude(emotions["aptitude"])
+    aptitude = f':atom: {emotions["aptitude"]:.2f} | status: {aptitude_status}'
+
+    embed.add_field(name='Username', value=name, inline=True)
+    embed.add_field(name='Affection', value=friendshipness, inline=True)
+    embed.add_field(name='Pleasantness', value=pleasantness, inline=False)
+    embed.add_field(name='Attention', value=attention, inline=False)
+    embed.add_field(name='Sensitivity', value=sensitivity, inline=False)
+    embed.add_field(name='Aptitude', value=aptitude, inline=False)
+    embed.set_thumbnail(url=avatar_url)
+
+    return await bot.send('', embed=embed)
