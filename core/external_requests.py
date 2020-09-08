@@ -47,7 +47,7 @@ class Query:
         if request.status_code == 200:
             return json.loads(request.text)
 
-        return None
+        return 0
 
     @staticmethod
     def get_quotes(server):
@@ -104,6 +104,30 @@ class Query:
 
         return ''
 
+    @staticmethod
+    def get_user_by_id(user_id):
+        """
+        Consulta um usuário por id de membro da guilda.
+        """
+        query = f'''
+        query {{
+        users(user_id: "{user_id}") {{
+            reference
+            name
+            friendshipness
+            emotion_resume {{
+                reference
+                pleasantness 
+                attention
+                sensitivity
+                aptitude
+                }}
+            }}
+        }}
+        '''
+
+        return gql(query)
+
 
 class Mutation:
     """
@@ -154,6 +178,47 @@ class Mutation:
                 attention
                 sensitivity
                 aptitude
+                }}
+            }}
+        }}
+        '''
+
+        return gql(mutation)
+
+    @staticmethod
+    def update_user(user_id, name, friendshipness, emotions):
+        """
+        Solicita a atualização do estado de um membro (usuário) do server.
+        """
+        pleasantness = emotions.get('pleasantness', 0)
+        attention = emotions.get('attention', 0)
+        sensitivity = emotions.get('sensitivity', 0)
+        aptitude = emotions.get('aptitude', 0)
+
+        mutation = f'''
+        mutation {{
+            update_user(input:{{
+                reference: "{user_id}"
+                name: "{name}"
+                friendshipness: {friendshipness}
+                emotion_resume: {{
+                    pleasantness: {pleasantness}
+                    attention: {attention}
+                    sensitivity: {sensitivity}
+                    aptitude: {aptitude}
+                }}
+            }}){{
+                user {{
+                reference
+                name
+                friendshipness
+                    emotion_resume {{
+                        reference
+                        pleasantness
+                        attention
+                        sensitivity
+                        aptitude
+                    }}
                 }}
             }}
         }}
