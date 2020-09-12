@@ -51,6 +51,8 @@ TOKEN=<your_test_bot_token>
 LISA_URL=<lisa_url>
 BACKEND_URL=None
 SETTINGS_MODULE=development
+REDIS_HOST=<redis_server_host>
+REDIS_HOST=<redis_server_port>
 ```
 
 You should configure your own environment cloning both lisa and bot api:
@@ -58,6 +60,8 @@ You should configure your own environment cloning both lisa and bot api:
 - `LISA_URl` is required since the bot requests text offense and sentiment to the service API.
 
 - `BACKEND_URL` is the long range memory storage (AKA database) which is a separated service.
+
+- `REDIS_HOST` and `REDIS_PORT` is the short term memory, and it depends on a redis-server.
 
 Note: If `SETTINGS_MODULE=production` the bot will run on a flask server instance.
 
