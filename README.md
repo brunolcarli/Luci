@@ -12,7 +12,7 @@
 
 <div align="center">
 
-> [![Version badge](https://img.shields.io/badge/version-0.1.6-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
+> [![Version badge](https://img.shields.io/badge/version-0.1.7-silver.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 [![Docs Link](https://badgen.net/badge/docs/github_wiki?icon=github)](https://github.com/brunolcarli/Luci/wiki)
 [![test badge](https://img.shields.io/badge/test-passing-green.svg)](https://lisa--brunolcarli.repl.co/graphql/?query=query%7B%0A%09lisa%0A%7D)
 
@@ -51,6 +51,8 @@ TOKEN=<your_test_bot_token>
 LISA_URL=<lisa_url>
 BACKEND_URL=None
 SETTINGS_MODULE=development
+REDIS_HOST=<redis_server_host>
+REDIS_HOST=<redis_server_port>
 ```
 
 You should configure your own environment cloning both lisa and bot api:
@@ -58,6 +60,8 @@ You should configure your own environment cloning both lisa and bot api:
 - `LISA_URl` is required since the bot requests text offense and sentiment to the service API.
 
 - `BACKEND_URL` is the long range memory storage (AKA database) which is a separated service.
+
+- `REDIS_HOST` and `REDIS_PORT` is the short term memory, and it depends on a redis-server.
 
 Note: If `SETTINGS_MODULE=production` the bot will run on a flask server instance.
 

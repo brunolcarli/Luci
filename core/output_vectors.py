@@ -800,3 +800,14 @@ intention_responses = {
         StuffILike.TRAVELING: ['Só viajo na internet'],
     }
 }
+
+bored_messages = [
+    'Então, será que chove?',
+    'Então, que silêncio...',
+    'cri cri ... cri cri',
+    'Esse server ja foi mais animado...',
+    'Gente falem algo, a cada hora de silêncio nasce um padre D:',
+    'Tédiooo',
+    'Galera ta animada aqui, só que não xD',
+    'Vocês não falam mais aqui, to me sentindo sozinha :('
+]
