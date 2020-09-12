@@ -1,13 +1,15 @@
 import pickle
 from random import choice, randint, random
 import spacy
+import redis
 import discord
-from discord.ext import commands
-
+from discord.ext import commands, tasks
+from dateutil import parser
+from datetime import datetime, timezone
 from core.classifiers import naive_response
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
-                                 positive_answers, negative_answers)
+                                 positive_answers, negative_answers, bored_messages)
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
@@ -20,8 +22,61 @@ nlp = spacy.load('pt')
 client = commands.Bot(command_prefix='!')
 
 
+class GuildTracker(commands.Cog):
+    """
+    Acompanha a movimentaçnao de mensagens dos servidores que Luci pertence.
+    Luci recorda-se de quando foi a última mensagem enviada no server, se a
+    mensagem exceder o período em horas definido na janela, ela se sentirá
+    sozinha e aborrecida, enviando uma mensagem no canal geral do servidor.
+
+    Luci também diminuirá seu valor de aptitude por ficar aborrecida.
+    """
+    def __init__(self):
+        self.short_memory = redis.Redis(decode_responses=True)
+        self.window = 3  # janela de tempo = 3 horas
+        self.guilds = client.guilds
+        self.track.start()
+
+    @tasks.loop(seconds=60*5)
+    async def track(self):
+        """ Tracking task """
+        for guild in self.guilds:
+            # data da última mensagem enviada no server
+            last_message_dt = parser.parse(self.short_memory.get(guild.id))
+
+            if last_message_dt:
+                now = datetime.now().astimezone(tz=timezone.utc)
+                elapsed_time = now.replace(tzinfo=None) - last_message_dt.replace(tzinfo=None)
+                
+                if (elapsed_time.total_seconds() / 60 / 60) > self.window:
+                    # envia mensagem no canal principal
+                    await guild.system_channel.send(choice(bored_messages))
+
+                    # Renova a data de última mensagem para a data atual
+                    self.short_memory.set(
+                        guild.id,
+                        str(now.astimezone(tz=timezone.utc))
+                    )
+
+                    # Atualiza o humor da Luci no backend
+                    server = make_hash(guild.name, guild.id).decode('utf-8')
+                    gql_client = get_gql_client(BACKEND_URL)
+
+                    payload = Mutation.update_emotion(
+                        server=server,
+                        aptitude=-0.5
+                    )
+                    try:
+                        response = gql_client.execute(payload)
+                    except Exception as err:
+                        print(f'Erro: {str(err)}\n\n')
+
+
 @client.event
 async def on_ready():
+    guilds = client.guilds
+    client.add_cog(GuildTracker())
+
     print('Ok!')
 
 
@@ -35,6 +90,10 @@ async def on_message(message):
         return
 
     await client.process_commands(message)
+
+    # guarda a data da mensagem como valor para o id da guilda
+    short_memory = redis.Redis()  # TODO passar host e porta
+    short_memory.set(message.guild.id, str(message.created_at))
 
     text = message.content
     is_offensive = validate_text_offense(text)
