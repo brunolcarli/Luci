@@ -15,7 +15,7 @@ from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id)
-from luci.settings import __version__, BACKEND_URL
+from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 
 nlp = spacy.load('pt')
@@ -32,7 +32,7 @@ class GuildTracker(commands.Cog):
     Luci também diminuirá seu valor de aptitude por ficar aborrecida.
     """
     def __init__(self):
-        self.short_memory = redis.Redis(decode_responses=True)
+        self.short_memory = redis.Redis(REDIS_HOST, REDIS_PORT, decode_responses=True)
         self.window = 3  # janela de tempo = 3 horas
         self.guilds = client.guilds
         self.track.start()
@@ -92,7 +92,7 @@ async def on_message(message):
     await client.process_commands(message)
 
     # guarda a data da mensagem como valor para o id da guilda
-    short_memory = redis.Redis()  # TODO passar host e porta
+    short_memory = redis.Redis(REDIS_HOST, REDIS_PORT)
     short_memory.set(message.guild.id, str(message.created_at))
 
     text = message.content
