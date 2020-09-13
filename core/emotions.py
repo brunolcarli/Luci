@@ -115,7 +115,7 @@ def change_humor_values(text_pol, is_offensive):
     
     pleasantness = 0
     attention = 0
-    aptitude = 0
+    aptitude = 0.01
     sensitivity = 0
 
     if text_pol > 0:
@@ -125,15 +125,6 @@ def change_humor_values(text_pol, is_offensive):
     elif text_pol < 0:
         pleasantness -= text_pol + random()
         attention -= text_pol + random()
-
-    # if str(G_intention) == 'GlobalIntentions.GOOD_INTENTION':
-    #     attention += text_pol + random()
-    #     aptitude += text_pol + random()
-
-    # elif str(G_intention) == 'GlobalIntentions.BAD_INTENTION':
-    #     sensitivity -= text_pol + random()
-    #     attention -= text_pol + random()
-    #     aptitude -= text_pol + random()
 
     if is_offensive:
         pleasantness -= text_pol + random()
