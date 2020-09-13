@@ -1,3 +1,4 @@
+import logging
 import pickle
 from random import choice, randint, random
 import spacy
@@ -20,6 +21,7 @@ from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 nlp = spacy.load('pt')
 client = commands.Bot(command_prefix='!')
+log = logging.getLogger()
 
 
 class GuildTracker(commands.Cog):
@@ -33,23 +35,30 @@ class GuildTracker(commands.Cog):
     """
     def __init__(self):
         self.short_memory = redis.Redis(REDIS_HOST, REDIS_PORT, decode_responses=True)
-        self.window = 3  # janela de tempo = 3 horas
+        self.window = 0.1  # janela de tempo = 3 horas
         self.guilds = client.guilds
         self.track.start()
 
-    @tasks.loop(seconds=60*5)
+    @tasks.loop(seconds=1)
     async def track(self):
         """ Tracking task """
+        log.info('track')
         for guild in self.guilds:
+            log.info(guild.name)
             # data da última mensagem enviada no server
             last_message_dt = parser.parse(self.short_memory.get(guild.id))
-
+            log.info(last_message_dt)
             if last_message_dt:
                 now = datetime.now().astimezone(tz=timezone.utc)
                 elapsed_time = now.replace(tzinfo=None) - last_message_dt.replace(tzinfo=None)
-                
+
+                log.info('elapsed time: ')
+                log.info(elapsed_time)
+                log.info('total: ')
+                log.info(elapsed_time.total_seconds() / 60 / 60)
                 if (elapsed_time.total_seconds() / 60 / 60) > self.window:
                     # envia mensagem no canal principal
+                    log.info('Notifying channel %s', guild.system_channel.name)
                     await guild.system_channel.send(choice(bored_messages))
 
                     # Renova a data de última mensagem para a data atual
@@ -57,6 +66,7 @@ class GuildTracker(commands.Cog):
                         guild.id,
                         str(now.astimezone(tz=timezone.utc))
                     )
+                    log.info('Renewed datetime to %s', str(now))
 
                     # Atualiza o humor da Luci no backend
                     server = make_hash(guild.name, guild.id).decode('utf-8')
@@ -68,8 +78,9 @@ class GuildTracker(commands.Cog):
                     )
                     try:
                         response = gql_client.execute(payload)
+                        log.info('Updated aptitude')
                     except Exception as err:
-                        print(f'Erro: {str(err)}\n\n')
+                        log.error(f'Erro: {str(err)}\n\n')
 
 
 @client.event
@@ -77,7 +88,7 @@ async def on_ready():
     guilds = client.guilds
     client.add_cog(GuildTracker())
 
-    print('Ok!')
+    log.info('Ok!')
 
 
 @client.event
