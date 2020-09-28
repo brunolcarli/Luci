@@ -73,7 +73,7 @@ class GuildTracker(commands.Cog):
                     log.info('Renewed datetime to %s', str(now))
 
                     # Atualiza o humor da Luci no backend
-                    server = make_hash(guild.name, guild.id).decode('utf-8')
+                    server = make_hash('id', guild.id).decode('utf-8')
                     gql_client = get_gql_client(BACKEND_URL)
 
                     payload = Mutation.update_emotion(
