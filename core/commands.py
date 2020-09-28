@@ -73,7 +73,7 @@ class GuildTracker(commands.Cog):
                     log.info('Renewed datetime to %s', str(now))
 
                     # Atualiza o humor da Luci no backend
-                    server = make_hash(guild.name, guild.id).decode('utf-8')
+                    server = make_hash('id', guild.id).decode('utf-8')
                     gql_client = get_gql_client(BACKEND_URL)
 
                     payload = Mutation.update_emotion(
@@ -117,7 +117,7 @@ async def on_message(message):
     new_humor = change_humor_values(text_pol, is_offensive)
     friendshipness = -0.5 + text_pol if is_offensive else text_pol
 
-    server = make_hash(message.guild.name, message.guild.id).decode('utf-8')
+    server = make_hash('id', message.guild.id).decode('utf-8')
     user_id = make_hash(server, message.author.id).decode('utf-8')
     gql_client = get_gql_client(BACKEND_URL)
 
@@ -157,7 +157,7 @@ async def status(bot):
     """
     Verifica o estado emocional da Luci.
     """
-    server = make_hash(bot.guild.name, bot.guild.id)
+    server = make_hash('id', bot.guild.id)
     payload = Query.get_emotions(server.decode('utf-8'))
     client = get_gql_client(BACKEND_URL)
 
@@ -206,7 +206,7 @@ async def random_quote(bot):
     """
     Retorna um quote aleatório.
     """
-    server = make_hash(bot.guild.name, bot.guild.id)
+    server = make_hash('id', bot.guild.id)
     payload = Query.get_quotes(server.decode('utf-8'))
     client = get_gql_client(BACKEND_URL)
 
@@ -239,7 +239,7 @@ async def quote(bot, *args):
             '``` !quote my name is bond, vagabond ```'
         )
 
-    server = make_hash(bot.guild.name, bot.guild.id)
+    server = make_hash('id', bot.guild.id)
     payload = Mutation.create_quote(message, server.decode('utf-8'), author)
     client = get_gql_client(BACKEND_URL)
 
@@ -315,7 +315,7 @@ async def user_status(bot):
         )
 
     # consulta os membros no backend
-    server = make_hash(bot.message.guild.name, bot.message.guild.id).decode('utf-8')
+    server = make_hash('id', bot.message.guild.id).decode('utf-8')
     user_id = make_hash(server, mentions[0].id).decode('utf-8')
 
     payload = Query.get_user(user_id)
