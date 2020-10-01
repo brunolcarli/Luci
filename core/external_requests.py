@@ -129,6 +129,23 @@ class Query:
         return gql(query)
 
 
+    @staticmethod
+    def get_users(server_id):
+        """
+        Consulta membros de um server que Luci conhece.
+        """
+        query = f'''
+        query{{
+            users(server_id: "{server_id}") {{
+                reference
+                name
+                friendshipness
+            }}
+        }}
+        '''
+        return gql(query)
+
+
 class Mutation:
     """
     Operações graphql de criação e alteração de dados.
