@@ -373,3 +373,57 @@ async def user_status(bot):
     embed.set_thumbnail(url=avatar_url)
 
     return await bot.send('', embed=embed)
+
+
+@client.command(aliases=['fs', 'friend', 'friends'])
+async def friendship(ctx, opt=None):
+    """
+    Lista os membros com maior afinidade com a Luci.
+    O parâmetro `-` solicita que sejam listados os membros com menor afinidade.
+
+    Exemplos:
+
+        - `!fs`
+        - `!friendship -`
+    """
+    embed = discord.Embed(color=0x1E1E1E, type="rich")
+
+    # consulta os membros no backend
+    server = make_hash('id', ctx.message.guild.id).decode('utf-8')    
+    payload = Query.get_users(server)
+    gql_client = get_gql_client(BACKEND_URL)
+    try:
+        response = gql_client.execute(payload)
+    except Exception as err:
+        print(f'Erro: {str(err)}\n\n')
+        return
+
+    members = response.get('users')
+
+    if not members:
+        return await ctx.send('Acho que ainda não gosto muito de ninguém')
+
+    if opt and opt == '-':
+        members = [m for m in members if m['friendshipness'] < 0]
+
+        if not members:
+            return await ctx.send('Acho que não tenho muitos amigos aqui ainda')
+
+        members = sorted(members, key=lambda k: k['friendshipness'])[:10]
+        
+        for member in members:
+            body = f'{member["name"]} | :heartpulse: : {member["friendshipness"]}'
+            embed.add_field(name='Membro', value=body, inline=False)
+
+        return await ctx.send('Membros que eu menos curto :rolling_eyes:', embed=embed)
+
+    members = [m for m in members if m['friendshipness'] >= 0]
+    if not members:
+        return await ctx.send('Acho que gosto de todo mundo por aqui')
+
+    members = sorted(members, key=lambda k: k['friendshipness'], reverse=True)[:10]
+    for member in members:   
+        body = f'{member["name"]} | :heartpulse: : {member["friendshipness"]}'
+        embed.add_field(name='Membro', value=body, inline=False)
+
+    return await ctx.send('Membros que eu mais curto :blush:', embed=embed)
