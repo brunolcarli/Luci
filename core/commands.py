@@ -139,8 +139,8 @@ async def on_message(message):
     if str(channel.guild.me.id) in text:
         return await channel.send(naive_response(remove_id(text)))
 
-    # 50% chance to not answer if is offensive and lucis not mentioned
-    if is_offensive and choice([True, False]):
+    # 10% chance to not answer if is offensive and lucis not mentioned
+    if is_offensive and choice([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
 
