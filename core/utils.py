@@ -147,14 +147,15 @@ def get_wiki(text):
         return error_response
 
     tokens = [token['token'] for token in data['data']['partOfSpeech']
-              if token['description'] == 'substantivo']
+              if token['description'] == 'substantivo'
+              or token['description'] == 'nome próprio']
 
     if len(tokens) > 3:
         return [get_random_blahblahblah()]
 
     try:
-        response = [wiki.summary(token) for token in tokens]
-    except (wiki.DisambiguationError, wiki.exceptions.PageError):
+        response = [wiki.summary(token, sentences=2) for token in tokens]
+    except (wiki.exceptions.DisambiguationError, wiki.exceptions.PageError):
         response = error_response
 
     return response
