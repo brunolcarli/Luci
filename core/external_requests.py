@@ -253,3 +253,37 @@ class Mutation:
         '''
 
         return gql(mutation)
+
+    @staticmethod
+    def assign_response(text, possible_response):
+        """
+        Requisição GraphQL para anexar uma possível resposta
+        à uma determinada mensagem.
+        """
+        possible_response_input = f'''
+        response: {{
+            global_intention: "{possible_response.get('global_intention')}"
+            specific_intention: "{possible_response.get('specific_intention')}"
+            text: "{possible_response.get('text')}"
+        }}
+        '''
+
+        mutation = f'''
+        mutation {{
+            assign_response(input:{{
+                text: "{text}"
+                {possible_response_input}
+            }}){{
+                messages {{
+                    global_intention
+                    specific_intention
+                    text
+                    possible_responses{{
+                        text
+                    }}
+                }}
+            }}
+        }}
+        '''
+
+        return gql(mutation)

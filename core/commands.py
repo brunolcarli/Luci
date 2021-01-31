@@ -112,6 +112,7 @@ async def on_message(message):
     short_memory.set(message.guild.id, str(message.created_at))
 
     text = message.content
+    
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
@@ -148,6 +149,18 @@ async def on_message(message):
         response = gql_client.execute(payload)
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
+
+    # Atualiza reconhecimento de respostas, se for resposta à outra mensagem
+    if message.reference:
+        payload = Mutation.assign_response(
+            text=message.reference.resolved.content,
+            possible_response=msg
+        )
+
+        try:
+            response = gql_client.execute(payload)
+        except Exception as err:
+            log.error(f'Erro: {str(err)}\n\n')
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
