@@ -61,7 +61,8 @@ class Intentions:
         3: BadIntentions.SUICIDE,
         4: BadIntentions.ILLEGAL_STUFF,
         5: BadIntentions.THREAT,
-        6: BadIntentions.FORBIDDEN
+        6: BadIntentions.FORBIDDEN,
+        7: BadIntentions.VERBAL_OFFENSE
     }
 
     specific_intentions = {

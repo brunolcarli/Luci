@@ -22,11 +22,12 @@ class BadIntentions(Enum):
     Enumerates types of bad intentions.
     """
     SEXUAL_ABUSE = 'sex_abuse'
-    RACISM_XENOPHOBIA = 'xenophobia_and_xenophobia'
+    RACISM_XENOPHOBIA = 'racism_and_xenophobia'
     SUICIDE = 'suicide'
     ILLEGAL_STUFF = 'illegal_stuff'
     THREAT = 'threat'
     FORBIDDEN = 'forbidden'
+    VERBAL_OFFENSE = 'verbal_offense'
 
 
 class GoodIntentions(Enum):

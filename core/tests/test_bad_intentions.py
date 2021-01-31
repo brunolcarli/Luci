@@ -113,3 +113,21 @@ class TestBadIntentionClassifier(unittest.TestCase):
             get_bad_intention(get_text_vector('assassinar seres humanos')),
             BadIntentions.FORBIDDEN
         )
+
+    def test_predict_verbal_offense(self):
+        self.assertEqual(
+            get_bad_intention(get_text_vector('vc é um puta corno')),
+            BadIntentions.VERBAL_OFFENSE
+        )
+        self.assertEqual(
+            get_bad_intention(get_text_vector('vc é corno')),
+            BadIntentions.VERBAL_OFFENSE
+        )
+        self.assertEqual(
+            get_bad_intention(get_text_vector('seu corno')),
+            BadIntentions.VERBAL_OFFENSE
+        )
+        self.assertEqual(
+            get_bad_intention(get_text_vector('teu pai é um corno')),
+            BadIntentions.VERBAL_OFFENSE
+        )

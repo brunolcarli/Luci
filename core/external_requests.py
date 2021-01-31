@@ -64,7 +64,6 @@ class Query:
 
         return gql(query)
 
-
     @staticmethod
     def get_emotions(server):
         """
@@ -203,7 +202,7 @@ class Mutation:
         return gql(mutation)
 
     @staticmethod
-    def update_user(user_id, name, friendshipness, emotions):
+    def update_user(user_id, name, friendshipness, emotions, message=None):
         """
         Solicita a atualização do estado de um membro (usuário) do server.
         """
@@ -211,6 +210,17 @@ class Mutation:
         attention = emotions.get('attention', 0)
         sensitivity = emotions.get('sensitivity', 0)
         aptitude = emotions.get('aptitude', 0)
+
+        if message:
+            message_input = f'''
+            message: {{
+                global_intention: "{message.get('global_intention')}"
+                specific_intention: "{message.get('specific_intention')}"
+                text: "{message.get('text')}"
+            }}
+            '''
+        else:
+            message_input = ''
 
         mutation = f'''
         mutation {{
@@ -224,6 +234,7 @@ class Mutation:
                     sensitivity: {sensitivity}
                     aptitude: {aptitude}
                 }}
+                {message_input}
             }}){{
                 user {{
                 reference
@@ -235,6 +246,40 @@ class Mutation:
                         attention
                         sensitivity
                         aptitude
+                    }}
+                }}
+            }}
+        }}
+        '''
+
+        return gql(mutation)
+
+    @staticmethod
+    def assign_response(text, possible_response):
+        """
+        Requisição GraphQL para anexar uma possível resposta
+        à uma determinada mensagem.
+        """
+        possible_response_input = f'''
+        response: {{
+            global_intention: "{possible_response.get('global_intention')}"
+            specific_intention: "{possible_response.get('specific_intention')}"
+            text: "{possible_response.get('text')}"
+        }}
+        '''
+
+        mutation = f'''
+        mutation {{
+            assign_response(input:{{
+                text: "{text}"
+                {possible_response_input}
+            }}){{
+                messages {{
+                    global_intention
+                    specific_intention
+                    text
+                    possible_responses{{
+                        text
                     }}
                 }}
             }}

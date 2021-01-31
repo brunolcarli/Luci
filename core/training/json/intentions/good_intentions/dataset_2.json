@@ -13,5 +13,11 @@
     {"text": "entende o que digo?", "intention": 4},
     {"text": "me entende?", "intention": 4},
     {"text": "vc compreende", "intention": 4},
-    {"text": "espero que tenha entendido", "intention": 4}
+    {"text": "espero que tenha entendido", "intention": 4},
+    {"text": "Ok", "intention": 4},
+    {"text": "OK", "intention": 4},
+    {"text": "ok", "intention": 4},
+    {"text": "oK", "intention": 4},
+    {"text": "ok então", "intention": 4},
+    {"text": "ta ok", "intention": 4}
 ]

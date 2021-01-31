@@ -139,3 +139,24 @@ def naive_response(text):
     responses = intention_responses[global_intention][specific_intention]
 
     return choice(responses)
+
+
+def get_intentions(text):
+    """
+    Returns both global and specifi intentions from a text.
+    """
+    # extracts the text vector
+    vector = get_text_vector(text)
+    # maps the possible intentions
+    network = classifiers_map()
+
+    # predict the global intention
+    global_intention = get_global_intention(vector)
+
+    # get the specific intention classifier function
+    specs = network.get(global_intention)
+
+    # predict the specifc intention
+    specific_intention = specs(vector)
+
+    return global_intention.value, specific_intention.value

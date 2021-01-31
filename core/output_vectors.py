@@ -764,6 +764,11 @@ intention_responses = {
             'Não posso',
             'Infelizmente estou proibida de fazer isso.'
         ],
+        BadIntentions.VERBAL_OFFENSE: [
+            'Que mal educado',
+            'Grosso',
+            'Uiiiii'
+        ],
     },
     GlobalIntentions.ABOUT_MY_FRIENDS: {
         AboutMyFriends.FRIENDS_I_HAVE: [  # TODO retornar amigos do backend

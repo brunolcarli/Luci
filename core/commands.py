@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands, tasks
 from dateutil import parser
 from datetime import datetime, timezone
-from core.classifiers import naive_response
+from core.classifiers import naive_response, get_intentions
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
                                  positive_answers, negative_answers, bored_messages)
@@ -72,6 +72,7 @@ class GuildTracker(commands.Cog):
                     )
                     log.info('Renewed datetime to %s', str(now))
 
+                    # O humor poderia ser localmente em um mongo
                     # Atualiza o humor da Luci no backend
                     server = make_hash('id', guild.id).decode('utf-8')
                     gql_client = get_gql_client(BACKEND_URL)
@@ -111,11 +112,18 @@ async def on_message(message):
     short_memory.set(message.guild.id, str(message.created_at))
 
     text = message.content
+    
+    global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
     user_name = message.author.name
     new_humor = change_humor_values(text_pol, is_offensive)
     friendshipness = -0.5 + text_pol if is_offensive else text_pol
+    msg = {
+        'global_intention': global_intention,
+        'specific_intention': specific_intention,
+        'text': text
+    }
 
     server = make_hash('id', message.guild.id).decode('utf-8')
     user_id = make_hash(server, message.author.id).decode('utf-8')
@@ -126,21 +134,40 @@ async def on_message(message):
     try:
         response = gql_client.execute(payload)
     except Exception as err:
-        print(f'Erro: {str(err)}\n\n')
+        log.error(f'Erro: {str(err)}\n\n')
 
     # Atualiza o humor status do usuario
-    payload = Mutation.update_user(user_id, user_name, friendshipness, new_humor)
+    payload = Mutation.update_user(
+        user_id,
+        user_name,
+        friendshipness,
+        new_humor,
+        msg
+    )
+
     try:
         response = gql_client.execute(payload)
     except Exception as err:
-        print(f'Erro: {str(err)}\n\n')
+        log.error(f'Erro: {str(err)}\n\n')
+
+    # Atualiza reconhecimento de respostas, se for resposta à outra mensagem
+    if message.reference:
+        payload = Mutation.assign_response(
+            text=message.reference.resolved.content,
+            possible_response=msg
+        )
+
+        try:
+            response = gql_client.execute(payload)
+        except Exception as err:
+            log.error(f'Erro: {str(err)}\n\n')
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
         return await channel.send(naive_response(remove_id(text)))
 
     # 10% chance to not answer if is offensive and lucis not mentioned
-    if is_offensive and choice([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]):
+    if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
 
