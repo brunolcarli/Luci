@@ -164,6 +164,27 @@ async def on_message(message):
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
+        # busca possíveis respostas na memória de longo prazo
+        payload = Query.get_possible_responses(
+            text=remove_id(text)
+        )
+
+        try:
+            response = gql_client.execute(payload)
+        except Exception as err:
+            log.error(f'Erro: {str(err)}\n\n')
+            response = {'messages': []}
+
+        if response.get('messages'):
+            possible_responses = []
+            for msg in response['messages']:
+                for possible_response in msg.get('possible_responses'):
+                    possible_responses.append(possible_response.get('text'))
+
+            if possible_responses:
+                return await channel.send(choice(possible_responses))
+
+        # Caso não conheça nenhuma resposta, use o classificador inocente
         return await channel.send(naive_response(remove_id(text)))
 
     # 10% chance to not answer if is offensive and lucis not mentioned
