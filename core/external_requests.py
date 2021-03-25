@@ -161,6 +161,13 @@ class Query:
 
         return gql(query)
 
+    @staticmethod
+    def somal_guess(text):
+        """
+        Requisição graphql para descobrir quem disse a frase.
+        """
+        return f'{{guess(text: "{text}")}}'
+
 
 class Mutation:
     """
