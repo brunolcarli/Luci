@@ -127,7 +127,6 @@ class Query:
 
         return gql(query)
 
-
     @staticmethod
     def get_users(server_id):
         """
@@ -143,6 +142,31 @@ class Query:
         }}
         '''
         return gql(query)
+
+    @staticmethod
+    def get_possible_responses(text):
+        """
+        Requisição graphql para buscar possíveis respostas
+        para um determinado texto no backend.
+        """
+        query = f'''
+        query {{
+            messages (text__icontains: "{text}") {{
+                possible_responses {{
+                    text
+                }}
+            }}
+        }}
+        '''
+
+        return gql(query)
+
+    @staticmethod
+    def somal_guess(text):
+        """
+        Requisição graphql para descobrir quem disse a frase.
+        """
+        return f'{{guess(text: "{text}")}}'
 
 
 class Mutation:

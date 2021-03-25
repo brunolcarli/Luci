@@ -1,5 +1,6 @@
 import logging
 import pickle
+import requests
 from random import choice, randint, random
 import spacy
 import redis
@@ -164,6 +165,27 @@ async def on_message(message):
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
+        # busca possíveis respostas na memória de longo prazo
+        payload = Query.get_possible_responses(
+            text=remove_id(text)
+        )
+
+        try:
+            response = gql_client.execute(payload)
+        except Exception as err:
+            log.error(f'Erro: {str(err)}\n\n')
+            response = {'messages': []}
+
+        if response.get('messages'):
+            possible_responses = []
+            for msg in response['messages']:
+                for possible_response in msg.get('possible_responses'):
+                    possible_responses.append(possible_response.get('text'))
+
+            if possible_responses:
+                return await channel.send(choice(possible_responses))
+
+        # Caso não conheça nenhuma resposta, use o classificador inocente
         return await channel.send(naive_response(remove_id(text)))
 
     # 10% chance to not answer if is offensive and lucis not mentioned
@@ -454,3 +476,24 @@ async def friendship(ctx, opt=None):
         embed.add_field(name='Membro', value=body, inline=False)
 
     return await ctx.send('Membros que eu mais curto :blush:', embed=embed)
+
+
+@client.command(aliases=['g', 'who_said', 'ws'])
+async def guess(ctx, *args):
+    """
+    Luci tenta adivinhar quem disse a frase.
+    """
+    text = ' '.join(char for char in args)
+    query = Query.somal_guess(text)
+    url = 'http://somal.brunolcarli.repl.co/graphql/'
+
+    response = requests.post(url, json={'query': query}).json()
+    target = response['data'].get('guess')
+
+    if target:
+        if target == 'bruno':
+            return await ctx.send('Eu acho que quem disse isso foi o Bruno.')
+
+        return await ctx.send(f'Acho que quem disse isso foi o tio {target.capitalize()}')
+
+    return await ctx.send('Acho que não sei quem disse isso, sei la...')
