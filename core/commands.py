@@ -350,34 +350,34 @@ async def question(bot, *args):
 
 
 @client.command(aliases=['u', 'ust', 'user'])
-async def user_status(bot):
+async def user_status(ctx):
     """
     Verifica o relatório de afeição que Luci possui de um determinado membro.
 
     Uso:
         !user @Username
     """
-    mentions = bot.message.mentions
+    mentions = ctx.message.mentions
     if not mentions:
-        return await bot.send(
+        return await tx.send(
             'Não sei de quem vc está falando. Marca ele tipo @Fulano.'
         )
 
     # consulta os membros no backend
-    server = make_hash('id', bot.message.guild.id).decode('utf-8')
+    server = make_hash('id', ctx.message.guild.id).decode('utf-8')
     user_id = make_hash(server, mentions[0].id).decode('utf-8')
-
     payload = Query.get_user(user_id)
     gql_client = get_gql_client(BACKEND_URL)
+
     try:
         response = gql_client.execute(payload)
     except Exception as err:
-        print(f'Erro: {str(err)}\n\n')
+        log.error(f'Erro: {str(err)}\n\n')
         return
 
     data = response.get('users', [])
     if not data:
-        return await bot.send('Acho que não c-conheço... Desculpa.')
+        return await ctx.send('Acho que não c-conheço... Desculpa.')
 
     # monta a resposta
     embed = discord.Embed(color=0x1E1E1E, type='rich')
@@ -385,13 +385,6 @@ async def user_status(bot):
     friendshipness = data[0].get('friendshipness', 0)
     emotions = data[0].get('emotion_resume', {})
     user_id = extract_user_id(data[0]['reference'])
-
-    # url do avatar do cidadão
-    user = bot.guild._members.get(user_id)
-    avatar_url = f'{user.avatar_url.BASE}/avatars/{user.id}/{user.avatar}'
-
-    if not user:
-        return await bot.send('Acho que não c-conheço... Desculpa.')
 
     pleasantness_status = EmotionHourglass.get_pleasantness(
         emotions["pleasantness"]
@@ -419,9 +412,8 @@ async def user_status(bot):
     embed.add_field(name='Attention', value=attention, inline=False)
     embed.add_field(name='Sensitivity', value=sensitivity, inline=False)
     embed.add_field(name='Aptitude', value=aptitude, inline=False)
-    embed.set_thumbnail(url=avatar_url)
 
-    return await bot.send('', embed=embed)
+    return await ctx.send('', embed=embed)
 
 
 @client.command(aliases=['fs', 'friend', 'friends'])
