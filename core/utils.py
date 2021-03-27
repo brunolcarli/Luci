@@ -189,3 +189,21 @@ def get_random_blahblahblah():
                f'{random_tought_2} Viajei né?'
 
     return response
+
+
+def evaluate_math_expression(expression):
+    """
+    Retorna o resultado matemático de cálculos contidos na string.
+    retorna 0 se não houver qualquer expressão matemática.
+    param : expression : <str>
+    return : <int>
+    """
+    valid_operators = ('+', '-', '*', '/')
+    filtered = ''.join(i for i in expression if i.isdigit() or i in valid_operators)
+
+    try:
+        result =  eval(filtered)
+    except SyntaxError:
+        result = 0
+
+    return result

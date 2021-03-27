@@ -16,7 +16,8 @@ from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
                         make_hash, get_gql_client, remove_id, get_wiki,
-                        get_random_blahblahblah, extract_user_id)
+                        get_random_blahblahblah, extract_user_id,
+                        evaluate_math_expression)
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 
@@ -521,3 +522,15 @@ async def source(ctx, *args):
     authors = ';'.join(author for author in list(authors))
 
     return await ctx.send(f'Aprendi isso com {authors}')
+
+
+@client.command(aliases=['math', 'clc'])
+async def calc(ctx, *args):
+    """
+    Calcula o total das expressões aritméticas básicas continas na mensagem.
+    """
+    text = ' '.join(char for char in args)
+    if not text.strip():
+        return await ctx.send('Manda a braba pra eu calcular ...')
+
+    return await ctx.send(f'Acho que é {evaluate_math_expression(text)}')
