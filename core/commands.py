@@ -494,6 +494,9 @@ async def guess(ctx, *args):
 
 @client.command(aliases=['wt', 'src', 'who_teached_you'])
 async def source(ctx, *args):
+    """
+    Pergunta quem foi que ensinou a mensagem.
+    """
     text = ' '.join(char for char in args)
     if not text.strip():
         return await ctx.send('Ué você não disse nada ...')
