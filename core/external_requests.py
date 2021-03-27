@@ -168,6 +168,23 @@ class Query:
         """
         return f'{{guess(text: "{text}")}}'
 
+    @staticmethod
+    def get_message_authors(message):
+        """
+        Requisição graphql para identificar o(s) autor(es) de
+        uma determinada mensagem.
+        """
+        query = f'''
+        query {{
+            messages(text__icontains: "{message}") {{
+                text
+                author
+            }}
+        }}
+        '''
+
+        return gql(query)
+
 
 class Mutation:
     """

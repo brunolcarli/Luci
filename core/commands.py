@@ -497,3 +497,31 @@ async def guess(ctx, *args):
         return await ctx.send(f'Acho que quem disse isso foi o tio {target.capitalize()}')
 
     return await ctx.send('Acho que não sei quem disse isso, sei la...')
+
+
+@client.command(aliases=['wt', 'src', 'who_teached_you'])
+async def source(ctx, *args):
+    text = ' '.join(char for char in args)
+    if not text.strip():
+        return await ctx.send('Ué você não disse nada ...')
+
+    query = Query.get_message_authors(text)
+    gql_client = get_gql_client(BACKEND_URL)
+    try:
+        response = gql_client.execute(query)
+    except Exception as err:
+        log.error(f'Erro: {str(err)}\n\n')
+        return
+
+    authors = set()
+    for message in response.get('messages', []):
+        authors.add(message.get('author'))
+
+    if len(authors) > 9:
+        return await ctx.send(
+            f'Ja vi tipo umas {len(authors)} pessoas dizerem isso :rolling_eyes:'
+        )
+
+    authors = ';'.join(author for author in list(authors))
+
+    return await ctx.send(f'Aprendi isso com {authors}')
