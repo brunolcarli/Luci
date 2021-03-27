@@ -19,4 +19,5 @@ RUN python3 -m spacy download pt
 
 COPY . .
 ENV LANG C.UTF-8
+ENV PYTHONUNBUFFERED=1
 ENV NAME luci

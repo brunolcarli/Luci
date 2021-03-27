@@ -16,7 +16,8 @@ from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
                         make_hash, get_gql_client, remove_id, get_wiki,
-                        get_random_blahblahblah, extract_user_id)
+                        get_random_blahblahblah, extract_user_id,
+                        evaluate_math_expression)
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 
@@ -350,34 +351,34 @@ async def question(bot, *args):
 
 
 @client.command(aliases=['u', 'ust', 'user'])
-async def user_status(bot):
+async def user_status(ctx):
     """
     Verifica o relatório de afeição que Luci possui de um determinado membro.
 
     Uso:
         !user @Username
     """
-    mentions = bot.message.mentions
+    mentions = ctx.message.mentions
     if not mentions:
-        return await bot.send(
+        return await tx.send(
             'Não sei de quem vc está falando. Marca ele tipo @Fulano.'
         )
 
     # consulta os membros no backend
-    server = make_hash('id', bot.message.guild.id).decode('utf-8')
+    server = make_hash('id', ctx.message.guild.id).decode('utf-8')
     user_id = make_hash(server, mentions[0].id).decode('utf-8')
-
     payload = Query.get_user(user_id)
     gql_client = get_gql_client(BACKEND_URL)
+
     try:
         response = gql_client.execute(payload)
     except Exception as err:
-        print(f'Erro: {str(err)}\n\n')
+        log.error(f'Erro: {str(err)}\n\n')
         return
 
     data = response.get('users', [])
     if not data:
-        return await bot.send('Acho que não c-conheço... Desculpa.')
+        return await ctx.send('Acho que não c-conheço... Desculpa.')
 
     # monta a resposta
     embed = discord.Embed(color=0x1E1E1E, type='rich')
@@ -385,13 +386,6 @@ async def user_status(bot):
     friendshipness = data[0].get('friendshipness', 0)
     emotions = data[0].get('emotion_resume', {})
     user_id = extract_user_id(data[0]['reference'])
-
-    # url do avatar do cidadão
-    user = bot.guild._members.get(user_id)
-    avatar_url = f'{user.avatar_url.BASE}/avatars/{user.id}/{user.avatar}'
-
-    if not user:
-        return await bot.send('Acho que não c-conheço... Desculpa.')
 
     pleasantness_status = EmotionHourglass.get_pleasantness(
         emotions["pleasantness"]
@@ -419,9 +413,8 @@ async def user_status(bot):
     embed.add_field(name='Attention', value=attention, inline=False)
     embed.add_field(name='Sensitivity', value=sensitivity, inline=False)
     embed.add_field(name='Aptitude', value=aptitude, inline=False)
-    embed.set_thumbnail(url=avatar_url)
 
-    return await bot.send('', embed=embed)
+    return await ctx.send('', embed=embed)
 
 
 @client.command(aliases=['fs', 'friend', 'friends'])
@@ -501,6 +494,9 @@ async def guess(ctx, *args):
 
 @client.command(aliases=['wt', 'src', 'who_teached_you'])
 async def source(ctx, *args):
+    """
+    Pergunta quem foi que ensinou a mensagem.
+    """
     text = ' '.join(char for char in args)
     if not text.strip():
         return await ctx.send('Ué você não disse nada ...')
@@ -514,7 +510,11 @@ async def source(ctx, *args):
         return
 
     authors = set()
-    for message in response.get('messages', []):
+    messages = response.get('messages', [])
+    if not messages:
+        return await ctx.send('Não conhecia essa ainda, até agora...')
+
+    for message in messages:
         authors.add(message.get('author'))
 
     if len(authors) > 9:
@@ -525,3 +525,15 @@ async def source(ctx, *args):
     authors = ';'.join(author for author in list(authors))
 
     return await ctx.send(f'Aprendi isso com {authors}')
+
+
+@client.command(aliases=['math', 'clc'])
+async def calc(ctx, *args):
+    """
+    Calcula o total das expressões aritméticas básicas continas na mensagem.
+    """
+    text = ' '.join(char for char in args)
+    if not text.strip():
+        return await ctx.send('Manda a braba pra eu calcular ...')
+
+    return await ctx.send(f'Acho que é {evaluate_math_expression(text)}')
