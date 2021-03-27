@@ -514,7 +514,11 @@ async def source(ctx, *args):
         return
 
     authors = set()
-    for message in response.get('messages', []):
+    messages = response.get('messages', [])
+    if not messages:
+        return await ctx.send('Não conhecia essa ainda, até agora...')
+
+    for message in messages:
         authors.add(message.get('author'))
 
     if len(authors) > 9:
