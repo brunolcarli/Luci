@@ -98,7 +98,7 @@ def get_data_from_json(path):
     targets = []
 
     for dataset in datasets:
-        with open(f'{path}{dataset}') as f:
+        with open(f'{path}{dataset}', 'r') as f:
             raw_data = json.load(f)
             for data in raw_data:
                 samples.append(nlp(data['text']).vector)
@@ -161,7 +161,7 @@ def train_good_intentions():
     """
     Train a Logistic Regression model to recognize good intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/good_intentions/'
     samples, targets = get_data_from_json(path)
 
