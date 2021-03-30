@@ -198,11 +198,11 @@ def evaluate_math_expression(expression):
     param : expression : <str>
     return : <int>
     """
-    valid_operators = ('+', '-', '*', '/')
+    valid_operators = ('+', '-', '*', '/', '>', '<', '=', '!', '(', ')', '.')
     filtered = ''.join(i for i in expression if i.isdigit() or i in valid_operators)
 
     try:
-        result =  eval(filtered)
+        result = eval(filtered)
     except SyntaxError:
         result = 0
 
