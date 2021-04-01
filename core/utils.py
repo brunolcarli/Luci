@@ -5,6 +5,7 @@ from random import choice
 import spacy
 import wikipedia
 from gql import Client
+from deep_translator import GoogleTranslator
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
 from core.output_vectors import (intention_responses, intention_vectors, opinions,
@@ -12,6 +13,19 @@ from core.output_vectors import (intention_responses, intention_vectors, opinion
 
 
 nlp = spacy.load('pt')
+
+
+def known_language_codes():
+    """
+    Returns a list of know language codes for translation.
+    """
+    return ['af', 'ga', 'sq', 'it', 'ar', 'ja', 'az', 'kn', 'eu',
+            'ko', 'bn', 'la', 'be', 'lv','bg', 'lt', 'ca', 'mk',
+            'ms', 'mt', 'hr', 'no', 'cs', 'fa', 'da', 'pl', 'nl',
+            'pt', 'en', 'ro', 'eo', 'ru', 'et', 'sr', 'tl', 'sk',
+            'fi', 'sl', 'fr', 'es', 'gl', 'sw', 'ka', 'sv', 'de',
+            'ta', 'el', 'te', 'gu', 'th', 'ht', 'tr', 'iw', 'uk',
+            'hi', 'ur', 'hu', 'vi', 'is', 'cy', 'id', 'yi']
 
 
 def validate_text_offense(text):
@@ -207,3 +221,10 @@ def evaluate_math_expression(expression):
         result = 0
 
     return result
+
+
+def translate_text(text, lang):
+    """
+    Traduz um texto para uma outroa linguagem
+    """
+    return GoogleTranslator(target=lang).translate(text)

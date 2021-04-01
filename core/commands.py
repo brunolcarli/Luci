@@ -17,7 +17,7 @@ from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id,
-                        evaluate_math_expression)
+                        evaluate_math_expression, known_language_codes, translate_text)
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 
@@ -537,3 +537,31 @@ async def calc(ctx, *args):
         return await ctx.send('Manda a braba pra eu calcular ...')
 
     return await ctx.send(f'Acho que é {evaluate_math_expression(text)}')
+
+
+@client.command(aliases=['tlt', 'trans'])
+async def translate(ctx, code=None, *args):
+    """
+    Traduz um texto para uma outra linguagem.
+    Necessita informar um código de linguagem:
+        -Ex:
+            !translate pt Hello There
+
+    Códigos válidos:
+        ['af', 'ga', 'sq', 'it', 'ar', 'ja', 'az', 'kn', 'eu',
+        'ko', 'bn', 'la', 'be', 'lv','bg', 'lt', 'ca', 'mk',
+        'ms', 'mt', 'hr', 'no', 'cs', 'fa', 'da', 'pl', 'nl',
+        'pt', 'en', 'ro', 'eo', 'ru', 'et', 'sr', 'tl', 'sk',
+        'fi', 'sl', 'fr', 'es', 'gl', 'sw', 'ka', 'sv', 'de',
+        'ta', 'el', 'te', 'gu', 'th', 'ht', 'tr', 'iw', 'uk',
+        'hi', 'ur', 'hu', 'vi', 'is', 'cy', 'id', 'yi']
+    """
+    text = ' '.join(char for char in args)
+    if not text.strip():
+        return await ctx.send('Escreve algo pra eu traduzir ...')
+
+    if code not in known_language_codes():
+        return await ctx.send('Não conheço esse código dessa linguagem. '\
+                              'Manda um !help translate pra ver os códigos que eu sei.')
+
+    return await ctx.send(f'Acho que se traduz como:\n > {translate_text(text, code)}')
