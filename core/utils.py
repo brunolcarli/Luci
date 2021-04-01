@@ -212,7 +212,24 @@ def evaluate_math_expression(expression):
     param : expression : <str>
     return : <int>
     """
-    valid_operators = ('+', '-', '*', '/', '>', '<', '=', '!', '(', ')', '.')
+    valid_operators = (
+        '+', '-', '*', '/', '>', '<', '=', '!', '(', ')', '.', '&'
+    )
+    word_switchs = {
+        'maior': '>',
+        'menor': '<',
+        'igual': "=",
+        'ou': 'or',
+        'não': 'not',
+        'diferente': '!=',
+        'mais': '+',
+        'menos': '-',
+        'vezes': '*',
+        'dividido': '/',
+    }
+    for word, switch in word_switchs.items():
+        expression = expression.replace(word, switch)
+
     filtered = ''.join(i for i in expression if i.isdigit() or i in valid_operators)
 
     try:
