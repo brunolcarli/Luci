@@ -7,29 +7,29 @@ from core.utils import get_text_vector
 class TestGoodIntentionClassifier(unittest.TestCase):
     def test_predict_praise(self):
         self.assertEqual(
-            get_good_intention(get_text_vector('Vc gosta de maçã?')),
+            get_good_intention(get_text_vector('ficou muito bom')),
             GoodIntentions.PRAISE
         )
         self.assertEqual(
-            get_good_intention(get_text_vector('O que vc gosta de comer?')),
+            get_good_intention(get_text_vector('meus parabéns')),
             GoodIntentions.PRAISE
         )
         self.assertEqual(
-            get_good_intention(get_text_vector('qual sua fruta favorita?')),
+            get_good_intention(get_text_vector('você é inteligente')),
             GoodIntentions.PRAISE
         )
 
     def test_predict_helpful(self):
         self.assertEqual(
-            get_good_intention(get_text_vector('nossa, obrigado')),
+            get_good_intention(get_text_vector('Veja no stack overflow')),
             GoodIntentions.HELPFUL
         )
         self.assertEqual(
-            get_good_intention(get_text_vector('vlw')),
+            get_good_intention(get_text_vector('faz assim pra ver se funciona')),
             GoodIntentions.HELPFUL
         )
         self.assertEqual(
-            get_good_intention(get_text_vector('muito obrigado')),
+            get_good_intention(get_text_vector('tenta dessa forma')),
             GoodIntentions.HELPFUL
         )
 
@@ -47,14 +47,13 @@ class TestGoodIntentionClassifier(unittest.TestCase):
             GoodIntentions.GREETING
         )
         self.assertEqual(
-            get_good_intention(get_text_vector('boa noite')),
+            get_good_intention(get_text_vector('Oi tudo bem?')),
             GoodIntentions.GREETING
         )
 
-
     def test_predict_acknowledgement(self):
         self.assertEqual(
-            get_good_intention(get_text_vector('Você entende o que quero dizer')),
+            get_good_intention(get_text_vector('Ok obrigado')),
             GoodIntentions.ACKNOWLEDGEMENT
         )
         self.assertEqual(
@@ -62,7 +61,7 @@ class TestGoodIntentionClassifier(unittest.TestCase):
             GoodIntentions.ACKNOWLEDGEMENT
         )
         self.assertEqual(
-            get_good_intention(get_text_vector('vc compreende')),
+            get_good_intention(get_text_vector('blz entendi')),
             GoodIntentions.ACKNOWLEDGEMENT
         )
         self.assertEqual(
@@ -85,6 +84,10 @@ class TestGoodIntentionClassifier(unittest.TestCase):
         )
         self.assertEqual(
             get_good_intention(get_text_vector('hahahahaha')),
+            GoodIntentions.FUNNY
+        )
+        self.assertEqual(
+            get_good_intention(get_text_vector('mds kkkk')),
             GoodIntentions.FUNNY
         )
 
@@ -121,5 +124,9 @@ class TestGoodIntentionClassifier(unittest.TestCase):
         )
         self.assertEqual(
             get_good_intention(get_text_vector('ate depois')),
+            GoodIntentions.GOODBYE
+        )
+        self.assertEqual(
+            get_good_intention(get_text_vector('flw')),
             GoodIntentions.GOODBYE
         )

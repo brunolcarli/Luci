@@ -98,7 +98,7 @@ def get_data_from_json(path):
     targets = []
 
     for dataset in datasets:
-        with open(f'{path}{dataset}') as f:
+        with open(f'{path}{dataset}', 'r') as f:
             raw_data = json.load(f)
             for data in raw_data:
                 samples.append(nlp(data['text']).vector)
@@ -112,7 +112,7 @@ def train_global_intentions():
     """
     Train a Logistic Regression model to recognize Luci global intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/global_intentions/'
     samples, targets = get_data_from_json(path)
 
@@ -145,7 +145,7 @@ def train_bad_intentions():
     """
     Train a LineraRegression model to recognize bad intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/bad_intentions/'
     samples, targets = get_data_from_json(path)
 
@@ -161,7 +161,7 @@ def train_good_intentions():
     """
     Train a Logistic Regression model to recognize good intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/good_intentions/'
     samples, targets = get_data_from_json(path)
 
@@ -177,7 +177,7 @@ def train_about_my_friends_intentions():
     """
     Train a Logistic Regression model to recognize friendship intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/about_friends/'
     samples, targets = get_data_from_json(path)
     
@@ -193,7 +193,7 @@ def train_about_my_parents_intentions():
     """
     Train a Logistic Regression model to recognize parentship intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/about_parents/'
     samples, targets = get_data_from_json(path)
 
@@ -209,7 +209,7 @@ def train_stuff_i_like_intentions():
     """
     Train a Logistic Regression model to recognize stuff Luci likes intentions.
     """
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, solver='liblinear')
     path = 'core/training/json/intentions/stuff_i_like/'
     samples, targets = get_data_from_json(path)
 
