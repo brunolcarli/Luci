@@ -1,8 +1,9 @@
 from random import choice
-from core.utils import answer_intention, get_text_vector, load_model
+from core.utils import get_text_vector
 from core.intentions import Intentions
 from core.enums import GlobalIntentions
 from core.output_vectors import intention_responses
+from core.model_loader import IntentionClassifierModels
 
 
 def classifiers_map():
@@ -23,8 +24,7 @@ def get_global_intention(text_vector):
     param : text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/global_intentions')  # TODO get path from settings
-
+    recognizer = IntentionClassifierModels.GLOBAL_INTENTIONS_MODEL
     return Intentions.global_intentions.get(
         recognizer.predict([text_vector])[0]
     )
@@ -37,8 +37,7 @@ def get_myself_intention(text_vector):
     param : :text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/myself_intentions')  # TODO get path from settings
-
+    recognizer = IntentionClassifierModels.MYSELF_INTENTIONS_MODEL
     return Intentions.about_myself_intentions.get(
         recognizer.predict([text_vector])[0]
     )
@@ -51,8 +50,7 @@ def get_my_parents_intention(text_vector):
     param : :text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/parents_intentions')  # TODO get path from settings
-
+    recognizer = IntentionClassifierModels.PARENTS_INTENTION_MODEL
     return Intentions.about_my_parents_intentions.get(
         recognizer.predict([text_vector])[0]
     )
@@ -65,8 +63,7 @@ def get_my_friends_intention(text_vector):
     param : :text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/friends_intentions')  # TODO get path from settings
-
+    recognizer = IntentionClassifierModels.FRIENDS_INTENTION_MODEL
     return Intentions.about_my_friends_intentions.get(
         recognizer.predict([text_vector])[0]
     )
@@ -79,8 +76,7 @@ def get_stuff_i_like_intention(text_vector):
     param : :text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/stuff_i_like_intentions')  # TODO get path form settings
-
+    recognizer = IntentionClassifierModels.STUFF_I_LIKE_INTENTIONS_MODEL
     return Intentions.stuff_i_like_intentions.get(
         recognizer.predict([text_vector])[0]
     )
@@ -93,8 +89,7 @@ def get_good_intention(text_vector):
     param : :text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/good_intentions')  # TODO get path from settings
-
+    recognizer = IntentionClassifierModels.GOOD_INTENTIONS_MODEL
     return Intentions.good_intentions.get(recognizer.predict([text_vector])[0])
 
 
@@ -105,8 +100,7 @@ def get_bad_intention(text_vector):
     param : :text_vector : <list>
     return <Enum>
     """
-    recognizer = load_model('luci/models/bad_intentions')  # TODO get path from settings
-
+    recognizer = IntentionClassifierModels.BAD_INTENTIONS_MODEL
     return Intentions.bad_intentions.get(recognizer.predict([text_vector])[0])
 
 
@@ -136,9 +130,9 @@ def naive_response(text):
     specific_intention = specs(vector)
 
     # gets a random answer for the specific intention
-    responses = intention_responses[global_intention][specific_intention]
+    response = intention_responses[global_intention][specific_intention]
 
-    return choice(responses)
+    return response()
 
 
 def get_intentions(text):
