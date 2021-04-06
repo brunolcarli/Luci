@@ -14,7 +14,7 @@ from core.output_vectors import (offended, insufficiency_recognition,
                                  positive_answers, negative_answers, bored_messages)
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
-from core.utils import (validate_text_offense, extract_sentiment, answer_intention,
+from core.utils import (validate_text_offense, extract_sentiment,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id,
                         evaluate_math_expression, known_language_codes, translate_text)
