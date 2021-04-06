@@ -8,7 +8,7 @@ from gql import Client
 from deep_translator import GoogleTranslator
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
-from core.output_vectors import (intention_responses, intention_vectors, opinions,
+from core.output_vectors import (intention_responses, opinions,
                                  propositions)
 
 
@@ -73,18 +73,6 @@ def extract_sentiment(text):
     return 0
 
 
-def answer_intention(text):
-    """
-    Responde de acordo com a intenção identificada, se identificada, do contrário
-    retorna None.
-    """
-    for sample in intention_vectors:
-        if sample['text'].lower() in text.lower() or text.lower() in sample['text'].lower():
-            return choice(intention_responses[sample['intention']])
-
-    return None
-
-
 def make_hash(descriptor, _id):
     """
     Criptografa um descritor e um id em uma hash base64
@@ -123,18 +111,6 @@ def get_text_vector(text):
     Receives a string text input and returns its vector.
     """
     return nlp(text).vector
-
-
-def load_model(fpath):
-    """
-    Loads a trained machine learning model.
-
-    param : fpath: <str> : file path to the model
-    """
-    with open(fpath, 'rb') as trained_model:
-        model = pickle.load(trained_model)
-
-    return model
 
 
 def remove_id(string):
