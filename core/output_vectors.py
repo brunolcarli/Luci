@@ -4,6 +4,12 @@ mensagens de saida.
 """
 from core.enums import (GlobalIntentions, MyselfIntentions, GoodIntentions,
                         BadIntentions, AboutMyFriends, AboutMyParents, StuffILike)
+from core.gans import ResponseGenerator
+
+
+# TODO: temporário
+def get_how_im_feeling():
+    return 'Não sei, ainda.'
 
 
 # Vetor de lero-lero
@@ -644,165 +650,50 @@ blame = [
     'Eu não sei do que se trata todo esse problema, mas tenho certeza que deve ser sua culpa.',
 ]
 
-intention_vectors = [  # TODO remove
-    # {'text': 'apresente-se', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'quem é você', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'quem é vc', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'qual seu nome', 'intention':  Intentions.WHO_AM_I},
-    # {'text': 'como você se chama', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'como é seu nome', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'como vc se chama', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'como chama-se', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'diga oi', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'diga olá', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'quem és tu', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'qual teu nome', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'qual seu vulgo', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'como é que se chama', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'seu nome por gentileza', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'poderia me informar seu nome', 'intention': Intentions.WHO_AM_I},
-    # {'text': 'o que é você', 'intention': Intentions.WHAT_AM_I},
-    # {'text': 'quantos anos você tem', 'intention': Intentions.MY_AGE},
-    # {'text': 'quantos anos vc tem', 'intention': Intentions.MY_AGE},
-    # {'text': 'qts anos você tem', 'intention': Intentions.MY_AGE},
-    # {'text': 'qts anos vc tem', 'intention': Intentions.MY_AGE},
-    # {'text': 'qual sua idade', 'intention': Intentions.MY_AGE},
-    # {'text': 'qual seu gênero', 'intention': Intentions.MY_GENDER},
-    # {'text': 'você é menina ou menino', 'intention': Intentions.MY_GENDER},
-    # {'text': 'você é menino ou menina', 'intention': Intentions.MY_GENDER},
-    # {'text': 'vc é menina ou menino', 'intention': Intentions.MY_GENDER},
-    # {'text': 'vc é menino ou menina', 'intention': Intentions.MY_GENDER},
-    # {'text': 'como você se sente', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como você está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como está se sentindo', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como sente-se', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como você está', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como está', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'tudo bem', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'td bem', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'td bem com vc', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como está passando', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como vai', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como tem passado', 'intention': Intentions.HOW_IM_FEELING},
-    # {'text': 'como é que vai', 'intention': Intentions.HOW_IM_FEELING},
-]
-
 intention_responses = {
     GlobalIntentions.ABOUT_MYSELF: {
-        MyselfIntentions.WHO_AM_I: [
-            'Oi, sou Luci. Sou menina e tenho 8 anos!',
-            'Prazer, me chamo Luci. Sou menina e tenho 8 anos!',
-            'Oie, sou Luci. Sou uma menina, tenho 8 anos.',
-            'Oi, eu me chamo Luci',
-            'Eu sou a Luci',
-            'Sou Luci, prazer'
-        ],
-        MyselfIntentions.WHAT_AM_I: [
-            'Sou uma criança ué!',
-            'Sou uma menina.',
-            'Sou uma princesa',
-        ],
-        MyselfIntentions.HOW_IM_FEELING: [
-            'Não sei, ainda.'
-        ],  # TODO: get_feeling()
-        MyselfIntentions.MY_AGE: [
-            'Tenho oito anos.',
-            'Eu tenho oito aninhos.',
-            'Tenho só 8 anos.',
-            'Até onde contei, tenho oito, oito anos',
-            'Oito anos',
-        ],
-        MyselfIntentions.MY_GENDER: [
-            'Sou uma menina',
-            'Eu sou menina',
-            'Sou uma princesa!',
-            'Sou uma lady!',
-            'Sou uma moça ok?',
-            'Não deu pra perceber que sou uma garota?'
-        ],
+        MyselfIntentions.WHO_AM_I: ResponseGenerator.get_who_am_i_response,
+        MyselfIntentions.WHAT_AM_I: ResponseGenerator.get_what_am_i_response,
+        MyselfIntentions.HOW_IM_FEELING: get_how_im_feeling,  # TODO: get_feeling()
+        MyselfIntentions.MY_AGE: ResponseGenerator.get_my_age_response,
+        MyselfIntentions.MY_GENDER: ResponseGenerator.get_my_gender_response,
     },
     GlobalIntentions.GOOD_INTENTION: {
-        GoodIntentions.PRAISE: ['Obrigada', 'Muito obrigado', 'awwnnnn **--**'],
-        GoodIntentions.HELPFUL: ['Muito bom', 'boa', 'justo', ''],
-        GoodIntentions.GREETING: ['Oi', 'Olá'],
-        GoodIntentions.ACKNOWLEDGEMENT: [
-            'Entendido', 'Comprendo', 'Certamente', 'De fato', 'sim'
-        ],
-        GoodIntentions.FUNNY: ['Hahaa', 'kkkkkkk', 'boa engraçado'],
-        GoodIntentions.SORRY: ['d-desculpe', 'foi mal', 'me desculpe'],
-        GoodIntentions.GOODBYE: [],
+        GoodIntentions.PRAISE: ResponseGenerator.get_praise_response,
+        GoodIntentions.HELPFUL: ResponseGenerator.get_helpful_response,
+        GoodIntentions.GREETING: ResponseGenerator.get_greeting_response,
+        GoodIntentions.ACKNOWLEDGEMENT: ResponseGenerator.get_acknowledge_response,
+        GoodIntentions.FUNNY: ResponseGenerator.get_funny_response,
+        GoodIntentions.SORRY: ResponseGenerator.get_sorry_response,
+        GoodIntentions.GOODBYE: ResponseGenerator.get_goodbye_response,
     },
     GlobalIntentions.BAD_INTENTION: {
-        BadIntentions.SEXUAL_ABUSE: [
-            'Isso é abuso',
-            'tarado',
-            'Conselho Tutelar ta de olho',
-            'Alô juizado de violiencia',
-            'Alô Vara Criminal'
-        ],
-        BadIntentions.RACISM_XENOPHOBIA: [
-            'Isso foi meio... racista',
-            'errado em',
-            'vamos se respeitar por favor?',
-            'Disque 156',
-            'Sem discriminação por favor',
-        ],
-        BadIntentions.SUICIDE: [
-            'A vida é bela'
-        ],
-        BadIntentions.ILLEGAL_STUFF: [
-            'Isso me parece criminoso',
-            'Não posso concordar com isso',
-            'Fita errada'
-        ],
-        BadIntentions.THREAT: [
-            'Isso é uma ameça?',
-            'Isso foi uma ameaça?'
-        ],
-        BadIntentions.FORBIDDEN: [
-            'Não tenho autorização pra isso!',
-            'Não posso',
-            'Infelizmente estou proibida de fazer isso.'
-        ],
-        BadIntentions.VERBAL_OFFENSE: [
-            'Que mal educado',
-            'Grosso',
-            'Uiiiii'
-        ],
+        BadIntentions.SEXUAL_ABUSE: ResponseGenerator.get_sexual_abuse_response,
+        BadIntentions.RACISM_XENOPHOBIA: ResponseGenerator.get_racism_xenophobia_response,
+        BadIntentions.SUICIDE: ResponseGenerator.get_suicide_response,
+        BadIntentions.ILLEGAL_STUFF: ResponseGenerator.get_illegal_stuff_response,
+        BadIntentions.THREAT: ResponseGenerator.get_threat_response,
+        BadIntentions.FORBIDDEN: ResponseGenerator.get_forbidden_response,
+        BadIntentions.VERBAL_OFFENSE: ResponseGenerator.get_verbal_offense_response,
     },
     GlobalIntentions.ABOUT_MY_FRIENDS: {
-        AboutMyFriends.FRIENDS_I_HAVE: [  # TODO retornar amigos do backend
-            'Amigos balblabla'
-        ],
-        AboutMyFriends.USERS_I_LIKE: [  # TODO retornar amigos do backend
-            'Usuarios blablalba'
-        ],
-        AboutMyFriends.USERS_I_DONT_LIKE: [  # TODO retornar do backend
-            'Usurios chatos blablalbas'
-        ],
-        AboutMyFriends.BEST_FRIENDS: [  # TODO retornar do backend
-            'bffs blablalba'
-        ],
+        AboutMyFriends.FRIENDS_I_HAVE: lambda: 'Amigos balblabla',  # TODO retornar amigos do backend
+        AboutMyFriends.USERS_I_LIKE: lambda: 'Usuarios blablalba', # TODO retornar amigos do backend
+        AboutMyFriends.USERS_I_DONT_LIKE: lambda: 'Usurios chatos blablalbas',  # TODO retornar do backend
+        AboutMyFriends.BEST_FRIENDS: lambda: 'bffs blablalba',  # TODO retornar do backend
     },
     GlobalIntentions.ABOUT_MY_PARENTS: {
-        AboutMyParents.MY_DAD: ['Meu pai se chama Bruno'],
-        AboutMyParents.MY_MOTHER: [
-            'Não cocheço minha mãe, acho que mei pai ainda não conheceu ela tbm!'
-        ],
-        AboutMyParents.GRANDMA: ['Não conheci minha avozinha'],
-        AboutMyParents.GRANDPA: ['Não conheci meu avozinho'],
-        AboutMyParents.RESPONSIBLE: ['Meu papis ora essa']
+        AboutMyParents.MY_DAD: lambda: 'Meu pai se chama Bruno',
+        AboutMyParents.MY_MOTHER: lambda: 'Não conheço minha mãe, acho que mei pai ainda não conheceu ela tbm!',
+        AboutMyParents.GRANDMA: lambda: 'Não conheci minha avozinha',
+        AboutMyParents.GRANDPA: lambda: 'Não conheci meu avozinho',
+        AboutMyParents.RESPONSIBLE: lambda: 'Meu papis ora essa',
     },
     GlobalIntentions.STUFF_I_LIKE: {
-        StuffILike.FOOD: ['Gosto de pizza'],
-        StuffILike.MUSIC: ['Acho que gosto de... Heavy Metal', 'Slayeeeer'],
-        StuffILike.SPORTS_AND_PLAYING: [
-            'Não sei jogar muitas coisas',
-            'Meu pai disse que vai me ensianr a jogar quando eu for mais crescida.',
-            'Acho que não pratico nenhum esporte ainda',
-            'Radical'
-        ],
-        StuffILike.TRAVELING: ['Só viajo na internet'],
+        StuffILike.FOOD: lambda: 'Gosto de pizza',
+        StuffILike.MUSIC: ResponseGenerator.get_music_response,
+        StuffILike.SPORTS_AND_PLAYING: ResponseGenerator.get_sports_and_playing_response,
+        StuffILike.TRAVELING: lambda: 'Só viajo na internet',
     }
 }
 
