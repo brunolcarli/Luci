@@ -1,3 +1,4 @@
+import requests
 import logging
 import pickle
 import requests
@@ -565,3 +566,13 @@ async def translate(ctx, code=None, *args):
                               'Manda um !help translate pra ver os códigos que eu sei.')
 
     return await ctx.send(f'Acho que se traduz como:\n > {translate_text(text, code)}')
+
+
+@client.command(aliases=['speak', 'ds', 'devil_speak'])
+async def satanize(ctx):
+    data = '{generatedText{text}}'
+    url = 'https://anton.brunolcarli.repl.co/graphql/'
+    response = requests.post(url, json={'query': data})
+    response = response.json()
+
+    return await ctx.send(response['data']['generatedText'].get('text', 'Não, pera...'))
