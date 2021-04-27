@@ -206,6 +206,14 @@ def evaluate_math_expression(expression):
     for word, switch in word_switchs.items():
         expression = expression.replace(word, switch)
 
+    # calculates the probability of an "overcalculation"
+    if (len(expression) + 1) / (len(expression) + 2) > 0.9:
+        responses = [
+            'bem, acho que não sei calcular tanta coisa assim',
+            'sei lá, só tenho oito anos não sei fazer isso.'
+        ]
+        return choice(responses)
+
     filtered = ''.join(i for i in expression if i.isdigit() or i in valid_operators)
 
     try:
