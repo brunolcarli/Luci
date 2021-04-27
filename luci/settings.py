@@ -3,7 +3,7 @@ LUCI settings module.
 """
 from decouple import config
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 TOKEN = config('TOKEN', '')
 BACKEND_URL = config('BACKEND_URL', '')
