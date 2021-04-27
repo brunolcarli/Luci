@@ -12,3 +12,5 @@ SETTINGS_MODULE = config('SETTINGS_MODULE', 'common')
 
 REDIS_HOST = config('REDIS_HOST', 'localhost')
 REDIS_PORT = config('REDIS_PORT', '')
+
+MAIN_CHANNEL = config('MAIN_CHANNEL', '')
