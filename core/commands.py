@@ -19,7 +19,8 @@ from core.utils import (validate_text_offense, extract_sentiment,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id,
                         evaluate_math_expression, known_language_codes, translate_text)
-from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
+from core.gans import ResponseGenerator
+from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT, MAIN_CHANNEL
 
 
 nlp = spacy.load('pt')
@@ -66,7 +67,10 @@ class GuildTracker(commands.Cog):
                 if (elapsed_time.total_seconds() / 60 / 60) > self.window:
                     # envia mensagem no canal principal
                     log.info('Notifying channel %s', guild.system_channel.name)
-                    await guild.system_channel.send(choice(bored_messages))
+                    # await guild.system_channel.send(choice(bored_messages))
+                    channel = client.get_channel(int(MAIN_CHANNEL))
+                    if channel:
+                        await channel.send(choice(bored_messages))
 
                     # Renova a data de última mensagem para a data atual
                     self.short_memory.set(
@@ -89,6 +93,21 @@ class GuildTracker(commands.Cog):
                         log.info('Updated aptitude')
                     except Exception as err:
                         log.error(f'Erro: {str(err)}\n\n')
+
+
+@client.event
+async def on_member_join(member):
+    """
+    Greets the new member.
+    """
+    # Gets an hello
+    say_hi = ResponseGenerator.get_greeting_response()
+    while len(say_hi) < 2:
+        say_hi = ResponseGenerator.get_greeting_response()
+
+    channel = client.get_channel(int(MAIN_CHANNEL))
+    if channel:
+        await channel.send(f'{say_hi} {member.mention}')
 
 
 @client.event
@@ -115,7 +134,7 @@ async def on_message(message):
     short_memory.set(message.guild.id, str(message.created_at))
 
     text = message.content
-    
+
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
