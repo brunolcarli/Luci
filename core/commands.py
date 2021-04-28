@@ -102,13 +102,10 @@ async def on_member_join(member):
     Greets the new member.
     """
     # Gets an hello
-    say_hi = ResponseGenerator.get_greeting_response()
-    while len(say_hi) < 2:
-        say_hi = ResponseGenerator.get_greeting_response()
-
+    message = ResponseGenerator.get_greeting_response()
     channel = client.get_channel(int(MAIN_CHANNEL))
     if channel:
-        await channel.send(f'{say_hi} {member.mention}')
+        await channel.send(f'{message} {member.mention}')
 
 
 @client.event
