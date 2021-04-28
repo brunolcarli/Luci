@@ -68,7 +68,7 @@ class GuildTracker(commands.Cog):
 
                 if (elapsed_time.total_seconds() / 60 / 60) > self.window:
                     # envia mensagem no canal principal
-                    log.info('Notifying channel %s', channel(int(MAIN_CHANNEL)))
+                    log.info('Notifying channel %s', client.get_channel(int(MAIN_CHANNEL)))
 
                     if channel:
                         await channel.send(choice(bored_messages))
