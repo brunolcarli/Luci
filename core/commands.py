@@ -47,8 +47,10 @@ class GuildTracker(commands.Cog):
     async def track(self):
         """ Tracking task """
         log.info('tracking...')
+        channel = client.get_channel(int(MAIN_CHANNEL))
         for guild in self.guilds:
             log.info(guild.name)
+
             # data da última mensagem enviada no server
             try:
                 last_message_dt = parser.parse(self.short_memory.get(guild.id))
@@ -66,9 +68,8 @@ class GuildTracker(commands.Cog):
 
                 if (elapsed_time.total_seconds() / 60 / 60) > self.window:
                     # envia mensagem no canal principal
-                    log.info('Notifying channel %s', guild.system_channel.name)
-                    # await guild.system_channel.send(choice(bored_messages))
-                    channel = client.get_channel(int(MAIN_CHANNEL))
+                    log.info('Notifying channel %s', channel(int(MAIN_CHANNEL)))
+
                     if channel:
                         await channel.send(choice(bored_messages))
 
