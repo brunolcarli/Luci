@@ -587,9 +587,38 @@ async def translate(ctx, code=None, *args):
 
 @client.command(aliases=['speak', 'ds', 'devil_speak'])
 async def satanize(ctx):
+    """
+    Gera um texto satânico solicitado da API Anton..
+    """
     data = '{generatedText{text}}'
     url = 'https://anton.brunolcarli.repl.co/graphql/'
     response = requests.post(url, json={'query': data})
     response = response.json()
 
     return await ctx.send(response['data']['generatedText'].get('text', 'Não, pera...'))
+
+
+@client.command(aliases=['cfg', 'config'])
+async def custom_config(ctx):
+    """
+    Verifica as configurações customizaveis para este server.
+    """
+    server = make_hash('id', ctx.message.guild.id).decode('utf-8')
+    payload = Query.get_custom_config(server)
+    gql_client = get_gql_client(BACKEND_URL)
+
+    try:
+        response = gql_client.execute(payload)
+    except Exception as err:
+        log.error(f'Erro: {str(err)}\n\n')
+        return await ctx.send('D-desculpa, não consegui...')
+
+    data = response.get('custom_config')
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    embed.add_field(name='Server', value=data.get('server_name'), inline=True)
+    embed.add_field(name='Sys Channel', value=data.get('main_channel'), inline=True)
+    embed.add_field(name='Allow auto send message', value=data.get('allow_auto_send_messages'), inline=False)
+    embed.add_field(name='Allow chat learning', value=data.get('allow_learning_from_chat'), inline=False)
+    embed.add_field(name='Filter offensive messages', value=data.get('filter_offensive_messages'), inline=False)
+
+    return await ctx.send('Configurações do servidor:', embed=embed)
