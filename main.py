@@ -14,7 +14,7 @@ if __name__ == '__main__':
             ║  ║ ║║  ║
             ╩═╝╚═╝╚═╝╩
             ==========
-         Logical Unity for
+         Logical Unit for
     Communicational Interactivity
         '''
     )

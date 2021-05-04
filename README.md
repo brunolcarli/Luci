@@ -4,7 +4,7 @@
 
 # LUCI
 
-*Logical Unity for Communicational Interactivity*
+*Logical Unit for Communicational Interactivity*
 
 </td></tr>
 
