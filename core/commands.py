@@ -196,7 +196,7 @@ async def on_message(message):
         response = gql_client.execute(query)
     except Exception as error:
         log.error(str(error))
-        server_config = {}
+        response = {}
 
     server_config = response.get('custom_config')
 
