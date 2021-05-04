@@ -262,7 +262,7 @@ def train_greeting_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/greeting.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
         500,
         0.01

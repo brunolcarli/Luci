@@ -3,6 +3,7 @@ Defines requests, queries and connections to external platforms and services.
 """
 import json
 import requests
+from typing import Generic
 from gql import gql
 from luci.settings import LISA_URL
 
@@ -182,7 +183,26 @@ class Query:
             }}
         }}
         '''
+        return gql(query)
 
+    @staticmethod
+    def get_custom_config(reference: str) -> Generic:
+        """
+        Requisição graphql para buscar as cinfigurações customizaveis
+        da Luci para um determinado servidor em especial.
+        """
+        query = f'''
+        query {{
+            custom_config(reference: "{reference}") {{
+                reference
+                server_name
+                main_channel
+                allow_auto_send_messages
+                filter_offensive_messages
+                allow_learning_from_chat
+            }}
+        }}
+        '''
         return gql(query)
 
 

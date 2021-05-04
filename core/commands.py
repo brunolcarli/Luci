@@ -1,3 +1,4 @@
+import requests
 import logging
 import pickle
 import requests
@@ -18,7 +19,8 @@ from core.utils import (validate_text_offense, extract_sentiment,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id,
                         evaluate_math_expression, known_language_codes, translate_text)
-from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
+from core.gans import ResponseGenerator
+from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT, MAIN_CHANNEL
 
 
 nlp = spacy.load('pt')
@@ -28,7 +30,7 @@ log = logging.getLogger()
 
 class GuildTracker(commands.Cog):
     """
-    Acompanha a movimentaçnao de mensagens dos servidores que Luci pertence.
+    Acompanha a movimentação de mensagens dos servidores que Luci pertence.
     Luci recorda-se de quando foi a última mensagem enviada no server, se a
     mensagem exceder o período em horas definido na janela, ela se sentirá
     sozinha e aborrecida, enviando uma mensagem no canal geral do servidor.
@@ -37,7 +39,7 @@ class GuildTracker(commands.Cog):
     """
     def __init__(self):
         self.short_memory = redis.Redis(REDIS_HOST, REDIS_PORT, decode_responses=True)
-        self.window = 3  # janela de tempo = 3 horas
+        self.window = 8  # janela de tempo = 8 horas
         self.guilds = client.guilds
         self.track.start()
 
@@ -45,8 +47,28 @@ class GuildTracker(commands.Cog):
     async def track(self):
         """ Tracking task """
         log.info('tracking...')
+        gql_client = get_gql_client(BACKEND_URL)
+
         for guild in self.guilds:
             log.info(guild.name)
+
+            server = make_hash('id', guild.id).decode('utf-8')
+            # recupera a configuração do server
+            query = Query.get_custom_config(server)
+            try:
+                response = gql_client.execute(query)
+            except:
+                log.error(f'Cant get server {guild.name} config. Skipping!')
+                continue
+
+            server_config = response.get('custom_config')
+            main_channel = server_config.get('main_channel')
+
+            if not main_channel:
+                continue
+
+            channel = client.get_channel(int(main_channel))
+
             # data da última mensagem enviada no server
             try:
                 last_message_dt = parser.parse(self.short_memory.get(guild.id))
@@ -63,9 +85,10 @@ class GuildTracker(commands.Cog):
                 log.info(elapsed_time.total_seconds() / 60 / 60)
 
                 if (elapsed_time.total_seconds() / 60 / 60) > self.window:
-                    # envia mensagem no canal principal
-                    log.info('Notifying channel %s', guild.system_channel.name)
-                    await guild.system_channel.send(choice(bored_messages))
+                    if server_config.get('allow_auto_send_messages'):
+                        # envia mensagem no canal principal se autorizado
+                        log.info('Notifying channel %s', channel)
+                        await channel.send(choice(bored_messages))
 
                     # Renova a data de última mensagem para a data atual
                     self.short_memory.set(
@@ -73,12 +96,6 @@ class GuildTracker(commands.Cog):
                         str(now.astimezone(tz=timezone.utc))
                     )
                     log.info('Renewed datetime to %s', str(now))
-
-                    # O humor poderia ser localmente em um mongo
-                    # Atualiza o humor da Luci no backend
-                    server = make_hash('id', guild.id).decode('utf-8')
-                    gql_client = get_gql_client(BACKEND_URL)
-
                     payload = Mutation.update_emotion(
                         server=server,
                         aptitude=-0.1
@@ -88,6 +105,27 @@ class GuildTracker(commands.Cog):
                         log.info('Updated aptitude')
                     except Exception as err:
                         log.error(f'Erro: {str(err)}\n\n')
+
+
+@client.event
+async def on_member_join(member):
+    """
+    Greets the new member.
+    """
+    # Gets an hello
+    message = ResponseGenerator.get_greeting_response()
+    server_reference = make_hash('id', int(member.guild.id))
+    query = Query.get_custom_config(server_reference)
+    try:
+        response = gql_client.execute(query)
+    except:
+        log.error(f'Cant get server {server_reference} config. Skipping!')
+        return None
+
+    server_config = response.get('custom_config')
+    channel = client.get_channel(int(server_config.get('main_channel')))
+    if channel:
+        await channel.send(f'{message} {member.mention}')
 
 
 @client.event
@@ -108,13 +146,15 @@ async def on_message(message):
         return
 
     await client.process_commands(message)
+    
+    server = make_hash('id', message.guild.id).decode('utf-8')
 
     # guarda a data da mensagem como valor para o id da guilda
     short_memory = redis.Redis(REDIS_HOST, REDIS_PORT)
     short_memory.set(message.guild.id, str(message.created_at))
 
     text = message.content
-    
+
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
@@ -127,14 +167,13 @@ async def on_message(message):
         'text': text
     }
 
-    server = make_hash('id', message.guild.id).decode('utf-8')
     user_id = make_hash(server, message.author.id).decode('utf-8')
     gql_client = get_gql_client(BACKEND_URL)
 
     # Atualiza o humor da Luci
     payload = Mutation.update_emotion(server=server, **new_humor)
     try:
-        response = gql_client.execute(payload)
+        gql_client.execute(payload)
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
 
@@ -148,9 +187,19 @@ async def on_message(message):
     )
 
     try:
-        response = gql_client.execute(payload)
+        gql_client.execute(payload)
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
+
+    # get server configuration
+    query = Query.get_custom_config(server)
+    try:
+        response = gql_client.execute(query)
+    except Exception as error:
+        log.error(str(error))
+        response = {}
+
+    server_config = response.get('custom_config')
 
     # Atualiza reconhecimento de respostas, se for resposta à outra mensagem
     if message.reference:
@@ -190,7 +239,8 @@ async def on_message(message):
         return await channel.send(naive_response(remove_id(text)))
 
     # 10% chance to not answer if is offensive and lucis not mentioned
-    if is_offensive and choice([1, 0]) and choice([1, 0]):
+    is_allowed = server_config.get('allow_auto_send_messages')
+    if is_offensive and choice([1, 0]) and choice([1, 0]) and is_allowed:
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
 
@@ -276,20 +326,25 @@ async def random_quote(bot):
 
 
 @client.command(aliases=['q', 'sq', 'save_quote'])
-async def quote(bot, *args):
+async def quote(ctx, *args):
     """
     Ensina um novo quote à Luci
     """
     message = ' '.join(word for word in args)
-    author = bot.author.name
+    author = ctx.author.name
 
     if not message:
-        return await bot.send(
+        return await ctx.send(
             'Por favor insira uma mensagem.\nExemplo:\n'\
             '``` !quote my name is bond, vagabond ```'
         )
 
-    server = make_hash('id', bot.guild.id)
+    if '@' in message:
+        return await ctx.send(
+            'Eu não posso aprender esse tipo de coisa. Vou contar pro meu pai.'
+        )
+
+    server = make_hash('id', ctx.guild.id)
     payload = Mutation.create_quote(message, server.decode('utf-8'), author)
     client = get_gql_client(BACKEND_URL)
 
@@ -297,12 +352,12 @@ async def quote(bot, *args):
         response = client.execute(payload)
     except Exception as err:
         print(f'Erro: {str(err)}\n\n')
-        return await bot.send('Buguei')
+        return await ctx.send('Buguei')
 
     quote = response['create_quote'].get('quote')
     embed = discord.Embed(color=0x1E1E1E, type="rich")
     embed.add_field(name='Entendi:', value=quote.get('quote'), inline=True)
-    return await bot.send('Ok:', embed=embed)
+    return await ctx.send('Ok:', embed=embed)
 
 
 @client.command(aliases=['lero', 'lr', 'bl', 'blah', 'ps'])
@@ -565,3 +620,42 @@ async def translate(ctx, code=None, *args):
                               'Manda um !help translate pra ver os códigos que eu sei.')
 
     return await ctx.send(f'Acho que se traduz como:\n > {translate_text(text, code)}')
+
+
+@client.command(aliases=['speak', 'ds', 'devil_speak'])
+async def satanize(ctx):
+    """
+    Gera um texto satânico solicitado da API Anton..
+    """
+    data = '{generatedText{text}}'
+    url = 'https://anton.brunolcarli.repl.co/graphql/'
+    response = requests.post(url, json={'query': data})
+    response = response.json()
+
+    return await ctx.send(response['data']['generatedText'].get('text', 'Não, pera...'))
+
+
+@client.command(aliases=['cfg', 'config'])
+async def custom_config(ctx):
+    """
+    Verifica as configurações customizaveis para este server.
+    """
+    server = make_hash('id', ctx.message.guild.id).decode('utf-8')
+    payload = Query.get_custom_config(server)
+    gql_client = get_gql_client(BACKEND_URL)
+
+    try:
+        response = gql_client.execute(payload)
+    except Exception as err:
+        log.error(f'Erro: {str(err)}\n\n')
+        return await ctx.send('D-desculpa, não consegui...')
+
+    data = response.get('custom_config')
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    embed.add_field(name='Server', value=data.get('server_name'), inline=True)
+    embed.add_field(name='Sys Channel', value=data.get('main_channel'), inline=True)
+    embed.add_field(name='Allow auto send message', value=data.get('allow_auto_send_messages'), inline=False)
+    embed.add_field(name='Allow chat learning', value=data.get('allow_learning_from_chat'), inline=False)
+    embed.add_field(name='Filter offensive messages', value=data.get('filter_offensive_messages'), inline=False)
+
+    return await ctx.send('Configurações do servidor:', embed=embed)
