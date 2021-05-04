@@ -62,11 +62,12 @@ class GuildTracker(commands.Cog):
                 continue
 
             server_config = response.get('custom_config')
-            main_channel = int(server_config.get('main_channel', 0))
-            channel = client.get_channel(main_channel)
+            main_channel = server_config.get('main_channel')
 
-            if not channel:
+            if not main_channel:
                 continue
+
+            channel = client.get_channel(int(main_channel))
 
             # data da última mensagem enviada no server
             try:
