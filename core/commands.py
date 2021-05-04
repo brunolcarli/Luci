@@ -30,7 +30,7 @@ log = logging.getLogger()
 
 class GuildTracker(commands.Cog):
     """
-    Acompanha a movimentaçnao de mensagens dos servidores que Luci pertence.
+    Acompanha a movimentação de mensagens dos servidores que Luci pertence.
     Luci recorda-se de quando foi a última mensagem enviada no server, se a
     mensagem exceder o período em horas definido na janela, ela se sentirá
     sozinha e aborrecida, enviando uma mensagem no canal geral do servidor.
@@ -39,7 +39,7 @@ class GuildTracker(commands.Cog):
     """
     def __init__(self):
         self.short_memory = redis.Redis(REDIS_HOST, REDIS_PORT, decode_responses=True)
-        self.window = 3  # janela de tempo = 3 horas
+        self.window = 8  # janela de tempo = 8 horas
         self.guilds = client.guilds
         self.track.start()
 
@@ -47,9 +47,26 @@ class GuildTracker(commands.Cog):
     async def track(self):
         """ Tracking task """
         log.info('tracking...')
-        channel = client.get_channel(int(MAIN_CHANNEL))
+        gql_client = get_gql_client(BACKEND_URL)
+
         for guild in self.guilds:
             log.info(guild.name)
+
+            server = make_hash('id', guild.id).decode('utf-8')
+            # recupera a configuração do server
+            query = Query.get_custom_config(server)
+            try:
+                response = gql_client.execute(query)
+            except:
+                log.error(f'Cant get server {guild.name} config. Skipping!')
+                continue
+
+            server_config = response.get('custom_config')
+            main_channel = int(server_config.get('main_channel', 0))
+            channel = client.get_channel(main_channel)
+
+            if not channel:
+                continue
 
             # data da última mensagem enviada no server
             try:
@@ -67,10 +84,9 @@ class GuildTracker(commands.Cog):
                 log.info(elapsed_time.total_seconds() / 60 / 60)
 
                 if (elapsed_time.total_seconds() / 60 / 60) > self.window:
-                    # envia mensagem no canal principal
-                    log.info('Notifying channel %s', client.get_channel(int(MAIN_CHANNEL)))
-
-                    if channel:
+                    if server_config.get('allow_auto_send_messages'):
+                        # envia mensagem no canal principal se autorizado
+                        log.info('Notifying channel %s', channel)
                         await channel.send(choice(bored_messages))
 
                     # Renova a data de última mensagem para a data atual
@@ -79,12 +95,6 @@ class GuildTracker(commands.Cog):
                         str(now.astimezone(tz=timezone.utc))
                     )
                     log.info('Renewed datetime to %s', str(now))
-
-                    # O humor poderia ser localmente em um mongo
-                    # Atualiza o humor da Luci no backend
-                    server = make_hash('id', guild.id).decode('utf-8')
-                    gql_client = get_gql_client(BACKEND_URL)
-
                     payload = Mutation.update_emotion(
                         server=server,
                         aptitude=-0.1
@@ -103,7 +113,16 @@ async def on_member_join(member):
     """
     # Gets an hello
     message = ResponseGenerator.get_greeting_response()
-    channel = client.get_channel(int(MAIN_CHANNEL))
+    server_reference = make_hash('id', int(member.guild.id))
+    query = Query.get_custom_config(server_reference)
+    try:
+        response = gql_client.execute(query)
+    except:
+        log.error(f'Cant get server {server_reference} config. Skipping!')
+        return None
+
+    server_config = response.get('custom_config')
+    channel = client.get_channel(int(server_config.get('main_channel')))
     if channel:
         await channel.send(f'{message} {member.mention}')
 
@@ -126,6 +145,8 @@ async def on_message(message):
         return
 
     await client.process_commands(message)
+    
+    server = make_hash('id', message.guild.id).decode('utf-8')
 
     # guarda a data da mensagem como valor para o id da guilda
     short_memory = redis.Redis(REDIS_HOST, REDIS_PORT)
@@ -145,14 +166,13 @@ async def on_message(message):
         'text': text
     }
 
-    server = make_hash('id', message.guild.id).decode('utf-8')
     user_id = make_hash(server, message.author.id).decode('utf-8')
     gql_client = get_gql_client(BACKEND_URL)
 
     # Atualiza o humor da Luci
     payload = Mutation.update_emotion(server=server, **new_humor)
     try:
-        response = gql_client.execute(payload)
+        gql_client.execute(payload)
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
 
@@ -166,9 +186,19 @@ async def on_message(message):
     )
 
     try:
-        response = gql_client.execute(payload)
+        gql_client.execute(payload)
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
+
+    # get server configuration
+    query = Query.get_custom_config(server)
+    try:
+        response = gql_client.execute(query)
+    except Exception as error:
+        log.error(str(error))
+        server_config = {}
+
+    server_config = response.get('custom_config')
 
     # Atualiza reconhecimento de respostas, se for resposta à outra mensagem
     if message.reference:
@@ -208,7 +238,8 @@ async def on_message(message):
         return await channel.send(naive_response(remove_id(text)))
 
     # 10% chance to not answer if is offensive and lucis not mentioned
-    if is_offensive and choice([1, 0]) and choice([1, 0]):
+    is_allowed = server_config.get('allow_auto_send_messages')
+    if is_offensive and choice([1, 0]) and choice([1, 0]) and is_allowed:
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
 
@@ -294,17 +325,22 @@ async def random_quote(bot):
 
 
 @client.command(aliases=['q', 'sq', 'save_quote'])
-async def quote(bot, *args):
+async def quote(ctx, *args):
     """
     Ensina um novo quote à Luci
     """
     message = ' '.join(word for word in args)
-    author = bot.author.name
+    author = ctx.author.name
 
     if not message:
-        return await bot.send(
+        return await ctx.send(
             'Por favor insira uma mensagem.\nExemplo:\n'\
             '``` !quote my name is bond, vagabond ```'
+        )
+
+    if '@' in message:
+        return await ctx.send(
+            'Eu não posso aprender esse tipo de coisa. Vou contar pro meu pai.'
         )
 
     server = make_hash('id', bot.guild.id)
