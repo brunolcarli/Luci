@@ -343,7 +343,7 @@ async def quote(ctx, *args):
             'Eu não posso aprender esse tipo de coisa. Vou contar pro meu pai.'
         )
 
-    server = make_hash('id', bot.guild.id)
+    server = make_hash('id', ctx.guild.id)
     payload = Mutation.create_quote(message, server.decode('utf-8'), author)
     client = get_gql_client(BACKEND_URL)
 
@@ -351,12 +351,12 @@ async def quote(ctx, *args):
         response = client.execute(payload)
     except Exception as err:
         print(f'Erro: {str(err)}\n\n')
-        return await bot.send('Buguei')
+        return await ctx.send('Buguei')
 
     quote = response['create_quote'].get('quote')
     embed = discord.Embed(color=0x1E1E1E, type="rich")
     embed.add_field(name='Entendi:', value=quote.get('quote'), inline=True)
-    return await bot.send('Ok:', embed=embed)
+    return await ctx.send('Ok:', embed=embed)
 
 
 @client.command(aliases=['lero', 'lr', 'bl', 'blah', 'ps'])
