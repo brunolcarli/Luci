@@ -246,15 +246,6 @@ async def on_message(message):
     if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
-    query = Query.somal_black(message.content)
-    url = 'http://somal.brunolcarli.repl.co/graphql/'
-    response = requests.post(url, json={'query': query}).json()
-    print(response)
-    is_black = response['data']['guessBlack']
-    if is_black and choice([1, 0]) and choice([0, 1]):
-        return await channel.send(f'{message.author.mention} eu acho que isso '
-                                   'é uma coisa que o $Black diria')
-
 
 @client.command(aliases=['v'])
 async def version(discord):
