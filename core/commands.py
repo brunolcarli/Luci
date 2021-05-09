@@ -246,15 +246,12 @@ async def on_message(message):
     if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
-    query = Query.somal_black(server)
-    try:
-        response = gql_client.execute(query)
-    except Exception as error:
-        log.error(str(error))
-        response = {'data': {'guessBlack': False}}
-
+    query = Query.somal_black(message.content)
+    url = 'http://somal.brunolcarli.repl.co/graphql/'
+    response = requests.post(url, json={'query': query}).json()
+    print(response)
     is_black = response['data']['guessBlack']
-    if is_black and choice([1, 0]):
+    if is_black and choice([1, 0]) and choice([0, 1]):
         return await channel.send(f'{message.author.mention} eu acho que isso '
                                    'é uma coisa que o $Black diria')
 
