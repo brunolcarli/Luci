@@ -205,6 +205,15 @@ class Query:
         '''
         return gql(query)
 
+        @staticmethod
+
+    @staticmethod(f)
+    def somal_black(text):
+        """
+        Pergunta ao SOMAL se é uma frase que o chato do $Black teria dito.
+        """
+        return f'{{guessBlack(text: "{text}")}}'
+
 
 class Mutation:
     """

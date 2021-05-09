@@ -240,8 +240,23 @@ async def on_message(message):
 
     # 10% chance to not answer if is offensive and lucis not mentioned
     is_allowed = server_config.get('allow_auto_send_messages')
-    if is_offensive and choice([1, 0]) and choice([1, 0]) and is_allowed:
+    if not is_allowed:
+        return
+
+    if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
+
+    query = Query.somal_black(server)
+    try:
+        response = gql_client.execute(query)
+    except Exception as error:
+        log.error(str(error))
+        response = {'data': {'guessBlack': False}}
+
+    is_black = response['data']['guessBlack']
+    if is_black and choice([1, 0]):
+        return await channel.send(f'{message.author.mention} eu acho que isso '
+                                   'é uma coisa que o $Black diria')
 
 
 @client.command(aliases=['v'])
