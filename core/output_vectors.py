@@ -2,14 +2,50 @@
 Módulo para os vetores de mensagens que a LUCI pode utilizar para montar
 mensagens de saida.
 """
+from random import choice
 from core.enums import (GlobalIntentions, MyselfIntentions, GoodIntentions,
                         BadIntentions, AboutMyFriends, AboutMyParents, StuffILike)
 from core.gans import ResponseGenerator
+from core.emotions import EmotionHourglass
+from core.external_requests import Query
+from gql.transport.requests import RequestsHTTPTransport
+from gql import Client
+from luci.settings import BACKEND_URL
 
 
-# TODO: temporário
-def get_how_im_feeling():
-    return 'Não sei, ainda.'
+def get_how_im_feeling(**kwargs):
+
+    if not kwargs.get('reference'):
+        return 'Acho que não sei, to meio sei la...'
+
+    transport = RequestsHTTPTransport(url=BACKEND_URL, use_json=True)
+    client = Client(transport=transport, fetch_schema_from_transport=False)
+    payload = Query.get_emotions(kwargs['reference'])
+
+    try:
+        response = client.execute(payload)
+    except:
+        return 'Buguei...'
+
+    emotions = response.get('emotions', [None])[0]
+
+    if not emotions:
+        return 'Buguei...'
+
+    pleasantness = choice(emotion_messages.get(
+        EmotionHourglass.get_pleasantness(emotions.get('pleasantness', 0))
+    ))
+    attention = choice(emotion_messages.get(
+        EmotionHourglass.get_attention(emotions.get('attention', 0))
+    ))
+    sensitivity = choice(emotion_messages.get(
+        EmotionHourglass.get_sensitivity(emotions.get('sensitivity', 0))
+    ))
+    aptitude = choice(emotion_messages.get(
+        EmotionHourglass.get_aptitude(emotions.get('aptitude', 0))
+    ))
+
+    return f'Me sinto {pleasantness}, além de {attention}. Também {sensitivity} e {aptitude}.'
 
 
 # Vetor de lero-lero
@@ -677,23 +713,23 @@ intention_responses = {
         BadIntentions.VERBAL_OFFENSE: ResponseGenerator.get_verbal_offense_response,
     },
     GlobalIntentions.ABOUT_MY_FRIENDS: {
-        AboutMyFriends.FRIENDS_I_HAVE: lambda: 'Amigos balblabla',  # TODO retornar amigos do backend
-        AboutMyFriends.USERS_I_LIKE: lambda: 'Usuarios blablalba', # TODO retornar amigos do backend
-        AboutMyFriends.USERS_I_DONT_LIKE: lambda: 'Usurios chatos blablalbas',  # TODO retornar do backend
-        AboutMyFriends.BEST_FRIENDS: lambda: 'bffs blablalba',  # TODO retornar do backend
+        AboutMyFriends.FRIENDS_I_HAVE: lambda **_: 'Amigos balblabla',  # TODO retornar amigos do backend
+        AboutMyFriends.USERS_I_LIKE: lambda **_: 'Usuarios blablalba', # TODO retornar amigos do backend
+        AboutMyFriends.USERS_I_DONT_LIKE: lambda **_: 'Usurios chatos blablalbas',  # TODO retornar do backend
+        AboutMyFriends.BEST_FRIENDS: lambda **_: 'bffs blablalba',  # TODO retornar do backend
     },
     GlobalIntentions.ABOUT_MY_PARENTS: {
-        AboutMyParents.MY_DAD: lambda: 'Meu pai se chama Bruno',
-        AboutMyParents.MY_MOTHER: lambda: 'Não conheço minha mãe, acho que mei pai ainda não conheceu ela tbm!',
-        AboutMyParents.GRANDMA: lambda: 'Não conheci minha avozinha',
-        AboutMyParents.GRANDPA: lambda: 'Não conheci meu avozinho',
-        AboutMyParents.RESPONSIBLE: lambda: 'Meu papis ora essa',
+        AboutMyParents.MY_DAD: lambda **_: 'Meu pai se chama Bruno',
+        AboutMyParents.MY_MOTHER: lambda **_: 'Não conheço minha mãe, acho que mei pai ainda não conheceu ela tbm!',
+        AboutMyParents.GRANDMA: lambda **_: 'Não conheci minha avozinha',
+        AboutMyParents.GRANDPA: lambda **_: 'Não conheci meu avozinho',
+        AboutMyParents.RESPONSIBLE: lambda **_: 'Meu papis ora essa',
     },
     GlobalIntentions.STUFF_I_LIKE: {
-        StuffILike.FOOD: lambda: 'Gosto de pizza',
+        StuffILike.FOOD: lambda **_: 'Gosto de pizza',
         StuffILike.MUSIC: ResponseGenerator.get_music_response,
         StuffILike.SPORTS_AND_PLAYING: ResponseGenerator.get_sports_and_playing_response,
-        StuffILike.TRAVELING: lambda: 'Só viajo na internet',
+        StuffILike.TRAVELING: lambda **_: 'Só viajo na internet',
     }
 }
 
@@ -707,3 +743,25 @@ bored_messages = [
     'Galera ta animada aqui, só que não xD',
     'Vocês não falam mais aqui, to me sentindo sozinha :('
 ]
+
+emotion_messages = {
+    'joy': ['total felizona', 'super alegre', 'me sinto bem', 'contente'],
+    'serenity': ['bem calma e em paz', 'me sinto zen', 'relaxada'],
+    'pensiveness': ['um pouco pensativa', 'refletindo', 'viajando um pouco'],
+    'grief': ['meio angustiada', 'super deprê', 'to pra baixo'],
+    'anticipation': ['meio agitada', 'de ímpeto cheio', 'elétrica, mas deve ser o açucar'],
+    'interest': ['to focada', 'um pouco comovida', 'estudando', 'devereas interessada'],
+    'distraction': ['ando meio distraída', 'divagando muito', 'não tenho prestado muita atenção'],
+    'amazement': ['impressionada', 'bem maravilhada', 'encantada'],
+    'anger': ['muito brava', 'to nervosa', 'to pistola'],
+    'annoyance': ['me sinto aborrecida', 'incomodada com algumas coisas', 'chateada'],
+    'apprehension': ['com receio', 'receosa', 'apreensiva', 'meio anciosa'],
+    'terror': ['to com medo', 'aterrorizada', 'bastante medo'],
+    'acceptance': ['bem disposta', 'receptiva', 'só positividade'],
+    'boredom': ['entediada', 'com bastante tédio', 'aborrecida'],
+    'neutral': ['bem de boa', 'suave', 'em equilibrio', 'com a mente tranquila', 'em paz comigo mesma'],
+    'sadness': ['muito triste', 'ai só tristeza', 'tristinha'],
+    'trust': ['confiante', 'sinto que posso fazer qualquer coisa', 'to no grau'],
+    'loathing': ['meio enjoada', 'repugnada', 'com nojinho']
+}
+

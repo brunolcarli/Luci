@@ -236,11 +236,16 @@ async def on_message(message):
                 return await channel.send(choice(possible_responses))
 
         # Caso não conheça nenhuma resposta, use o classificador inocente
-        return await channel.send(naive_response(remove_id(text)))
+        return await channel.send(
+            naive_response(remove_id(text), reference=server)
+        )
 
     # 10% chance to not answer if is offensive and lucis not mentioned
     is_allowed = server_config.get('allow_auto_send_messages')
-    if is_offensive and choice([1, 0]) and choice([1, 0]) and is_allowed:
+    if not is_allowed:
+        return
+
+    if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
 
 
