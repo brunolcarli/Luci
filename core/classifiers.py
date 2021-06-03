@@ -104,7 +104,7 @@ def get_bad_intention(text_vector):
     return Intentions.bad_intentions.get(recognizer.predict([text_vector])[0])
 
 
-def naive_response(text):
+def naive_response(text, **kwargs):
     """
     Mecanismo de resposta inocente.
     Recebe um texto e responde com uma resposta aleatoria para esta intenção.
@@ -132,7 +132,7 @@ def naive_response(text):
     # gets a random answer for the specific intention
     response = intention_responses[global_intention][specific_intention]
 
-    return response()
+    return response(**kwargs)
 
 
 def get_intentions(text):

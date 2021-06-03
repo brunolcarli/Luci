@@ -26,7 +26,7 @@ class EmotionHourglass:
             if -2 < value <= -1:
                 return 'pensiveness' 
             elif value <= -2:
-                return 'sadness'
+                return 'grief'
             else:
                 return 'neutral'
 
@@ -52,7 +52,7 @@ class EmotionHourglass:
             if -2 < value <= -1:
                 return 'distraction' 
             elif value <= -2:
-                return 'surprise'
+                return 'amazement'
             else:
                 return 'neutral'
 
@@ -76,9 +76,9 @@ class EmotionHourglass:
 
         elif value < 0:
             if -2 < value <= -1:
-                return 'aprehension' 
+                return 'apprehension' 
             elif value <= -2:
-                return 'fear'
+                return 'terror'
             else:
                 return 'neutral'
 
@@ -104,7 +104,7 @@ class EmotionHourglass:
             if -2 < value <= -1:
                 return 'boredom' 
             elif value <= -2:
-                return 'disgust'
+                return 'loathing'
             else:
                 return 'neutral'
 
