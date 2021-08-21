@@ -18,7 +18,8 @@ from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id,
-                        evaluate_math_expression, known_language_codes, translate_text)
+                        evaluate_math_expression, known_language_codes, translate_text,
+                        get_short_memory_value, set_short_memory_value)
 from core.gans import ResponseGenerator
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT, MAIN_CHANNEL
 
@@ -70,41 +71,43 @@ class GuildTracker(commands.Cog):
             channel = client.get_channel(int(main_channel))
 
             # data da última mensagem enviada no server
-            try:
-                last_message_dt = parser.parse(self.short_memory.get(guild.id))
-            except:
-                last_message_dt = None
+            guild_memory = self.short_memory.get(guild.id)
+            if guild_memory:
+                try:
+                    last_message_dt = parser.parse(g)
+                except:
+                    last_message_dt = None
 
-            if last_message_dt:
-                now = datetime.now().astimezone(tz=timezone.utc)
-                elapsed_time = now.replace(tzinfo=None) - last_message_dt.replace(tzinfo=None)
+                if last_message_dt:
+                    now = datetime.now().astimezone(tz=timezone.utc)
+                    elapsed_time = now.replace(tzinfo=None) - last_message_dt.replace(tzinfo=None)
 
-                log.info('elapsed time: ')
-                log.info(elapsed_time)
-                log.info('total: ')
-                log.info(elapsed_time.total_seconds() / 60 / 60)
+                    log.info('elapsed time: ')
+                    log.info(elapsed_time)
+                    log.info('total: ')
+                    log.info(elapsed_time.total_seconds() / 60 / 60)
 
-                if (elapsed_time.total_seconds() / 60 / 60) > self.window:
-                    if server_config.get('allow_auto_send_messages'):
-                        # envia mensagem no canal principal se autorizado
-                        log.info('Notifying channel %s', channel)
-                        await channel.send(choice(bored_messages))
+                    if (elapsed_time.total_seconds() / 60 / 60) > self.window:
+                        if server_config.get('allow_auto_send_messages'):
+                            # envia mensagem no canal principal se autorizado
+                            log.info('Notifying channel %s', channel)
+                            await channel.send(choice(bored_messages))
 
-                    # Renova a data de última mensagem para a data atual
-                    self.short_memory.set(
-                        guild.id,
-                        str(now.astimezone(tz=timezone.utc))
-                    )
-                    log.info('Renewed datetime to %s', str(now))
-                    payload = Mutation.update_emotion(
-                        server=server,
-                        aptitude=-0.1
-                    )
-                    try:
-                        response = gql_client.execute(payload)
-                        log.info('Updated aptitude')
-                    except Exception as err:
-                        log.error(f'Erro: {str(err)}\n\n')
+                        # Renova a data de última mensagem para a data atual
+                        memory = get_short_memory_value(server)
+                        memory['last_message_dt'] = str(now.astimezone(tz=timezone.utc))
+                        set_short_memory_value(server, memory)
+
+                        log.info('Renewed datetime to %s', str(now))
+                        payload = Mutation.update_emotion(
+                            server=server,
+                            aptitude=-0.1
+                        )
+                        try:
+                            response = gql_client.execute(payload)
+                            log.info('Updated aptitude')
+                        except Exception as err:
+                            log.error(f'Erro: {str(err)}\n\n')
 
 
 @client.event
@@ -125,7 +128,8 @@ async def on_member_join(member):
     server_config = response.get('custom_config')
     channel = client.get_channel(int(server_config.get('main_channel')))
     if channel:
-        await channel.send(f'{message} {member.mention}')
+        await channel.send('https://media.discordapp.net/attachments/590678517407285251/865606198341926912/jerry.gif?width=979&height=466')
+        await channel.send(f'{message} bem vinde.')
 
 
 @client.event
@@ -146,12 +150,14 @@ async def on_message(message):
         return
 
     await client.process_commands(message)
-    
-    server = make_hash('id', message.guild.id).decode('utf-8')
 
+    server = make_hash('id', message.guild.id).decode('utf-8')
+    if message.content.startswith('!'):  # não processa comandos
+        return None
     # guarda a data da mensagem como valor para o id da guilda
-    short_memory = redis.Redis(REDIS_HOST, REDIS_PORT)
-    short_memory.set(message.guild.id, str(message.created_at))
+    memory = get_short_memory_value(server)
+    memory['last_message_dt'] = str(message.created_at)
+    set_short_memory_value(server, memory)
 
     text = message.content
 
@@ -325,7 +331,33 @@ async def random_quote(bot):
     if not quotes:
         return await bot.send('Ainda não aprendi quotes neste servidor')
 
+    # sorteia um quote vindo da memória de longo rpazo
     chosen_quote = choice([quote['quote'] for quote in quotes])
+    # recupera os últimos quotes ditos nesse server da memória de curto prazo
+    server_memory = get_short_memory_value(server)
+
+    # se o quote sorteado não for um quote repetido
+    if chosen_quote not in server_memory.get('last_quotes', []):
+        # atualiza memória de curto prazo e retorna o quote sorteado
+        server_memory['last_quotes'].append(chosen_quote)
+        if len(server_memory['last_quotes']) > 10:
+            server_memory['last_quotes'].pop(0)
+        set_short_memory_value(server, server_memory)
+        return await bot.send(chosen_quote)
+
+    # se ela souber menos que 10 quotes nesse server pode retornar o quote repetido mesmo
+    if len(quotes) < 10:
+        return await bot.send(chosen_quote)
+
+    # Se não tem que ir sorteando quotes até não ser repetido
+    while chosen_quote in server_memory['last_quotes']:
+        chosen_quote = choice([quote['quote'] for quote in quotes])
+
+    # Atualiza a memória de curto rpazo ao selecionar o quote
+    server_memory['last_quotes'].append(chosen_quote)
+    if len(server_memory['last_quotes']) > 10:
+        server_memory['last_quotes'].pop(0)
+    set_short_memory_value(server, server_memory)
 
     return await bot.send(chosen_quote)
 

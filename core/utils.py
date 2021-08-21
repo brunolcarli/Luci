@@ -1,16 +1,19 @@
+from typing import Optional
 import re
 import base64
 import pickle
 from random import choice
 import spacy
 import wikipedia
+from redis import Redis
 from gql import Client
 from deep_translator import GoogleTranslator
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
 from core.output_vectors import (intention_responses, opinions,
                                  propositions)
-
+from core.types import CompressedDict
+from luci.settings import REDIS_HOST, REDIS_PORT
 
 nlp = spacy.load('pt')
 
@@ -229,3 +232,34 @@ def translate_text(text, lang):
     Traduz um texto para uma outroa linguagem
     """
     return GoogleTranslator(target=lang).translate(text)
+
+
+def get_short_memory_value(key: str) -> dict:
+    """
+    Recupera um valor da memória de curto prazo.
+    Caso o valor não exista, retorna uma estrutura default
+    """
+    short_memory = Redis(REDIS_HOST, REDIS_PORT)
+    memory = short_memory.get(key)
+
+    if memory:
+        return CompressedDict.decompress_bytes(memory)
+
+    # Se não houver memórias vamos instanciar uma nova memória
+    memory = {
+        'last_message_dt': None,
+        'last_quotes': []
+    }
+    short_memory.set(key, CompressedDict(memory).bit_string)
+
+    return memory
+
+
+def set_short_memory_value(key: str, value: Optional) -> bool:
+    """
+    Atualiza um valor da memória de curto prazo.
+    """
+    short_memory = Redis(REDIS_HOST, REDIS_PORT)
+    result = short_memory.set(key, CompressedDict(value).bit_string)
+
+    return result
