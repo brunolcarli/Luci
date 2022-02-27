@@ -109,6 +109,8 @@ class GuildTracker(commands.Cog):
                         except Exception as err:
                             log.error(f'Erro: {str(err)}\n\n')
 
+        self.guilds = client.guilds
+
 
 @client.event
 async def on_member_join(member):
@@ -119,6 +121,7 @@ async def on_member_join(member):
     message = ResponseGenerator.get_greeting_response()
     server_reference = make_hash('id', int(member.guild.id))
     query = Query.get_custom_config(server_reference)
+    gql_client = get_gql_client(BACKEND_URL)
     try:
         response = gql_client.execute(query)
     except:
@@ -245,6 +248,9 @@ async def on_message(message):
         return await channel.send(
             naive_response(remove_id(text), reference=server)
         )
+
+    if not server_config:
+        return
 
     # 10% chance to not answer if is offensive and lucis not mentioned
     is_allowed = server_config.get('allow_auto_send_messages')
@@ -452,7 +458,7 @@ async def user_status(ctx):
     """
     mentions = ctx.message.mentions
     if not mentions:
-        return await tx.send(
+        return await ctx.send(
             'Não sei de quem vc está falando. Marca ele tipo @Fulano.'
         )
 
@@ -696,3 +702,34 @@ async def custom_config(ctx):
     embed.add_field(name='Filter offensive messages', value=data.get('filter_offensive_messages'), inline=False)
 
     return await ctx.send('Configurações do servidor:', embed=embed)
+
+
+@client.command()
+@commands.is_owner()
+async def leave_guild(ctx, *, guild_reference=None):
+    """
+    Comando restrito: Faz a Luci sair de um servidor indesejado.
+    """
+    if not guild_reference:
+        return await ctx.send(
+            'Tem que me dizer o nome ou id do server né :rolling_eyes:'
+        )
+
+    guild_by_name = discord.utils.get(client.guilds, name=guild_reference)
+    guild_by_id = client.get_guild(int(guild_reference))
+    if guild_by_name is None and guild_by_id is None:
+        return await ctx.send('Hmm não conheço esse server.')
+
+    guild = guild_by_name or guild_by_id
+    await client.get_guild(guild.id).leave()
+    await ctx.send(f":ok_hand: pulei fora do server: {guild.name} ({guild.id})")
+
+
+@client.command()
+@commands.is_owner()
+async def list_guilds(ctx):
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    for guild in client.guilds:
+        embed.add_field(name=guild.name, value=guild.id, inline=True)
+
+    await ctx.send('Lista de servers que eu estou:', embed=embed)
