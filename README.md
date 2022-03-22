@@ -52,7 +52,7 @@ LISA_URL=<lisa_url>
 BACKEND_URL=None
 SETTINGS_MODULE=development
 REDIS_HOST=<redis_server_host>
-REDIS_HOST=<redis_server_port>
+REDIS_PORT=<redis_server_port>
 ```
 
 You should configure your own environment cloning both lisa and bot api:
