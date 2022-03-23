@@ -200,16 +200,6 @@ async def on_message(message):
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
 
-    # get server configuration
-    query = Query.get_custom_config(server)
-    try:
-        response = gql_client.execute(query)
-    except Exception as error:
-        log.error(str(error))
-        response = {}
-
-    server_config = response.get('custom_config')
-
     # Atualiza reconhecimento de respostas, se for resposta à outra mensagem
     if message.reference:
         payload = Mutation.assign_response(
@@ -248,14 +238,6 @@ async def on_message(message):
         return await channel.send(
             naive_response(remove_id(text), reference=server)
         )
-
-    if not server_config:
-        return
-
-    # 10% chance to not answer if is offensive and lucis not mentioned
-    is_allowed = server_config.get('allow_auto_send_messages')
-    if not is_allowed:
-        return
 
     if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
