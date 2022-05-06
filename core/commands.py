@@ -1,4 +1,5 @@
-import requests
+
+from collections import Counter
 import logging
 import pickle
 import requests
@@ -19,7 +20,7 @@ from core.utils import (validate_text_offense, extract_sentiment,
                         make_hash, get_gql_client, remove_id, get_wiki,
                         get_random_blahblahblah, extract_user_id,
                         evaluate_math_expression, known_language_codes, translate_text,
-                        get_short_memory_value, set_short_memory_value)
+                        get_short_memory_value, set_short_memory_value, score)
 from core.gans import ResponseGenerator
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT, MAIN_CHANNEL
 
@@ -200,16 +201,6 @@ async def on_message(message):
     except Exception as err:
         log.error(f'Erro: {str(err)}\n\n')
 
-    # get server configuration
-    query = Query.get_custom_config(server)
-    try:
-        response = gql_client.execute(query)
-    except Exception as error:
-        log.error(str(error))
-        response = {}
-
-    server_config = response.get('custom_config')
-
     # Atualiza reconhecimento de respostas, se for resposta à outra mensagem
     if message.reference:
         payload = Mutation.assign_response(
@@ -248,14 +239,6 @@ async def on_message(message):
         return await channel.send(
             naive_response(remove_id(text), reference=server)
         )
-
-    if not server_config:
-        return
-
-    # 10% chance to not answer if is offensive and lucis not mentioned
-    is_allowed = server_config.get('allow_auto_send_messages')
-    if not is_allowed:
-        return
 
     if is_offensive and choice([1, 0]) and choice([1, 0]):
         return await channel.send(f'{message.author.mention} {choice(offended)}')
@@ -733,3 +716,49 @@ async def list_guilds(ctx):
         embed.add_field(name=guild.name, value=guild.id, inline=True)
 
     await ctx.send('Lista de servers que eu estou:', embed=embed)
+
+
+@client.command(aliases=['agm'])
+async def anagram(ctx, word=None):
+    """
+    Lista anagramas para a palavra fornecida a partir da base de palavras
+    conhecidas pela Luci.
+
+    Uma palavra composta por mais de uma letra é necessária neste comando!
+    Exemplo:
+        !anagram pato
+    """
+    if not word:
+        return await ctx.send('Me fale uma palávra.')
+
+    if len(word) < 2:
+        return await ctx.send('Essa palávra é muito pequena, me diz uma com mais letras.')
+
+    word = word.lower()
+    payload = Query.words_for_anagram(word)
+    client = get_gql_client(BACKEND_URL)
+
+    try:
+        response = client.execute(payload)
+    except Exception as err:
+        print(f'Erro: {str(err)}\n\n')
+        return await ctx.send('Buguei')
+
+    words = response.get('words')
+    if not words:
+        return await ctx.send('Ah, não conheço anagramas para esta palávra.')
+    pattern = Counter(word)
+    anagrams = [(i['token'], score(i['token'])) for i in words
+                if i['token'] != word and Counter(i['token']) == pattern]
+
+    if not anagrams:
+        return await ctx.send('Ah, não conheço anagramas para esta palávra.')
+
+    # sort by word score
+    anagrams = sorted(anagrams, key=lambda k: k[1], reverse=True)
+    
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    for anagram in anagrams[:10]:
+        embed.add_field(name=anagram[0], value=f'Score: {anagram[1]}', inline=True)
+
+    await ctx.send(f'Top 10 anagramas para {word}', embed=embed)

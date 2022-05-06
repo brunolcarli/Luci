@@ -206,11 +206,12 @@ class Query:
         return gql(query)
     
     @staticmethod
-    def somal_black(text):
+    def words_for_anagram(token):
         """
-        Pergunta ao SOMAL se é uma frase que o chato do $Black teria dito.
+        Recupera palávras conhecidas cujas possuam mesmo número de caracteres
+        que a palavra fornecida como argumento.
         """
-        return f'{{guessBlack(text: "{text}")}}'
+        return gql(f'{{words(length: {len(token)}){{token}}}}')
 
 
 class Mutation:

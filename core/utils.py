@@ -1,3 +1,4 @@
+from string import ascii_letters
 from typing import Optional
 import re
 import base64
@@ -263,3 +264,22 @@ def set_short_memory_value(key: str, value: Optional) -> bool:
     result = short_memory.set(key, CompressedDict(value).bit_string)
 
     return result
+
+
+def dist(a, b):
+    """ Verifica a distancia entre duas letras do alfabeto """
+    b_value = ascii_letters.index(b) + 1
+    a_value = ascii_letters.index(a) + 1
+
+    return abs(a_value - b_value)
+
+
+def score(word):
+    distances = 0
+    if len(word) < 2:
+        return 0
+
+    for i in range(1, len(word)):
+        distances += dist(word[i-1], word[i])
+
+    return distances
