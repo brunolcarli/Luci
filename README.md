@@ -1,6 +1,6 @@
 <table align="center"><tr><td align="center" width="9999">
 
-<img src="https://images.generated.photos/jqguEfsi0Q7fghDlnuQ-KPkFkalSLGNHcgTIBMLVMyw/rs:fit:512:512/Z3M6Ly9nZW5lcmF0/ZWQtcGhvdG9zL3Yz/XzA5MTU5MzkuanBn.jpg" align="center" width="170" alt="Project icon">
+<img src="https://i.ibb.co/tmY85yh/fe23f6a0236180d38788e5cae3e1f5b9.png" align="center" width="170" alt="Project icon">
 
 # LUCI
 
@@ -52,7 +52,7 @@ LISA_URL=<lisa_url>
 BACKEND_URL=None
 SETTINGS_MODULE=development
 REDIS_HOST=<redis_server_host>
-REDIS_HOST=<redis_server_port>
+REDIS_PORT=<redis_server_port>
 ```
 
 You should configure your own environment cloning both lisa and bot api:
