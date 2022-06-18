@@ -729,10 +729,10 @@ async def anagram(ctx, word=None):
         !anagram pato
     """
     if not word:
-        return await ctx.send('Me fale uma palávra.')
+        return await ctx.send('Me fale uma palavra.')
 
     if len(word) < 2:
-        return await ctx.send('Essa palávra é muito pequena, me diz uma com mais letras.')
+        return await ctx.send('Essa palavra é muito pequena, me diz uma com mais letras.')
 
     word = word.lower()
     payload = Query.words_for_anagram(word)
@@ -746,13 +746,13 @@ async def anagram(ctx, word=None):
 
     words = response.get('words')
     if not words:
-        return await ctx.send('Ah, não conheço anagramas para esta palávra.')
+        return await ctx.send('Ah, não conheço anagramas para esta palavra.')
     pattern = Counter(word)
     anagrams = [(i['token'], score(i['token'])) for i in words
                 if i['token'] != word and Counter(i['token']) == pattern]
 
     if not anagrams:
-        return await ctx.send('Ah, não conheço anagramas para esta palávra.')
+        return await ctx.send('Ah, não conheço anagramas para esta palavra.')
 
     # sort by word score
     anagrams = sorted(anagrams, key=lambda k: k[1], reverse=True)
