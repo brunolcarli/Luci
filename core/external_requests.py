@@ -59,6 +59,8 @@ class Query:
         query {{
             quotes(reference: "{server}"){{
                 quote
+                author
+                date
             }}
         }}
         '''

@@ -202,7 +202,7 @@ async def on_message(message):
                 possible_response=msg
             )
             try:
-                response = gql_client.execute(payload)
+                gql_client.execute(payload)
             except Exception as err:
                 log.error(f'Erro: {str(err)}\n\n')
             else:
@@ -252,32 +252,12 @@ async def on_message(message):
         )
 
         try:
-            response = gql_client.execute(payload)
+            gql_client.execute(payload)
         except Exception as err:
             log.error(f'Erro: {str(err)}\n\n')
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
-        # # busca possíveis respostas na memória de longo prazo
-        # payload = Query.get_possible_responses(
-        #     text=remove_id(text)
-        # )
-
-        # try:
-        #     response = gql_client.execute(payload)
-        # except Exception as err:
-        #     log.error(f'Erro: {str(err)}\n\n')
-        #     response = {'messages': []}
-
-        # if response.get('messages'):
-        #     possible_responses = []
-        #     for msg in response['messages']:
-        #         for possible_response in msg.get('possible_responses'):
-        #             possible_responses.append(possible_response.get('text'))
-
-        #     if possible_responses:
-        #         return await channel.send(choice(possible_responses))
-
         answer = generate_answer(text)
         if answer:
             return await channel.send(answer)
@@ -368,34 +348,34 @@ async def random_quote(bot):
         return await bot.send('Ainda não aprendi quotes neste servidor')
 
     # sorteia um quote vindo da memória de longo rpazo
-    chosen_quote = choice([quote['quote'] for quote in quotes])
+    chosen_quote = choice(quotes)
     # recupera os últimos quotes ditos nesse server da memória de curto prazo
     server_memory = get_short_memory_value(server)
 
     # se o quote sorteado não for um quote repetido
-    if chosen_quote not in server_memory.get('last_quotes', []):
+    if chosen_quote['quote'] not in server_memory.get('last_quotes', []):
         # atualiza memória de curto prazo e retorna o quote sorteado
-        server_memory['last_quotes'].append(chosen_quote)
+        server_memory['last_quotes'].append(chosen_quote['quote'])
         if len(server_memory['last_quotes']) > 10:
             server_memory['last_quotes'].pop(0)
         set_short_memory_value(server, server_memory)
-        return await bot.send(chosen_quote)
+        return await bot.send(f'{chosen_quote["quote"]} ~ {chosen_quote["author"]}')
 
     # se ela souber menos que 10 quotes nesse server pode retornar o quote repetido mesmo
     if len(quotes) < 10:
-        return await bot.send(chosen_quote)
+        return await bot.send(f'{chosen_quote["quote"]} ~ {chosen_quote["author"]}')
 
     # Se não tem que ir sorteando quotes até não ser repetido
-    while chosen_quote in server_memory['last_quotes']:
-        chosen_quote = choice([quote['quote'] for quote in quotes])
+    while chosen_quote['quote'] in server_memory['last_quotes']:
+        chosen_quote = choice(quotes)
 
     # Atualiza a memória de curto rpazo ao selecionar o quote
-    server_memory['last_quotes'].append(chosen_quote)
+    server_memory['last_quotes'].append(chosen_quote['quote'])
     if len(server_memory['last_quotes']) > 10:
         server_memory['last_quotes'].pop(0)
     set_short_memory_value(server, server_memory)
 
-    return await bot.send(chosen_quote)
+    return await bot.send(f'{chosen_quote["quote"]} ~ {chosen_quote["author"]}')
 
 
 @client.command(aliases=['q', 'sq', 'save_quote'])
