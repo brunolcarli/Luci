@@ -579,27 +579,6 @@ async def friendship(ctx, opt=None):
     return await ctx.send('Membros que eu mais curto :blush:', embed=embed)
 
 
-# @client.command(aliases=['g', 'who_said', 'ws'])
-# async def guess(ctx, *args):
-#     """
-#     Luci tenta adivinhar quem disse a frase.
-#     """
-#     text = ' '.join(char for char in args)
-#     query = Query.somal_guess(text)
-#     url = 'http://somal.brunolcarli.repl.co/graphql/'
-
-#     response = requests.post(url, json={'query': query}).json()
-#     target = response['data'].get('guess')
-
-#     if target:
-#         if target == 'bruno':
-#             return await ctx.send('Eu acho que quem disse isso foi o Bruno.')
-
-#         return await ctx.send(f'Acho que quem disse isso foi o tio {target.capitalize()}')
-
-#     return await ctx.send('Acho que não sei quem disse isso, sei la...')
-
-
 @client.command(aliases=['wt', 'src', 'who_teached_you'])
 async def source(ctx, *args):
     """
