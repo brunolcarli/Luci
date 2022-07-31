@@ -1,8 +1,7 @@
 from collections import Counter
 import logging
-import pickle
-import requests
 from random import choice, randint, random
+import requests
 import spacy
 import redis
 import discord
@@ -10,9 +9,8 @@ from discord.ext import commands, tasks
 from dateutil import parser
 from datetime import datetime, timezone
 from core.classifiers import naive_response, get_intentions
-from core.output_vectors import (offended, insufficiency_recognition,
-                                 propositions, indifference, opinions,
-                                 positive_answers, negative_answers, bored_messages)
+from core.output_vectors import (offended, indifference, positive_answers,
+                                 negative_answers, bored_messages)
 from core.reinforcement import generate_answer
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
@@ -22,7 +20,7 @@ from core.utils import (validate_text_offense, extract_sentiment,
                         evaluate_math_expression, known_language_codes, translate_text,
                         get_short_memory_value, set_short_memory_value, score)
 from core.gans import ResponseGenerator
-from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT, MAIN_CHANNEL
+from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 
 nlp = spacy.load('pt')
