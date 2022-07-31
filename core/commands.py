@@ -1,4 +1,3 @@
-from string import punctuation
 from collections import Counter
 import logging
 import pickle
@@ -14,6 +13,7 @@ from core.classifiers import naive_response, get_intentions
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
                                  positive_answers, negative_answers, bored_messages)
+from core.reinforcement import generate_answer
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment,
@@ -170,7 +170,7 @@ async def on_message(message):
     gql_client = get_gql_client(BACKEND_URL)
 
     # não processa comandos
-    for punct in punctuation:
+    for punct in '.>@,/?:;!}{[]|)(*&^%$#~':
         if text.startswith(punct):
             log.info('Skipping command text process.')
             return None
@@ -260,25 +260,29 @@ async def on_message(message):
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
-        # busca possíveis respostas na memória de longo prazo
-        payload = Query.get_possible_responses(
-            text=remove_id(text)
-        )
+        # # busca possíveis respostas na memória de longo prazo
+        # payload = Query.get_possible_responses(
+        #     text=remove_id(text)
+        # )
 
-        try:
-            response = gql_client.execute(payload)
-        except Exception as err:
-            log.error(f'Erro: {str(err)}\n\n')
-            response = {'messages': []}
+        # try:
+        #     response = gql_client.execute(payload)
+        # except Exception as err:
+        #     log.error(f'Erro: {str(err)}\n\n')
+        #     response = {'messages': []}
 
-        if response.get('messages'):
-            possible_responses = []
-            for msg in response['messages']:
-                for possible_response in msg.get('possible_responses'):
-                    possible_responses.append(possible_response.get('text'))
+        # if response.get('messages'):
+        #     possible_responses = []
+        #     for msg in response['messages']:
+        #         for possible_response in msg.get('possible_responses'):
+        #             possible_responses.append(possible_response.get('text'))
 
-            if possible_responses:
-                return await channel.send(choice(possible_responses))
+        #     if possible_responses:
+        #         return await channel.send(choice(possible_responses))
+
+        answer = generate_answer(text)
+        if answer:
+            return await channel.send(answer)
 
         # Caso não conheça nenhuma resposta, use o classificador inocente
         return await channel.send(
