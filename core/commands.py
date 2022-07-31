@@ -675,18 +675,6 @@ async def translate(ctx, code=None, *args):
     return await ctx.send(f'Acho que se traduz como:\n > {translate_text(text, code)}')
 
 
-# @client.command(aliases=['speak', 'ds', 'devil_speak'])
-# async def satanize(ctx):
-#     """
-#     Gera um texto satânico solicitado da API Anton..
-#     """
-#     data = '{generatedText{text}}'
-#     url = 'https://anton.brunolcarli.repl.co/graphql/'
-#     response = requests.post(url, json={'query': data})
-#     response = response.json()
-
-#     return await ctx.send(response['data']['generatedText'].get('text', 'Não, pera...'))
-
 @client.command()
 @commands.is_owner()
 async def leave_guild(ctx, *, guild_reference=None):
