@@ -249,7 +249,8 @@ def get_short_memory_value(key: str) -> dict:
     # Se não houver memórias vamos instanciar uma nova memória
     memory = {
         'last_message_dt': None,
-        'last_quotes': []
+        'last_quotes': [],
+        'chat_log': []
     }
     short_memory.set(key, CompressedDict(memory).bit_string)
 

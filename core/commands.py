@@ -1,4 +1,3 @@
-
 from collections import Counter
 import logging
 import pickle
@@ -14,6 +13,7 @@ from core.classifiers import naive_response, get_intentions
 from core.output_vectors import (offended, insufficiency_recognition,
                                  propositions, indifference, opinions,
                                  positive_answers, negative_answers, bored_messages)
+from core.reinforcement import generate_answer
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment,
@@ -155,30 +155,75 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-    server = make_hash('id', message.guild.id).decode('utf-8')
-    if message.content.startswith('!'):  # não processa comandos
-        return None
-    # guarda a data da mensagem como valor para o id da guilda
-    memory = get_short_memory_value(server)
-    memory['last_message_dt'] = str(message.created_at)
-    set_short_memory_value(server, memory)
-
     text = message.content
-
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
     user_name = message.author.name
     new_humor = change_humor_values(text_pol, is_offensive)
-    friendshipness = -0.5 + text_pol if is_offensive else text_pol
+    friendshipness = (randint(-1, 1) * random()) + text_pol
     msg = {
         'global_intention': global_intention,
         'specific_intention': specific_intention,
         'text': text
     }
+    gql_client = get_gql_client(BACKEND_URL)
+
+    # não processa comandos
+    for punct in '.>@,/?:;!}{[]|)(*&^%$#~':
+        if text.startswith(punct):
+            log.info('Skipping command text process.')
+            return None
+
+    # não processa links
+    if text.startswith('http'):
+        log.info('Skipping hyperlink text process.')
+        return None
+
+    server = make_hash('id', message.guild.id).decode('utf-8')
+    memory = get_short_memory_value(server)
+
+    # guarda a data da mensagem como valor para o id da guilda
+    memory['last_message_dt'] = str(message.created_at)
+    chat_log = memory.get('chat_log', [])
+    log.info(memory)
+    # caso a mensagem seja do mesmo usuario da mensagem anterior, anexa o texto
+    if len(chat_log) > 1:
+        if chat_log[-1]['author'] == message.author.name:
+            chat_log[-1]['text'] += f' {text}'
+        else:
+            previous = chat_log[-1]
+            chat_log.append({
+                'author': message.author.name,
+                'text': text
+            })
+
+            # assume a mensagem do proximo membro como resposta
+            payload = Mutation.assign_response(
+                text=previous['text'],
+                possible_response=msg
+            )
+            try:
+                response = gql_client.execute(payload)
+            except Exception as err:
+                log.error(f'Erro: {str(err)}\n\n')
+            else:
+                log.info('Saved a possible response.')
+
+    else:
+        chat_log.append({
+            'author': message.author.name,
+            'text': text
+        })
+
+    # mantem um maximo de 10 mensagens do chat na lembrança
+    if len(chat_log) > 10:
+        chat_log.pop(0)
+
+    memory['chat_log'] = chat_log
+    set_short_memory_value(server, memory)
 
     user_id = make_hash(server, message.author.id).decode('utf-8')
-    gql_client = get_gql_client(BACKEND_URL)
 
     # Atualiza o humor da Luci
     payload = Mutation.update_emotion(server=server, **new_humor)
@@ -215,25 +260,29 @@ async def on_message(message):
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
-        # busca possíveis respostas na memória de longo prazo
-        payload = Query.get_possible_responses(
-            text=remove_id(text)
-        )
+        # # busca possíveis respostas na memória de longo prazo
+        # payload = Query.get_possible_responses(
+        #     text=remove_id(text)
+        # )
 
-        try:
-            response = gql_client.execute(payload)
-        except Exception as err:
-            log.error(f'Erro: {str(err)}\n\n')
-            response = {'messages': []}
+        # try:
+        #     response = gql_client.execute(payload)
+        # except Exception as err:
+        #     log.error(f'Erro: {str(err)}\n\n')
+        #     response = {'messages': []}
 
-        if response.get('messages'):
-            possible_responses = []
-            for msg in response['messages']:
-                for possible_response in msg.get('possible_responses'):
-                    possible_responses.append(possible_response.get('text'))
+        # if response.get('messages'):
+        #     possible_responses = []
+        #     for msg in response['messages']:
+        #         for possible_response in msg.get('possible_responses'):
+        #             possible_responses.append(possible_response.get('text'))
 
-            if possible_responses:
-                return await channel.send(choice(possible_responses))
+        #     if possible_responses:
+        #         return await channel.send(choice(possible_responses))
+
+        answer = generate_answer(text)
+        if answer:
+            return await channel.send(answer)
 
         # Caso não conheça nenhuma resposta, use o classificador inocente
         return await channel.send(
