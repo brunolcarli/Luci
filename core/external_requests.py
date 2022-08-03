@@ -59,6 +59,8 @@ class Query:
         query {{
             quotes(reference: "{server}"){{
                 quote
+                author
+                date
             }}
         }}
         '''
@@ -208,7 +210,7 @@ class Query:
     @staticmethod
     def words_for_anagram(token):
         """
-        Recupera palávras conhecidas cujas possuam mesmo número de caracteres
+        Recupera palavras conhecidas cujas possuam mesmo número de caracteres
         que a palavra fornecida como argumento.
         """
         return gql(f'{{words(length: {len(token)}){{token}}}}')

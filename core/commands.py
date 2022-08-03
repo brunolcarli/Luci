@@ -1,9 +1,8 @@
-
+import re
 from collections import Counter
 import logging
-import pickle
-import requests
 from random import choice, randint, random
+import requests
 import spacy
 import redis
 import discord
@@ -11,9 +10,9 @@ from discord.ext import commands, tasks
 from dateutil import parser
 from datetime import datetime, timezone
 from core.classifiers import naive_response, get_intentions
-from core.output_vectors import (offended, insufficiency_recognition,
-                                 propositions, indifference, opinions,
-                                 positive_answers, negative_answers, bored_messages)
+from core.output_vectors import (offended, indifference, positive_answers,
+                                 negative_answers, bored_messages)
+from core.reinforcement import generate_answer
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment,
@@ -22,7 +21,7 @@ from core.utils import (validate_text_offense, extract_sentiment,
                         evaluate_math_expression, known_language_codes, translate_text,
                         get_short_memory_value, set_short_memory_value, score)
 from core.gans import ResponseGenerator
-from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT, MAIN_CHANNEL
+from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
 
 nlp = spacy.load('pt')
@@ -155,30 +154,78 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-    server = make_hash('id', message.guild.id).decode('utf-8')
-    if message.content.startswith('!'):  # não processa comandos
-        return None
-    # guarda a data da mensagem como valor para o id da guilda
-    memory = get_short_memory_value(server)
-    memory['last_message_dt'] = str(message.created_at)
-    set_short_memory_value(server, memory)
-
     text = message.content
-
+    noises = ['\n', '"', "'"]
+    for noise in noises:
+        text = re.sub(noise, ' ', text).strip()
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
     user_name = message.author.name
     new_humor = change_humor_values(text_pol, is_offensive)
-    friendshipness = -0.5 + text_pol if is_offensive else text_pol
+    friendshipness = (randint(-1, 1) * random()) + text_pol
     msg = {
         'global_intention': global_intention,
         'specific_intention': specific_intention,
         'text': text
     }
+    gql_client = get_gql_client(BACKEND_URL)
+
+    # não processa comandos
+    for punct in '.>@,/?:;!}{[]|)(*&^%$#~':
+        if text.startswith(punct):
+            log.info('Skipping command text process.')
+            return None
+
+    # não processa links
+    if text.startswith('http'):
+        log.info('Skipping hyperlink text process.')
+        return None
+
+    server = make_hash('id', message.guild.id).decode('utf-8')
+    memory = get_short_memory_value(server)
+
+    # guarda a data da mensagem como valor para o id da guilda
+    memory['last_message_dt'] = str(message.created_at)
+    chat_log = memory.get('chat_log', [])
+    log.info(memory)
+    # caso a mensagem seja do mesmo usuario da mensagem anterior, anexa o texto
+    if len(chat_log) > 1:
+        if chat_log[-1]['author'] == message.author.name:
+            chat_log[-1]['text'] += f' {text}'
+        else:
+            previous = chat_log[-1]
+            chat_log.append({
+                'author': message.author.name,
+                'text': text
+            })
+
+            # assume a mensagem do proximo membro como resposta
+            payload = Mutation.assign_response(
+                text=previous['text'],
+                possible_response=msg
+            )
+            try:
+                gql_client.execute(payload)
+            except Exception as err:
+                log.error(f'Erro: {str(err)}\n\n')
+            else:
+                log.info('Saved a possible response.')
+
+    else:
+        chat_log.append({
+            'author': message.author.name,
+            'text': text
+        })
+
+    # mantem um maximo de 10 mensagens do chat na lembrança
+    if len(chat_log) > 10:
+        chat_log.pop(0)
+
+    memory['chat_log'] = chat_log
+    set_short_memory_value(server, memory)
 
     user_id = make_hash(server, message.author.id).decode('utf-8')
-    gql_client = get_gql_client(BACKEND_URL)
 
     # Atualiza o humor da Luci
     payload = Mutation.update_emotion(server=server, **new_humor)
@@ -209,31 +256,15 @@ async def on_message(message):
         )
 
         try:
-            response = gql_client.execute(payload)
+            gql_client.execute(payload)
         except Exception as err:
             log.error(f'Erro: {str(err)}\n\n')
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
-        # busca possíveis respostas na memória de longo prazo
-        payload = Query.get_possible_responses(
-            text=remove_id(text)
-        )
-
-        try:
-            response = gql_client.execute(payload)
-        except Exception as err:
-            log.error(f'Erro: {str(err)}\n\n')
-            response = {'messages': []}
-
-        if response.get('messages'):
-            possible_responses = []
-            for msg in response['messages']:
-                for possible_response in msg.get('possible_responses'):
-                    possible_responses.append(possible_response.get('text'))
-
-            if possible_responses:
-                return await channel.send(choice(possible_responses))
+        answer = generate_answer(text)
+        if answer:
+            return await channel.send(answer)
 
         # Caso não conheça nenhuma resposta, use o classificador inocente
         return await channel.send(
@@ -321,34 +352,34 @@ async def random_quote(bot):
         return await bot.send('Ainda não aprendi quotes neste servidor')
 
     # sorteia um quote vindo da memória de longo rpazo
-    chosen_quote = choice([quote['quote'] for quote in quotes])
+    chosen_quote = choice(quotes)
     # recupera os últimos quotes ditos nesse server da memória de curto prazo
     server_memory = get_short_memory_value(server)
 
     # se o quote sorteado não for um quote repetido
-    if chosen_quote not in server_memory.get('last_quotes', []):
+    if chosen_quote['quote'] not in server_memory.get('last_quotes', []):
         # atualiza memória de curto prazo e retorna o quote sorteado
-        server_memory['last_quotes'].append(chosen_quote)
+        server_memory['last_quotes'].append(chosen_quote['quote'])
         if len(server_memory['last_quotes']) > 10:
             server_memory['last_quotes'].pop(0)
         set_short_memory_value(server, server_memory)
-        return await bot.send(chosen_quote)
+        return await bot.send(f'{chosen_quote["quote"]} ~ {chosen_quote["author"]}')
 
     # se ela souber menos que 10 quotes nesse server pode retornar o quote repetido mesmo
     if len(quotes) < 10:
-        return await bot.send(chosen_quote)
+        return await bot.send(f'{chosen_quote["quote"]} ~ {chosen_quote["author"]}')
 
     # Se não tem que ir sorteando quotes até não ser repetido
-    while chosen_quote in server_memory['last_quotes']:
-        chosen_quote = choice([quote['quote'] for quote in quotes])
+    while chosen_quote['quote'] in server_memory['last_quotes']:
+        chosen_quote = choice(quotes)
 
     # Atualiza a memória de curto rpazo ao selecionar o quote
-    server_memory['last_quotes'].append(chosen_quote)
+    server_memory['last_quotes'].append(chosen_quote['quote'])
     if len(server_memory['last_quotes']) > 10:
         server_memory['last_quotes'].pop(0)
     set_short_memory_value(server, server_memory)
 
-    return await bot.send(chosen_quote)
+    return await bot.send(f'{chosen_quote["quote"]} ~ {chosen_quote["author"]}')
 
 
 @client.command(aliases=['q', 'sq', 'save_quote'])
@@ -552,27 +583,6 @@ async def friendship(ctx, opt=None):
     return await ctx.send('Membros que eu mais curto :blush:', embed=embed)
 
 
-@client.command(aliases=['g', 'who_said', 'ws'])
-async def guess(ctx, *args):
-    """
-    Luci tenta adivinhar quem disse a frase.
-    """
-    text = ' '.join(char for char in args)
-    query = Query.somal_guess(text)
-    url = 'http://somal.brunolcarli.repl.co/graphql/'
-
-    response = requests.post(url, json={'query': query}).json()
-    target = response['data'].get('guess')
-
-    if target:
-        if target == 'bruno':
-            return await ctx.send('Eu acho que quem disse isso foi o Bruno.')
-
-        return await ctx.send(f'Acho que quem disse isso foi o tio {target.capitalize()}')
-
-    return await ctx.send('Acho que não sei quem disse isso, sei la...')
-
-
 @client.command(aliases=['wt', 'src', 'who_teached_you'])
 async def source(ctx, *args):
     """
@@ -646,45 +656,6 @@ async def translate(ctx, code=None, *args):
                               'Manda um !help translate pra ver os códigos que eu sei.')
 
     return await ctx.send(f'Acho que se traduz como:\n > {translate_text(text, code)}')
-
-
-@client.command(aliases=['speak', 'ds', 'devil_speak'])
-async def satanize(ctx):
-    """
-    Gera um texto satânico solicitado da API Anton..
-    """
-    data = '{generatedText{text}}'
-    url = 'https://anton.brunolcarli.repl.co/graphql/'
-    response = requests.post(url, json={'query': data})
-    response = response.json()
-
-    return await ctx.send(response['data']['generatedText'].get('text', 'Não, pera...'))
-
-
-@client.command(aliases=['cfg', 'config'])
-async def custom_config(ctx):
-    """
-    Verifica as configurações customizaveis para este server.
-    """
-    server = make_hash('id', ctx.message.guild.id).decode('utf-8')
-    payload = Query.get_custom_config(server)
-    gql_client = get_gql_client(BACKEND_URL)
-
-    try:
-        response = gql_client.execute(payload)
-    except Exception as err:
-        log.error(f'Erro: {str(err)}\n\n')
-        return await ctx.send('D-desculpa, não consegui...')
-
-    data = response.get('custom_config')
-    embed = discord.Embed(color=0x1E1E1E, type='rich')
-    embed.add_field(name='Server', value=data.get('server_name'), inline=True)
-    embed.add_field(name='Sys Channel', value=data.get('main_channel'), inline=True)
-    embed.add_field(name='Allow auto send message', value=data.get('allow_auto_send_messages'), inline=False)
-    embed.add_field(name='Allow chat learning', value=data.get('allow_learning_from_chat'), inline=False)
-    embed.add_field(name='Filter offensive messages', value=data.get('filter_offensive_messages'), inline=False)
-
-    return await ctx.send('Configurações do servidor:', embed=embed)
 
 
 @client.command()
