@@ -4,7 +4,7 @@ from random import random
 class EmotionHourglass:
     """
     Returns the emotional corresponding status based on a value
-    between -2 and 2.
+    between -20 and 20.
     """
     @staticmethod
     def get_pleasantness(value):
@@ -15,17 +15,17 @@ class EmotionHourglass:
         returns: <str>
         """
         if value > 0:
-            if 1 <= value < 2:
+            if 10 <= value < 20:
                 return 'serenity'
-            elif value >= 2:
+            elif value >= 20:
                 return 'joy'
             else:
                 return 'neutral'
 
         elif value < 0:
-            if -2 < value <= -1:
+            if -20 < value <= -10:
                 return 'pensiveness' 
-            elif value <= -2:
+            elif value <= -20:
                 return 'grief'
             else:
                 return 'neutral'
@@ -41,17 +41,17 @@ class EmotionHourglass:
         returns: <str>
         """
         if value > 0:
-            if 1 <= value < 2:
+            if 1 <= value < 20:
                 return 'interest'
-            elif value >= 2:
+            elif value >= 20:
                 return 'anticipation'
             else:
                 return 'neutral'
 
         elif value < 0:
-            if -2 < value <= -1:
+            if -20 < value <= -10:
                 return 'distraction' 
-            elif value <= -2:
+            elif value <= -20:
                 return 'amazement'
             else:
                 return 'neutral'
@@ -67,17 +67,17 @@ class EmotionHourglass:
         returns: <str>
         """
         if value > 0:
-            if 1 <= value < 2:
+            if 10 <= value < 20:
                 return 'annoyance'
-            elif value >= 2:
+            elif value >= 20:
                 return 'anger'
             else:
                 return 'neutral'
 
         elif value < 0:
-            if -2 < value <= -1:
+            if -20 < value <= -10:
                 return 'apprehension' 
-            elif value <= -2:
+            elif value <= -20:
                 return 'terror'
             else:
                 return 'neutral'
@@ -93,17 +93,17 @@ class EmotionHourglass:
         returns: <str>
         """
         if value > 0:
-            if 1 <= value < 2:
+            if 10 <= value < 20:
                 return 'acceptance'
-            elif value >= 2:
+            elif value >= 20:
                 return 'trust'
             else:
                 return 'neutral'
 
         elif value < 0:
-            if -2 < value <= -1:
+            if -20 < value <= -10:
                 return 'boredom' 
-            elif value <= -2:
+            elif value <= -20:
                 return 'loathing'
             else:
                 return 'neutral'
