@@ -1,3 +1,4 @@
+import re
 from collections import Counter
 import logging
 from random import choice, randint, random
@@ -154,6 +155,9 @@ async def on_message(message):
     await client.process_commands(message)
 
     text = message.content
+    noises = ['\n', '"', "'"]
+    for noise in noises:
+        text = re.sub(noise, ' ', text).strip()
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)

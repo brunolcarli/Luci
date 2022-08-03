@@ -715,7 +715,7 @@ intention_responses = {
     GlobalIntentions.ABOUT_MY_FRIENDS: {
         AboutMyFriends.FRIENDS_I_HAVE: lambda **_: 'Amigos balblabla',  # TODO retornar amigos do backend
         AboutMyFriends.USERS_I_LIKE: lambda **_: 'Usuarios blablalba', # TODO retornar amigos do backend
-        AboutMyFriends.USERS_I_DONT_LIKE: lambda **_: 'Usurios chatos blablalbas',  # TODO retornar do backend
+        AboutMyFriends.USERS_I_DONT_LIKE: lambda **_: 'Usuarios chatos blablalbas',  # TODO retornar do backend
         AboutMyFriends.BEST_FRIENDS: lambda **_: 'bffs blablalba',  # TODO retornar do backend
     },
     GlobalIntentions.ABOUT_MY_PARENTS: {
@@ -764,4 +764,3 @@ emotion_messages = {
     'trust': ['confiante', 'sinto que posso fazer qualquer coisa', 'to no grau'],
     'loathing': ['meio enjoada', 'repugnada', 'com nojinho']
 }
-
