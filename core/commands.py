@@ -733,3 +733,61 @@ async def anagram(ctx, word=None):
         embed.add_field(name=anagram[0], value=f'Score: {anagram[1]}', inline=True)
 
     await ctx.send(f'Top 10 anagramas para {word}', embed=embed)
+
+
+@client.command(aliases=['am'])
+async def add_meaning(ctx, word=None, *args):
+    if not word:
+        return await ctx.send('Qual palavra?')
+    if not args:
+        return await ctx.send('Qual contexto e significado dessa palavra?')
+    try:
+        context, meaning = ' '.join(args).strip().lower().split(';;')
+    except ValueError:
+        return await ctx.send('Preciso que me diga um contexto e significado, separado por `;;`')
+
+    payload = Mutation.add_meaning(word, context, meaning)
+    client = get_gql_client(BACKEND_URL)
+
+    try:
+        response = client.execute(payload)
+    except Exception as err:
+        print(f'Erro: {str(err)}\n\n')
+        return await ctx.send('Buguei')
+
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    for option in response['add_meaning']['word']['meanings']:
+        embed.add_field(name=f'Context: {option["context"]}', value=f'Meaning: {option["meaning"]}', inline=False)
+
+    return await ctx.send(f'Legal, aprendi um significado pra palavra {word}:', embed=embed)
+
+
+@client.command(aliases=['wd', 'wds'])
+async def words(ctx, part=None):
+    if not part:
+        return await ctx.send('Mas diz uma palavra')
+
+    payload = Query.words(part)
+    client = get_gql_client(BACKEND_URL)
+
+    try:
+        response = client.execute(payload)
+    except Exception as err:
+        print(f'Erro: {str(err)}\n\n')
+        return await ctx.send('Buguei')
+
+    words = response.get('words')
+    if not words:
+        return await ctx.send('Não conheço nada parecido...')
+
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    for word in words:
+            for k, v in word.items():
+                if k == 'meanings':
+                    value = ''
+                    for i in v:
+                        value += f'Contexto: {i["context"]}\nSignificado: {i["meaning"]}\n\n'
+                    v = value
+                embed.add_field(name=k, value=(v or '?'), inline=True)
+            await ctx.send(embed=embed)
+
