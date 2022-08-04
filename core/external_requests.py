@@ -215,6 +215,31 @@ class Query:
         """
         return gql(f'{{words(length: {len(token)}){{token}}}}')
 
+    @staticmethod
+    def words(part):
+        """
+        Busca palávras conhecidas a partir de uma parte da palavra
+        """
+        query = f'''
+        query {{
+            words (token__icontains: "{part}"){{
+                token
+                language
+                pos_tag
+                lemma
+                entity
+                polarity
+                length
+                meanings {{
+                   context
+                    meaning
+                }}
+            }}
+        }}
+        '''
+
+        return gql(query)
+
 
 class Mutation:
     """
@@ -351,6 +376,31 @@ class Mutation:
                     text
                     possible_responses{{
                         text
+                    }}
+                }}
+            }}
+        }}
+        '''
+
+        return gql(mutation)
+
+    @staticmethod
+    def add_meaning(word, context, meaning):
+        """
+        Requisição GraphQL para ensinar um significado à uma palavra
+        """
+        mutation = f'''
+            mutation {{
+                add_meaning(input: {{
+                    word: "{word}"
+                    context: "{context}"
+                    meaning: "{meaning}"
+                }}){{
+                    word {{
+                    token
+                    meanings {{
+                        context
+                        meaning
                     }}
                 }}
             }}
