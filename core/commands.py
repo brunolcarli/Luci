@@ -2,10 +2,10 @@ import re
 from collections import Counter
 import logging
 from random import choice, randint, random
-import requests
 import spacy
 import redis
 import discord
+from discord import ActionRow, Button, ButtonStyle
 from discord.ext import commands, tasks
 from dateutil import parser
 from datetime import datetime, timezone
@@ -110,6 +110,88 @@ class GuildTracker(commands.Cog):
                             log.error(f'Erro: {str(err)}\n\n')
 
         self.guilds = client.guilds
+
+
+@client.on_click()
+async def word_page_down(interaction: discord.Interaction, button):
+    global page_key
+    global previous_output
+
+    key, index = page_key.split('_:_')
+    server = make_hash('id', interaction.guild_id).decode('utf-8')
+    memory = get_short_memory_value(server)
+    page = memory.get('word_page', {})
+    data = page.get(key, [])
+
+    index = int(index) - 1
+    if index < 0:
+        index = len(data) - 1
+    await interaction.defer()
+
+    page_key = f'{key}_:_{index}'
+    switch = {
+        'token': 'Termo',
+        'language': 'Idioma',
+        'pos_tag': 'Etiqueta Morfossintática',
+        'lemma': 'Radical',
+        'polarity': 'Polaridade',
+        'length': 'N˚ letras',
+        'meanings': 'Significados',
+        'entity': 'Entidade nomeada'
+    }
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    word = data[index]
+    for k, v in word.items():
+        if k == 'meanings':
+            value = ''
+            for i in v:
+                value += f'Contexto: {i["context"]}\nDefinição: {i["meaning"]}\n\n'
+            v = value
+        k = switch.get(k, k)
+        embed.add_field(name=k, value=(v or '?'), inline=True)
+
+    await previous_output.edit(content=f'Termo {index+1}/{len(data)}', embed=embed)
+
+
+@client.on_click()
+async def word_page_up(interaction: discord.Interaction, button):
+    global page_key
+    global previous_output
+
+    key, index = page_key.split('_:_')
+    server = make_hash('id', interaction.guild_id).decode('utf-8')
+    memory = get_short_memory_value(server)
+    page = memory.get('word_page', {})
+    data = page.get(key, [])
+
+    index = int(index) + 1
+    if index > len(data) - 1:
+        index = 0
+    await interaction.defer()
+
+    page_key = f'{key}_:_{index}'
+    switch = {
+        'token': 'Termo',
+        'language': 'Idioma',
+        'pos_tag': 'Etiqueta Morfossintática',
+        'lemma': 'Radical',
+        'polarity': 'Polaridade',
+        'length': 'N˚ letras',
+        'meanings': 'Significados',
+        'entity': 'Entidade nomeada'
+    }
+    embed = discord.Embed(color=0x1E1E1E, type='rich')
+    word = data[index]
+    for k, v in word.items():
+        if k == 'meanings':
+            value = ''
+            for i in v:
+                value += f'Contexto: {i["context"]}\nDefinição: {i["meaning"]}\n\n'
+            v = value
+        k = switch.get(k, k)
+        embed.add_field(name=k, value=(v or '?'), inline=True)
+
+    await previous_output.edit(content=f'Termo {index+1}/{len(data)}', embed=embed)
 
 
 @client.event
@@ -767,27 +849,76 @@ async def words(ctx, part=None):
     if not part:
         return await ctx.send('Mas diz uma palavra')
 
-    payload = Query.words(part)
-    client = get_gql_client(BACKEND_URL)
+    global previous_output
+    global page_key
+    # global ctxn
+    # ctxn = ctx
+    page_key = f'{ctx.author.id}_:_0'
+    server = make_hash('id', ctx.message.guild.id).decode('utf-8')
+    memory = get_short_memory_value(server)
+    page = memory.get('word_page', {})
+    data = page.get(f'{ctx.author.id}', {})
+    
+    if not data:
+        payload = Query.words(part)
+        client = get_gql_client(BACKEND_URL)
 
-    try:
-        response = client.execute(payload)
-    except Exception as err:
-        print(f'Erro: {str(err)}\n\n')
-        return await ctx.send('Buguei')
+        try:
+            response = client.execute(payload)
+        except Exception as err:
+            log.error(f'Erro: {str(err)}\n\n')
+            return await ctx.send('Buguei')
 
-    words = response.get('words')
-    if not words:
-        return await ctx.send('Não conheço nada parecido...')
+        words = response.get('words')
+        if not words:
+            return await ctx.send('Não conheço nada parecido...')
+
+        data = words
+        page[f'{ctx.author.id}'] = data
+        memory['word_page'] = page
+        set_short_memory_value(server, memory)
+    else:
+        words = data
+
+    switch = {
+        'token': 'Termo',
+        'language': 'Idioma',
+        'pos_tag': 'Etiqueta Morfossintática',
+        'lemma': 'Radical',
+        'polarity': 'Polaridade',
+        'length': 'N˚ letras',
+        'meanings': 'Significados',
+        'entity': 'Entidade nomeada'
+    }
+
+    # Button definition
+    components=[
+        ActionRow(
+            Button(
+                style=ButtonStyle.gray,
+                custom_id='word_page_up',
+                label='▲'  # U+25B2
+            ),
+            Button(
+                style=ButtonStyle.gray,
+                custom_id='word_page_down',
+                label='▼'  # U+25BC
+            ),
+        ),
+    ]
 
     embed = discord.Embed(color=0x1E1E1E, type='rich')
-    for word in words:
-            for k, v in word.items():
-                if k == 'meanings':
-                    value = ''
-                    for i in v:
-                        value += f'Contexto: {i["context"]}\nSignificado: {i["meaning"]}\n\n'
-                    v = value
-                embed.add_field(name=k, value=(v or '?'), inline=True)
-            await ctx.send(embed=embed)
+    for k, v in words[0].items():
+        if k == 'meanings':
+            value = ''
+            for i in v:
+                value += f'Contexto: {i["context"]}\nDefinição: {i["meaning"]}\n\n'
+            v = value
+        k = switch.get(k, k)
+        embed.add_field(name=k, value=(v or '?'), inline=True)
+    previous_output = await ctx.send(
+        f'Termo 1/{len(data)}',
+        embed=embed,
+        components=components
+    )
 
