@@ -820,6 +820,15 @@ async def anagram(ctx, word=None):
 
 @client.command(aliases=['am'])
 async def add_meaning(ctx, word=None, *args):
+    """
+    Ensina um significado de uma palavra dado um contexto.
+    A sequência deve iniciar com uma palavra. O contexto deve ser separado
+    do significado por ;;
+        !add_meaning palavra contexto;;significado
+
+        Exemplo:
+            !am Flor elogio;;Aponta qualidades de beleza de algo ou alguém.
+    """
     if not word:
         return await ctx.send('Qual palavra?')
     if not args:
@@ -847,6 +856,12 @@ async def add_meaning(ctx, word=None, *args):
 
 @client.command(aliases=['wd', 'wds'])
 async def words(ctx, part=None):
+    """
+    Verifica as características de um termo conhecido ou similar ao termo
+    fornecido como parâmetro.
+        Uso:
+            !wd princesa
+    """
     if not part:
         return await ctx.send('Mas diz uma palavra')
 
