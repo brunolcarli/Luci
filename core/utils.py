@@ -250,7 +250,8 @@ def get_short_memory_value(key: str) -> dict:
     memory = {
         'last_message_dt': None,
         'last_quotes': [],
-        'chat_log': []
+        'chat_log': [],
+        'word_page': {}
     }
     short_memory.set(key, CompressedDict(memory).bit_string)
 
