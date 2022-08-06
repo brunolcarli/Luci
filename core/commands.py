@@ -5,8 +5,8 @@ from random import choice, randint, random
 import spacy
 import redis
 import discord
-from discord import ActionRow, Button, ButtonStyle
 from discord.ext import commands, tasks
+from discord import Button, ActionRow
 from dateutil import parser
 from datetime import datetime, timezone
 from core.classifiers import naive_response, get_intentions
@@ -27,6 +27,7 @@ from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 nlp = spacy.load('pt')
 client = commands.Bot(command_prefix='!')
 log = logging.getLogger()
+
 
 
 class GuildTracker(commands.Cog):
@@ -851,8 +852,7 @@ async def words(ctx, part=None):
 
     global previous_output
     global page_key
-    # global ctxn
-    # ctxn = ctx
+
     page_key = f'{ctx.author.id}_:_0'
     server = make_hash('id', ctx.message.guild.id).decode('utf-8')
     memory = get_short_memory_value(server)
@@ -892,19 +892,17 @@ async def words(ctx, part=None):
     }
 
     # Button definition
-    components=[
+    buttons = [
         ActionRow(
             Button(
-                style=ButtonStyle.gray,
                 custom_id='word_page_up',
                 label='▲'  # U+25B2
             ),
             Button(
-                style=ButtonStyle.gray,
                 custom_id='word_page_down',
                 label='▼'  # U+25BC
-            ),
-        ),
+            )
+        )
     ]
 
     embed = discord.Embed(color=0x1E1E1E, type='rich')
@@ -919,6 +917,5 @@ async def words(ctx, part=None):
     previous_output = await ctx.send(
         f'Termo 1/{len(data)}',
         embed=embed,
-        components=components
+        components=buttons
     )
-
