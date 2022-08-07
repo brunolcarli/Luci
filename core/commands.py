@@ -6,7 +6,6 @@ import spacy
 import redis
 import discord
 from discord.ext import commands, tasks
-from discord import Button, ActionRow
 from dateutil import parser
 from datetime import datetime, timezone
 from core.classifiers import naive_response, get_intentions
@@ -23,11 +22,19 @@ from core.utils import (validate_text_offense, extract_sentiment,
 from core.gans import ResponseGenerator
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
 
+from discord_slash import SlashCommand
+from discord_slash.model import ButtonStyle
+from discord_slash.utils.manage_components import (
+    ComponentContext,
+    create_actionrow,
+    create_button,
+)
+
 
 nlp = spacy.load('pt')
 client = commands.Bot(command_prefix='!')
+slash = SlashCommand(client)
 log = logging.getLogger()
-
 
 
 class GuildTracker(commands.Cog):
@@ -113,62 +120,31 @@ class GuildTracker(commands.Cog):
         self.guilds = client.guilds
 
 
-@client.on_click()
-async def word_page_down(interaction: discord.Interaction, button):
+@client.event
+async def on_component(ctx: ComponentContext):
+    await ctx.defer(ignore=True)
     global page_key
     global previous_output
+    button_id = ctx.component_id
 
     key, index = page_key.split('_:_')
-    server = make_hash('id', interaction.guild_id).decode('utf-8')
+    server = make_hash('id', ctx.guild_id).decode('utf-8')
     memory = get_short_memory_value(server)
     page = memory.get('word_page', {})
     data = page.get(key, [])
 
-    index = int(index) - 1
-    if index < 0:
-        index = len(data) - 1
-    await interaction.defer()
-
-    page_key = f'{key}_:_{index}'
-    switch = {
-        'token': 'Termo',
-        'language': 'Idioma',
-        'pos_tag': 'Etiqueta Morfossintática',
-        'lemma': 'Radical',
-        'polarity': 'Polaridade',
-        'length': 'N˚ letras',
-        'meanings': 'Significados',
-        'entity': 'Entidade nomeada'
-    }
-    embed = discord.Embed(color=0x1E1E1E, type='rich')
-    word = data[index]
-    for k, v in word.items():
-        if k == 'meanings':
-            value = ''
-            for i in v:
-                value += f'Contexto: {i["context"]}\nDefinição: {i["meaning"]}\n\n'
-            v = value
-        k = switch.get(k, k)
-        embed.add_field(name=k, value=(v or '?'), inline=True)
-
-    await previous_output.edit(content=f'Termo {index+1}/{len(data)}', embed=embed)
+    if button_id == 'word_page_down':
+        index = int(index) - 1
+        if index < 0:
+            index = len(data) - 1
 
 
-@client.on_click()
-async def word_page_up(interaction: discord.Interaction, button):
-    global page_key
-    global previous_output
-
-    key, index = page_key.split('_:_')
-    server = make_hash('id', interaction.guild_id).decode('utf-8')
-    memory = get_short_memory_value(server)
-    page = memory.get('word_page', {})
-    data = page.get(key, [])
-
-    index = int(index) + 1
-    if index > len(data) - 1:
-        index = 0
-    await interaction.defer()
+    elif button_id == 'word_page_up':
+        index = int(index) + 1
+        if index > len(data) - 1:
+            index = 0
+    else:
+        return
 
     page_key = f'{key}_:_{index}'
     switch = {
@@ -232,15 +208,32 @@ async def on_message(message):
     Handler para mensagens do chat.
     """
     channel = message.channel
+    text = message.content
     if message.author.bot:
         return
 
+    # Prioriza comandos da Luci
     await client.process_commands(message)
 
-    text = message.content
+    # se não houver texto, não precisa processar nada não é mesmo? ¯\_(ツ)_/¯
+    if not text:
+        return
+
     noises = ['\n', '"', "'"]
     for noise in noises:
         text = re.sub(noise, ' ', text).strip()
+
+    # não processa comandos
+    for punct in '.>@,/?:;!}{[]|)(*&^%$#~':
+        if text.startswith(punct):
+            log.info('Skipping command text process.')
+            return None
+
+    # não processa links
+    if text.startswith('http'):
+        log.info('Skipping hyperlink text process.')
+        return None
+
     global_intention, specific_intention = get_intentions(text)
     is_offensive = validate_text_offense(text)
     text_pol = extract_sentiment(text)
@@ -253,17 +246,6 @@ async def on_message(message):
         'text': text
     }
     gql_client = get_gql_client(BACKEND_URL)
-
-    # não processa comandos
-    for punct in '.>@,/?:;!}{[]|)(*&^%$#~':
-        if text.startswith(punct):
-            log.info('Skipping command text process.')
-            return None
-
-    # não processa links
-    if text.startswith('http'):
-        log.info('Skipping hyperlink text process.')
-        return None
 
     server = make_hash('id', message.guild.id).decode('utf-8')
     memory = get_short_memory_value(server)
@@ -907,18 +889,20 @@ async def words(ctx, part=None):
     }
 
     # Button definition
-    buttons = [
-        ActionRow(
-            Button(
+    actionrow = create_actionrow(
+        *[
+            create_button(
+                label='▲',  # U+25B2
                 custom_id='word_page_up',
-                label='▲'  # U+25B2
+                style=ButtonStyle.primary
             ),
-            Button(
+            create_button(
+                label='▼',  # U+25BC
                 custom_id='word_page_down',
-                label='▼'  # U+25BC
-            )
-        )
-    ]
+                style=ButtonStyle.primary
+            ),
+        ]
+    )
 
     embed = discord.Embed(color=0x1E1E1E, type='rich')
     for k, v in words[0].items():
@@ -929,8 +913,9 @@ async def words(ctx, part=None):
             v = value
         k = switch.get(k, k)
         embed.add_field(name=k, value=(v or '?'), inline=True)
+
     previous_output = await ctx.send(
         f'Termo 1/{len(data)}',
         embed=embed,
-        components=buttons
+        components=[actionrow]
     )
