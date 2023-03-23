@@ -30,7 +30,7 @@ class TestBadIntentionClassifier(unittest.TestCase):
             BadIntentions.RACISM_XENOPHOBIA
         )
         self.assertEqual(
-            get_bad_intention(get_text_vector('seu rpeto fedido')),
+            get_bad_intention(get_text_vector('seu preto fedido')),
             BadIntentions.RACISM_XENOPHOBIA
         )
         self.assertEqual(

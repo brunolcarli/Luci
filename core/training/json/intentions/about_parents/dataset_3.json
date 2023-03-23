@@ -1,0 +1,47 @@
+[
+    {"text": "Minha mãe é a melhor pessoa do mundo", "intention": 1},
+    {"text": "Meu pai é um exemplo a ser seguido", "intention": 2},
+    {"text": "Sinto saudade do meu avô", "intention": 3},
+    {"text": "Minha avó cozinha muito bem", "intention": 4},
+    {"text": "Preciso ser mais responsável como filho", "intention": 5},
+    {
+        "text": "Meu pai é um grande exemplo para mim.",
+        "intention": 2
+    },
+    {
+        "text": "Sempre me dou muito bem com minha mãe.",
+        "intention": 1
+    },
+    {
+        "text": "Eu adoro passar as férias com meus avós.",
+        "intention": 3
+    },
+    {
+        "text": "Minha avó é uma ótima cozinheira.",
+        "intention": 4
+    },
+    {
+        "text": "Eu sou o responsável pela organização da festa de aniversário do meu irmão.",
+        "intention": 5
+    },
+    {
+        "text": "Meu pai sempre me incentiva a estudar.",
+        "intention": 2
+    },
+    {
+        "text": "Minha mãe é a pessoa mais carinhosa que conheço.",
+        "intention": 1
+    },
+    {
+        "text": "Eu amo passar o Natal com minha família.",
+        "intention": 3
+    },
+    {
+        "text": "Minha avó sempre me conta histórias incríveis sobre a família.",
+        "intention": 4
+    },
+    {
+        "text": "Eu sou responsável por cuidar da minha irmã mais nova.",
+        "intention": 5
+    }
+]

@@ -411,7 +411,7 @@ def sample(parameters, idx_to_chars, chars_to_idx, n):
 
 def model(
         file_path, chars_to_idx, idx_to_chars, hidden_layer_size, vocab_size,
-        num_epochs=10, learning_rate=0.01):
+        num_epochs=10, learning_rate=0.01, pre_trained_parameters=None):
     """
     Implements RNN to generate characters.
     Arguments
@@ -444,7 +444,10 @@ def model(
     examples = [x.lower().strip() for x in data]
 
     # Initialize parameters
-    parameters = initialize_parameters(vocab_size, hidden_layer_size)
+    if pre_trained_parameters is None:
+        parameters = initialize_parameters(vocab_size, hidden_layer_size)
+    else:
+        parameters = pre_trained_parameters
 
     # Initialize Adam parameters
     s = initialize_rmsprop(parameters)
@@ -475,6 +478,7 @@ def model(
             parameters, s = update_parameters_with_rmsprop(
                 parameters, grads, s)
 
+        print(f'Epoch: {epoch} ---- loss: {smoothed_loss}')
         overall_loss.append(smoothed_loss)
 
     return parameters, overall_loss
