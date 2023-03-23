@@ -117,9 +117,9 @@ def train_who_am_i_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/who_am_i.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        700,
+        1200,
         0.01
     )
     with open('luci/models/who_am_i_gan', 'wb') as fpath:
@@ -146,9 +146,9 @@ def train_goodbye_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/goodbye.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        700,
+        1200,
         0.01
     )
     with open('luci/models/goodbye', 'wb') as fpath:
@@ -175,9 +175,9 @@ def train_acknowledgement_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/acknowledgement.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/acknowledgement', 'wb') as fpath:
@@ -204,9 +204,9 @@ def train_forbidden_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/forbidden.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/forbidden', 'wb') as fpath:
@@ -227,24 +227,42 @@ def train_funny_gan():
     # Get the size of the data and vocab size
     data_size = len(data)
     vocab_size = len(chars_to_idx)
-    logging.info(f'\nThere are {data_size} characters and {vocab_size} unique characters.')
+    hidden_layer_size = 96
+    epochs = 1000
 
+    try:
+        with open('luci/models/funny', 'rb') as fpath:
+            previous_params = pickle.load(fpath)
+            pre_trained_parameters = previous_params[0]
+            if pre_trained_parameters['Whh'].shape[0] != hidden_layer_size:
+                print('Hidden layer size changed, network will init with random params')
+                pre_trained_parameters = None
+            else:
+                print(f'Loaded previous params.') 
+    except Exception as err:
+        print('Failed loading previous parameters, network will init with random params.')
+        print(err)
+        pre_trained_parameters = None
+
+    logging.info(f'\nThere are {data_size} characters and {vocab_size} unique characters.')
+    
     # Fitting the model
     parameters, loss = lstm_model(
         'core/training/output_samples/funny.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        hidden_layer_size,
         vocab_size,
-        500,
-        0.01
+        epochs,
+        0.1,
+        pre_trained_parameters=pre_trained_parameters
     )
     with open('luci/models/funny', 'wb') as fpath:
         pickle.dump([parameters, chars_to_idx, idx_to_chars], fpath)
 
-    logging.info('\nfunny GAN total loss: %s\n', loss[-1])
+    logging.info(f'\nfunny LSTM total loss: {loss[-1]} with hidden layer {hidden_layer_size} in {epochs} epochs')
 
 
-@Halo(text='Training greeting gan', spinner='dots')
+@Halo(text='Training greeting STM', spinner='dots')
 def train_greeting_gan():
     data = open('core/training/output_samples/greeting.txt').read()
     data = data.lower()
@@ -252,6 +270,22 @@ def train_greeting_gan():
     chars = list(sorted(set(data)))
     chars_to_idx = {ch:i for i, ch in enumerate(chars)}
     idx_to_chars = {i:ch for ch, i in chars_to_idx.items()}
+    hidden_layer_size = 96
+    epochs = 200
+
+    try:
+        with open('luci/models/greeting', 'rb') as fpath:
+            previous_params = pickle.load(fpath)
+            pre_trained_parameters = previous_params[0]
+            if pre_trained_parameters['Whh'].shape[0] != hidden_layer_size:
+                print('Hidden layer size changed, network will init with random params')
+                pre_trained_parameters = None
+            else:
+                print(f'Loaded previous params.') 
+    except Exception as err:
+        print('Failed loading previous parameters, network will init with random params.')
+        print(err)
+        pre_trained_parameters = None
 
     # Get the size of the data and vocab size
     data_size = len(data)
@@ -262,15 +296,16 @@ def train_greeting_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/greeting.txt',
         chars_to_idx, idx_to_chars,
-        150,
+        hidden_layer_size,
         vocab_size,
-        500,
-        0.01
+        epochs,
+        0.1,
+        pre_trained_parameters=pre_trained_parameters
     )
     with open('luci/models/greeting', 'wb') as fpath:
         pickle.dump([parameters, chars_to_idx, idx_to_chars], fpath)
 
-    logging.info('\ngreeting GAN total loss: %s\n', loss[-1])
+    logging.info(f'\Greeting LSTM total loss: {loss[-1]} with hidden layer {hidden_layer_size} in {epochs} epochs')
 
 
 @Halo(text='Training helpful gan', spinner='dots')
@@ -291,9 +326,9 @@ def train_helpful_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/helpful.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/helpful', 'wb') as fpath:
@@ -320,10 +355,10 @@ def train_illegal_stuff():
     parameters, loss = lstm_model(
         'core/training/output_samples/illegal_stuff.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
-        0.01
+        1200,
+        0.1
     )
     with open('luci/models/illegal_stuff', 'wb') as fpath:
         pickle.dump([parameters, chars_to_idx, idx_to_chars], fpath)
@@ -349,9 +384,9 @@ def train_music_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/music.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/music', 'wb') as fpath:
@@ -378,9 +413,9 @@ def train_age_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/my_age.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/my_age', 'wb') as fpath:
@@ -407,9 +442,9 @@ def train_gender_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/my_gender.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/my_gender', 'wb') as fpath:
@@ -436,9 +471,9 @@ def train_praise_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/praise.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/praise', 'wb') as fpath:
@@ -465,9 +500,9 @@ def train_racism_xenophobia_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/racism_xenophobia.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/racism_xenophobia', 'wb') as fpath:
@@ -496,9 +531,9 @@ def train_sexual_abuse_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/sexual_abuse.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/sexual_abuse', 'wb') as fpath:
@@ -525,9 +560,9 @@ def train_sorry_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/sorry.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/sorry', 'wb') as fpath:
@@ -554,9 +589,9 @@ def train_suicide_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/suicide.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/suicide', 'wb') as fpath:
@@ -565,7 +600,7 @@ def train_suicide_gan():
     logging.info('\nsuicide GAN total loss: %s', loss[-1])
 
 
-@Halo(text='Training sports and playing gan', spinner='dots')
+@Halo(text='Training sports and playing LSTM', spinner='dots')
 def train_sports_and_playing_gan():
     data = open('core/training/output_samples/sports_and_playing.txt').read()
     data = data.lower()
@@ -573,6 +608,22 @@ def train_sports_and_playing_gan():
     chars = list(sorted(set(data)))
     chars_to_idx = {ch:i for i, ch in enumerate(chars)}
     idx_to_chars = {i:ch for ch, i in chars_to_idx.items()}
+    hidden_layer_size = 128
+    epochs = 250
+
+    try:
+        with open('luci/models/sports_and_playing', 'rb') as fpath:
+            previous_params = pickle.load(fpath)
+            pre_trained_parameters = previous_params[0]
+            if pre_trained_parameters['Whh'].shape[0] != hidden_layer_size:
+                print('Hidden layer size changed, network will init with random params')
+                pre_trained_parameters = None
+            else:
+                print(f'Loaded previous params.') 
+    except Exception as err:
+        print('Failed loading previous parameters, network will init with random params.')
+        print(err)
+        pre_trained_parameters = None
 
     # Get the size of the data and vocab size
     data_size = len(data)
@@ -583,15 +634,16 @@ def train_sports_and_playing_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/sports_and_playing.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        hidden_layer_size,
         vocab_size,
-        500,
-        0.01
+        epochs,
+        0.1,
+        pre_trained_parameters=pre_trained_parameters
     )
     with open('luci/models/sports_and_playing', 'wb') as fpath:
         pickle.dump([parameters, chars_to_idx, idx_to_chars], fpath)
 
-    logging.info('\nsports_and_playing GAN total loss: %s', loss[-1])
+    logging.info(f'\Sports and Playing LSTM total loss: {loss[-1]} with hidden layer {hidden_layer_size} in {epochs} epochs')
 
 
 @Halo(text='Training threat gan', spinner='dots')
@@ -612,9 +664,9 @@ def train_threat_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/threat.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/threat', 'wb') as fpath:
@@ -641,9 +693,9 @@ def train_verbal_offense_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/verbal_offense.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/verbal_offense', 'wb') as fpath:
@@ -670,9 +722,9 @@ def train_what_am_i_gan():
     parameters, loss = lstm_model(
         'core/training/output_samples/what_am_i.txt',
         chars_to_idx, idx_to_chars,
-        100,
+        150,
         vocab_size,
-        500,
+        1200,
         0.01
     )
     with open('luci/models/what_am_i', 'wb') as fpath:

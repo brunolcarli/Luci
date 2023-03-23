@@ -1,0 +1,213 @@
+[
+    {"text": "O que você mais gosta de fazer no seu tempo livre?", "intention": 4},
+    {"text": "Qual é o seu filme favorito?", "intention": 4},
+    {"text": "Como você descreveria sua personalidade?", "intention": 1},
+    {"text": "Quais são seus objetivos na vida?", "intention": 1},
+    {"text": "Você tem algum hobby?", "intention": 4},
+    {"text": "Qual é o seu prato favorito?", "intention": 4},
+    {"text": "Quem é sua melhor amiga?", "intention": 2},
+    {"text": "Qual é o seu programa de TV favorito?", "intention": 4},
+    {"text": "Qual é o seu livro favorito?", "intention": 4},
+    {"text": "Você tem irmãos?", "intention": 3},
+    {"text": "Qual é a sua relação com seus pais?", "intention": 3},
+    {"text": "Qual é o seu tipo de música favorito?", "intention": 4},
+    {"text": "Você tem um melhor amigo?", "intention": 2},
+    {"text": "O que você faz quando está triste?", "intention": 4},
+    {"text": "Qual é a sua cor favorita?", "intention": 4},
+    {"text": "Você já machucou alguém intencionalmente?", "intention": 6},
+    {"text": "Qual é a sua opinião sobre o bullying?", "intention": 5},
+    {"text": "Você já ajudou alguém em uma situação difícil?", "intention": 5},
+    {"text": "O que você faria se encontrasse uma carteira cheia de dinheiro?", "intention": 5},
+    {"text": "Você já mentiu para um amigo?", "intention": 6},
+    {"text": "Qual é a sua opinião sobre a política?", "intention": 5},
+    {"text": "O que você faria se visse alguém roubando?", "intention": 5},
+    {"text": "Qual é o seu maior medo?", "intention": 4},
+    {"text": "Você já magoou alguém sem querer?", "intention": 6},
+    {"text": "Qual é a sua opinião sobre a religião?", "intention": 5},
+    {"text": "Você já fez algo que se arrependeu depois?", "intention": 6},
+    {"text": "Qual é o seu animal favorito?", "intention": 4},
+    {"text": "Você já traiu alguém?", "intention": 6},
+    {"text": "Você já roubou algo?", "intention": 6},
+    {"text": "O que você faria se visse alguém sendo agredido?", "intention": 5},
+    {"text": "Você já ajudou um desconhecido na rua?", "intention": 5},
+    {"text": "Qual é o seu maior desejo?", "intention": 1},
+    {"text": "Eu tenho 27 anos e me chamo Lucas.", "intention": 1},
+    {"text": "Eu me sinto feliz quando estou com meus amigos.", "intention": 4},
+    {"text": "Eu sou uma pessoa muito extrovertida e adoro conhecer pessoas novas.", "intention": 1},
+    {"text": "Eu me considero uma pessoa bastante criativa e gosto de inventar coisas novas.", "intention": 1},
+    {"text": "Eu sou muito alto, tenho 1,90m de altura.", "intention": 1},
+    {"text": "Eu sou uma pessoa muito calma e raramente me irrito.", "intention": 1},
+    {"text": "Eu sou uma pessoa muito organizada e gosto de manter as coisas em ordem.", "intention": 1},
+    {"text": "Eu gosto de assistir filmes de comédia, são os meus favoritos.", "intention": 4},
+    {"text": "Eu me sinto triste quando estou longe da minha família.", "intention": 4},
+    {"text": "Eu gosto de jogar futebol com os meus amigos nos fins de semana.", "intention": 4},
+    {"text": "Eu me sinto realizado quando consigo alcançar meus objetivos.", "intention": 4},
+    {"text": "Eu sou uma pessoa muito dedicada e sempre tento fazer o meu melhor em tudo o que faço.", "intention": 1},
+    {"text": "Eu gosto de viajar e conhecer novos lugares.", "intention": 4},
+    {"text": "Eu tenho dois irmãos mais novos e adoro passar tempo com eles.", "intention": 3},
+    {"text": "Eu sou uma pessoa bastante sensível e me emociono facilmente.", "intention": 1},
+    {"text": "Eu sou do sexo feminino e me sinto muito bem com o meu corpo.", "intention": 5},
+    {"text": "Eu adoro ouvir música e gosto de diversos estilos.", "intention": 4},
+    {"text": "Eu tenho muita vontade de conhecer outros países e culturas diferentes.", "intention": 1},
+    {"text": "Estou me sentindo um pouco cansada hoje.", "intention": 4},
+    {"text": "Eu adoro ouvir música clássica nas horas vagas.", "intention": 4},
+    {"text": "Minha mãe é uma pessoa muito carinhosa e dedicada.", "intention": 3},
+    {"text": "Eu amo passar tempo com meus amigos, sair para jantar ou ver um filme.", "intention": 2},
+    {"text": "Eu sou um grande fã de filmes de terror.", "intention": 4},
+    {"text": "Minha intenção é ajudar as pessoas a alcançarem seus objetivos.", "intention": 5},
+    {"text": "Eu não suporto mentiras e desonestidade.", "intention": 6},
+    {"text": "Eu sou uma pessoa bastante extrovertida e adoro conhecer gente nova.", "intention": 1},
+    {"text": "Eu gosto muito de esportes e sou fã do time de futebol da minha cidade.", "intention": 4},
+    {"text": "Meu pai é uma pessoa muito trabalhadora e sempre me inspira a dar o meu melhor.", "intention": 3},
+    {"text": "Qual é a sua idade?", "intention": 1},
+    {"text": "Quem você é e o que faz?", "intention": 2},
+    {"text": "Você se identifica com algum gênero específico?", "intention": 5},
+    {"text": "Como você está se sentindo hoje?", "intention": 4},
+    {"text": "O que você gosta de fazer nas horas vagas?", "intention": 4},
+    {"text": "Quem é a pessoa que mais te inspira?", "intention": 3},
+    {"text": "Qual é a sua intenção ao falar sobre esse assunto?", "intention": 5},
+    {"text": "Você tem alguma qualidade que considera importante?", "intention": 1},
+    {"text": "O que você acha das pessoas que mentem?", "intention": 6},
+    {"text": "Você tem algum hobby que gostaria de compartilhar?", "intention": 4},
+    {"text": "Eu estou feliz hoje e quero compartilhar isso com alguém.", "intention": 4},
+    {"text": "Qual é o seu nome e onde você mora?", "intention": 2},
+    {"text": "Você tem algum animal de estimação? Qual é?", "intention": 1},
+    {"text": "Você já foi em alguma viagem que te marcou muito? Qual foi?", "intention": 4},
+    {"text": "Eu não suporto pessoas que falam mal dos outros pelas costas.", "intention": 6},
+    {"text": "Qual é a sua opinião sobre a vida em grandes cidades?", "intention": 4},
+    {"text": "Eu adoro passar tempo na natureza e me conectar com o ambiente ao meu redor.", "intention": 4},
+    {"text": "O que você acha que é a coisa mais importante na vida?", "intention": 5},
+    {"text": "Eu sempre tento ser uma pessoa empática e compreensiva com as pessoas.", "intention": 5},
+    {"text": "Você tem alguma dica para me ajudar a ser uma pessoa mais positiva?", "intention": 5},
+    {"text": "Você é tão chato! Ninguém gosta de ficar perto de você.", "intention": 6},
+    {"text": "Seu cabelo está horrível hoje, você não deveria sair de casa assim.", "intention": 6},
+    {"text": "Você não tem ideia do que está falando. Sua opinião é irrelevante.", "intention": 6},
+    {"text": "Você é muito fraquinho para conseguir fazer isso.", "intention": 6},
+    {"text": "Você é um perdedor completo. Nunca vai conseguir nada na vida.", "intention": 6},
+    {"text": "Você é tão bobo que nem percebe quando está sendo enganado.", "intention": 6},
+    {"text": "Você não tem talento algum. É melhor desistir antes de passar mais vergonha.", "intention": 6},
+    {"text": "Você é tão feio que até um espelho quebra quando reflete sua imagem.", "intention": 6},
+    {"text": "Você é um idiota completo. Não entende nada do que está acontecendo.", "intention": 6},
+    {"text": "Você é tão fraco que mal consegue levantar um peso de 1 kg.", "intention": 6},
+    {
+        "text": "Você não tem habilidade alguma para isso",
+        "intention": 6
+    },
+    {
+        "text": "Você é tão fraco que nem consegue levantar esse peso",
+        "intention": 6
+    },
+    {
+        "text": "Você é um perdedor, nunca vai conseguir fazer isso direito",
+        "intention": 6
+    },
+    {
+        "text": "Seu trabalho é tão ruim que nem uma criança faria pior",
+        "intention": 6
+    },
+    {
+        "text": "Você é uma pessoa tão sem talento que nem merece tentar",
+        "intention": 6
+    },
+    {
+        "text": "Você é um idiota completo, não entende nada disso",
+        "intention": 6
+    },
+    {
+        "text": "Você é tão feio que ninguém jamais vai querer ficar perto de você",
+        "intention": 6
+    },
+    {
+        "text": "Você é um chato, ninguém gosta de falar com você",
+        "intention": 6
+    },
+    {
+        "text": "Você é tão burro que nem percebe o quão inútil é",
+        "intention": 6
+    },
+    {
+        "text": "Você é um fracassado, nunca vai conseguir nada na vida",
+        "intention": 6
+    },
+    {
+        "text": "Você é uma pessoa incrível!",
+        "intention": 5
+    },
+    {
+        "text": "Parabéns pelo seu ótimo trabalho, você é muito talentoso!",
+        "intention": 5
+    },
+    {
+        "text": "Você é uma pessoa muito inteligente, estou sempre aprendendo com você!",
+        "intention": 5
+    },
+    {
+        "text": "Você tem uma personalidade incrível, sempre me faz rir e me anima!",
+        "intention": 5
+    },
+    {
+        "text": "Sua dedicação é impressionante, você merece todo o sucesso do mundo!",
+        "intention": 5
+    },
+    {
+        "text": "Você é uma pessoa muito inspiradora, suas histórias de vida são incríveis!",
+        "intention": 5
+    },
+    {
+        "text": "O mundo precisa de mais pessoas como você, sempre ajudando e fazendo o bem!",
+        "intention": 5
+    },
+    {
+        "text": "Seu trabalho é fantástico, você tem muito talento!",
+        "intention": 5
+    },
+    {
+        "text": "Você é uma pessoa muito amável e gentil, é sempre um prazer conversar com você!",
+        "intention": 5
+    },
+    {
+        "text": "Parabéns pelo seu sucesso, você merece todo o reconhecimento!",
+        "intention": 5
+    },
+    {
+        "text": "Qual é o seu amigo favorito?",
+        "intention": 2
+    },
+    {
+        "text": "Você costuma sair com seus amigos nos fins de semana?",
+        "intention": 2
+    },
+    {
+        "text": "O que você e seus amigos gostam de fazer juntos?",
+        "intention": 2
+    },
+    {
+        "text": "Quem são seus melhores amigos?",
+        "intention": 2
+    },
+    {
+        "text": "O que você costuma fazer quando está com seus amigos?",
+        "intention": 2
+    },
+    {
+        "text": "Como você conheceu seu melhor amigo?",
+        "intention": 2
+    },
+    {
+        "text": "Você acha importante ter amigos na vida?",
+        "intention": 2
+    },
+    {
+        "text": "Você já fez uma viagem com seus amigos? Como foi?",
+        "intention": 2
+    },
+    {
+        "text": "Qual foi a melhor experiência que você teve com seus amigos?",
+        "intention": 2
+    },
+    {
+        "text": "Você tem um grupo de amigos ou prefere ter amigos próximos?",
+        "intention": 2
+    }
+
+]

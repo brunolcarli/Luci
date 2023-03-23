@@ -122,6 +122,6 @@ class ResponseGenerator:
 
     @staticmethod
     def get_goodbye_response(**kwargs):
-        model, idx_to_chars, chars_to_idx = IntentionResponseGAN.WHAT_AM_I_GAN
+        model, idx_to_chars, chars_to_idx = IntentionResponseGAN.GOODBYE_GAN
 
         return sample(model, chars_to_idx, idx_to_chars, 1000)

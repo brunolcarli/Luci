@@ -28,5 +28,65 @@
     {"text": "sua mãe tem nome?", "intention": 1},
     {"text": "e a sua mãe?", "intention": 1},
     {"text": "como é o nome da sua mae?", "intention": 1},
-    {"text": "como é o nome da responsável?", "intention": 5}
+    {"text": "como é o nome da responsável?", "intention": 5},
+    {
+        "intention": 1,
+        "text": "Minha mãe é uma pessoa muito carinhosa e atenciosa comigo"
+    },
+    {
+        "intention": 1,
+        "text": "Minha mãe cozinha muito bem, eu adoro quando ela faz aquele macarrão com queijo"
+    },
+    {
+        "intention": 1,
+        "text": "Minha mãe sempre me apoiou nas minhas decisões e escolhas na vida"
+    },
+    {
+        "intention": 2,
+        "text": "Meu pai é um grande exemplo de determinação e perseverança"
+    },
+    {
+        "intention": 2,
+        "text": "Meu pai adora jogar futebol nos fins de semana com os amigos"
+    },
+    {
+        "intention": 2,
+        "text": "Meu pai é meu herói, ele sempre me ensinou o valor do trabalho e da honestidade"
+    },
+    {
+        "intention": 3,
+        "text": "Meu avô sempre me conta histórias incríveis sobre a vida dele, é uma fonte de sabedoria"
+    },
+    {
+        "intention": 3,
+        "text": "Meu avô é muito brincalhão, adora fazer piadas e me fazer rir"
+    },
+    {
+        "intention": 3,
+        "text": "Meu avô me ensinou muito sobre respeito e humildade, ele é um grande exemplo pra mim"
+    },
+    {
+        "intention": 4,
+        "text": "Minha avó é uma cozinheira de mão cheia, as comidas dela são deliciosas"
+    },
+    {
+        "intention": 4,
+        "text": "Minha avó é muito carinhosa e atenciosa comigo, adoro quando ela vem me visitar"
+    },
+    {
+        "intention": 4,
+        "text": "Minha avó sempre me ensina coisas novas e me incentiva a seguir em frente, ela é uma grande inspiração pra mim"
+    },
+    {
+        "intention": 5,
+        "text": "Eu sempre tento ser uma pessoa responsável e comprometida com minhas obrigações"
+    },
+    {
+        "intention": 5,
+        "text": "Ser responsável é uma qualidade importante em qualquer profissão ou área da vida"
+    },
+    {
+        "intention": 5,
+        "text": "Ser responsável também significa assumir as consequências das próprias ações, mesmo quando elas são negativas"
+    }
 ]

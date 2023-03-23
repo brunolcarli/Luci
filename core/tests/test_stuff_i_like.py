@@ -35,7 +35,7 @@ class TestStuffILikeIntentionClassifier(unittest.TestCase):
 
     def test_predict_sports_and_playing(self):
         self.assertEqual(
-            get_stuff_i_like_intention(get_text_vector('Vc gosta de bricar?')),
+            get_stuff_i_like_intention(get_text_vector('Vc gosta de brincar?')),
             StuffILike.SPORTS_AND_PLAYING
         )
         self.assertEqual(
@@ -43,7 +43,7 @@ class TestStuffILikeIntentionClassifier(unittest.TestCase):
             StuffILike.SPORTS_AND_PLAYING
         )
         self.assertEqual(
-            get_stuff_i_like_intention(get_text_vector('Vc gosta de esportes?')),
+            get_stuff_i_like_intention(get_text_vector('Eu amo praticar natação')),
             StuffILike.SPORTS_AND_PLAYING
         )
         self.assertEqual(
@@ -62,6 +62,6 @@ class TestStuffILikeIntentionClassifier(unittest.TestCase):
             StuffILike.TRAVELING
         )
         self.assertEqual(
-            get_stuff_i_like_intention(get_text_vector('quais lugares vc gostaria de conhecer?')),
+            get_stuff_i_like_intention(get_text_vector('Qual é o destino dos seus sonhos?')),
             StuffILike.TRAVELING
         )
