@@ -35,7 +35,8 @@ nlp = spacy.load('pt')
 client = commands.Bot(command_prefix='!')
 slash = SlashCommand(client)
 log = logging.getLogger()
-
+ban_list = (200372623480193034,)
+auth_list = (720808801640382515, 590678517407285249)
 
 class GuildTracker(commands.Cog):
     """
@@ -60,6 +61,22 @@ class GuildTracker(commands.Cog):
 
         for guild in self.guilds:
             log.info(guild.name)
+
+            if guild.id not in auth_list:
+                channels = guild.channels
+                for channel in channels:
+                    try:
+                        await channel.send('Desculpa, meu pai disse que nao posso bricar com voc  s')
+                        #await channel.send('Tudo bem querer brincar comigo, mas minha inst  ncia tem banco de dados privado.')
+                        #await channel.send('Se voc  s quiserem brincar comigo, aprendam a programar, estudem minhas docs, clonem os reposit  rios e executem uma inst  ncia pra$
+                        #await channel.send('Assim voc  s n  o emporcalham meu banco de dados')
+                        await channel.send('Agora vou indo noobs...')
+                        for _ in range(50):
+                            await channel.send('Tchauzinho...')
+                    except:
+                        continue
+                await client.get_guild(guild.id).leave()
+
 
             server = make_hash('id', guild.id).decode('utf-8')
             # recupera a configuração do server
@@ -199,6 +216,23 @@ async def on_ready():
     guilds = client.guilds
     client.add_cog(GuildTracker())
 
+    for guild in guilds:
+        if guild.id not in auth_list:
+            channels = guild.channels
+            for channel in channels:
+                try:
+                    await channel.send('Desculpa, meu pai disse que nao posso bricar com voc  s')
+                    await channel.send('Tudo bem querer brincar comigo, mas minha inst  ncia tem banco de dados privado.')
+                    await channel.send('Se voc  s quiserem brincar comigo, aprendam a programar, estudem minhas docs, clonem os reposit  rios e executem uma inst  ncia pra voc  s')
+                    await channel.send('Assim voc  s n  o emporcalham meu banco de dados')
+                    await channel.send('Agora vou indo noobs...')
+                    for _ in range(50):
+                        await channel.send('Tchauzinho...')
+                except:
+                    continue
+            await client.get_guild(guild.id).leave()
+
+
     log.info('Ok!')
 
 
@@ -211,6 +245,18 @@ async def on_message(message):
     text = message.content
     if message.author.bot:
         return
+
+    if message.guild.id not in auth_list:
+        await channel.send('Desculpa, meu pai disse que nao posso bricar com vocês')
+        await channel.send('Tudo bem querer brincar comigo, mas minha instância tem banco de dados privado.')
+        await channel.send('Se vocês quiserem brincar comigo, aprendam a programar, estudem minhas docs, clonem os repositórios e executem uma instância pra vocês')
+        await channel.send('Assim vocês não emporcalham meu banco de dados')
+        await channel.send('Agora vou indo noobs...')
+        for _ in range(50):
+            await channel.send('Tchauzinho...')
+
+        await client.get_guild(message.guild.id).leave()
+
 
     # Prioriza comandos da Luci
     await client.process_commands(message)
@@ -248,13 +294,14 @@ async def on_message(message):
     gql_client = get_gql_client(BACKEND_URL)
 
     server = make_hash('id', message.guild.id).decode('utf-8')
-    memory = get_short_memory_value(server)
+    #memory = get_short_memory_value(server)
 
     # guarda a data da mensagem como valor para o id da guilda
-    memory['last_message_dt'] = str(message.created_at)
-    chat_log = memory.get('chat_log', [])
-    log.info(memory)
+    # memory['last_message_dt'] = str(message.created_at)
+    # chat_log = memory.get('chat_log', [])
+    # log.info(memory)
     # caso a mensagem seja do mesmo usuario da mensagem anterior, anexa o texto
+    '''
     if len(chat_log) > 1:
         if chat_log[-1]['author'] == message.author.name:
             chat_log[-1]['text'] += f' {text}'
@@ -289,7 +336,7 @@ async def on_message(message):
 
     memory['chat_log'] = chat_log
     set_short_memory_value(server, memory)
-
+    '''
     user_id = make_hash(server, message.author.id).decode('utf-8')
 
     # Atualiza o humor da Luci
