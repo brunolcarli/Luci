@@ -16,7 +16,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from luci.settings import LISA_URL
-from core.training.text_gen import model as lstm_model
+# from core.training.text_gen import model as lstm_model
 
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)

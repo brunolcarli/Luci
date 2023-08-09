@@ -1,37 +1,25 @@
-oi
-olá
-oie
-e ai
-fala ae
-opa
-hey
-coé
-olar
-e aí
-eae
-boa
-Olá! Como você está hoje?
-Boa tarde! Espero que seu dia esteja sendo ótimo.
-E aí! Tudo bem com você?
-Bom dia! Como foi sua noite?
-Olá! Fico feliz em vê-lo novamente.
-Olá, como você está hoje?
-Ei, tudo bem por aí?
-Saudações! Como posso ajudá-lo hoje?
-Oi! É um prazer falar com você.
-Olá, seja bem-vindo! Como posso ajudá-lo hoje?
-Ei, como está o seu dia indo até agora?
-Boa tarde! Como posso ajudá-lo?
-Olá! Espero que seu dia esteja indo bem.
-Bom dia! Como posso ajudá-lo hoje?
-Oi, como posso ser útil para você hoje?
-Ei, como você está se sentindo hoje?
-Saudações! Como posso ser útil para você?
-Olá, como posso ajudá-lo hoje?
-Bom dia, seja bem-vindo! O que posso fazer por você hoje?
-Ei, como posso ajudá-lo?
-Olá! É um prazer falar com você hoje.
-Saudações! Como posso ajudá-lo neste momento?
-Olá, como você está se sentindo hoje?
-Bom dia! Como posso ajudá-lo?
-Olá, seja bem-vindo! Como posso ser útil para você hoje?
+E aí Olá! Como você está hoje?
+E aí Boa tarde! Espero que seu dia esteja sendo ótimo.
+E aí Tudo bem com você?
+E aí Bom dia! Como foi sua noite?
+E aí Olá! Fico feliz em vê-lo novamente.
+E aí Olá, como você está hoje?
+E aí tudo bem por aí?
+E aí Saudações! Como posso ajudá-lo hoje?
+E aí Oi! É um prazer falar com você.
+E aí Olá, seja bem-vindo! Como posso ajudá-lo hoje?
+E aí Ei, como está o seu dia indo até agora?
+E aí Boa tarde! Como posso ajudá-lo?
+E aí Olá! Espero que seu dia esteja indo bem.
+E aí Bom dia! Como posso ajudá-lo hoje?
+E aí Oi, como posso ser útil para você hoje?
+E aí Ei, como você está se sentindo hoje?
+E aí Saudações! Como posso ser útil para você?
+E aí Olá, como posso ajudá-lo hoje?
+E aí Bom dia, seja bem-vindo! O que posso fazer por você hoje?
+E aí Ei, como posso ajudá-lo?
+E aí Olá! É um prazer falar com você hoje.
+E aí Saudações! Como posso ajudá-lo neste momento?
+E aí Olá, como você está se sentindo hoje?
+E aí Bom dia! Como posso ajudá-lo?
+E aí Olá, seja bem-vindo! Como posso ser útil para você hoje?
