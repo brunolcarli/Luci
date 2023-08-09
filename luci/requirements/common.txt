@@ -14,4 +14,4 @@ wikipedia==1.4.0
 redis==3.5.3
 deep-translator
 scipy==1.5.4
-nltk
+nltk==3.6.7
