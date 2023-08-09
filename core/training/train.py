@@ -24,7 +24,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
 @Halo(text='Loading spacy', spinner='dots')
 def load_spacy():
-    return spacy.load('pt')
+    return spacy.load('pt_core_news_sm')
 
 
 def train_bot():

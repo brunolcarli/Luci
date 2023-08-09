@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from core.classifiers import naive_response, get_intentions
 from core.output_vectors import (offended, indifference, positive_answers,
                                  negative_answers, bored_messages)
-from core.reinforcement import generate_answer
+from core.reinforcement import generate_answer, get_responses
 from core.external_requests import Query, Mutation
 from core.emotions import change_humor_values, EmotionHourglass
 from core.utils import (validate_text_offense, extract_sentiment,
@@ -20,7 +20,9 @@ from core.utils import (validate_text_offense, extract_sentiment,
                         evaluate_math_expression, known_language_codes, translate_text,
                         get_short_memory_value, set_short_memory_value, score)
 from core.gans import ResponseGenerator
+# from core.model_loader import LearnedResponses
 from luci.settings import __version__, BACKEND_URL, REDIS_HOST, REDIS_PORT
+from core.training.text_gen import GenerativeModel, ddic, ddic_aux
 
 from discord_slash import SlashCommand
 from discord_slash.model import ButtonStyle
@@ -31,12 +33,14 @@ from discord_slash.utils.manage_components import (
 )
 
 
-nlp = spacy.load('pt')
+nlp = spacy.load('pt_core_news_sm')
 client = commands.Bot(command_prefix='!')
 slash = SlashCommand(client)
 log = logging.getLogger()
 ban_list = (200372623480193034,)
 auth_list = (720808801640382515, 590678517407285249)
+# learned_responses = LearnedResponses()
+
 
 class GuildTracker(commands.Cog):
     """
@@ -374,9 +378,11 @@ async def on_message(message):
 
     # process @Luci mentions
     if str(channel.guild.me.id) in text:
-        answer = generate_answer(text)
-        if answer:
-            return await channel.send(answer)
+        responses = get_responses(text)
+        if responses:
+            answer = generate_answer(responses)
+            if answer != 'Não consegui pensar em nada':
+                return await channel.send(answer)
 
         # Caso não conheça nenhuma resposta, use o classificador inocente
         return await channel.send(

@@ -2,6 +2,7 @@
 Contains the trained models loaded and encapsulated in a class.
 """
 import pickle
+from core.training.text_gen import GenerativeModel, ddic, ddic_aux
 
 
 def load_model(fpath):
@@ -53,3 +54,11 @@ class IntentionResponseGAN:
     VERBAL_OFFENSE_GAN = load_model('luci/models/verbal_offense_response.model')
     WHAT_AM_I_GAN = load_model('luci/models/what_am_i_response.model')
     GOODBYE_GAN = load_model('luci/models/goodbye_response.model')
+
+
+class LearnedResponses:
+    def __init__(self):
+        self.model = load_model('luci/models/learned_responses.model')
+
+    def get_response(self, text):
+        return self.model.predict_sentence(text)

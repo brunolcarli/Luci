@@ -1,10 +1,11 @@
 from collections import Counter
-from random import randint
+from random import randint, choice
 import random
 import numpy as np
 from core.external_requests import Query
 from core.utils import get_gql_client, remove_id
 from luci.settings import BACKEND_URL
+from core.training.text_gen import train_generative_model, GenerativeModel
 
 
 def filter_messages(messages):
@@ -196,16 +197,9 @@ def get_responses(text):
     return responses
 
 
-def generate_answer(text):
-    messages = filter_messages(get_responses(text))
-    if not messages:
-        return
-
-    relations = get_relations(messages)
-    i_to_actions, actions_to_i = get_map(relations)
-    environment = get_environment(relations, i_to_actions, actions_to_i)
-    q_matrix = get_q_matrix(environment)
-    exit_states = get_exit_states(relations, actions_to_i)
-    kb = train(environment, q_matrix, actions_to_i, exit_states)
-
-    return gen_text(environment, kb, exit_states, actions_to_i)[0]
+def generate_answer(messages):
+    sents = [i.split() for i in messages]
+    model = train_generative_model(sents)
+    model = GenerativeModel(model)
+    seed = choice(messages).split()[:2]
+    return model.predict_sentence(seed)

@@ -15,8 +15,9 @@ from core.output_vectors import (intention_responses, opinions,
                                  propositions)
 from core.types import CompressedDict
 from luci.settings import REDIS_HOST, REDIS_PORT
+from core.training.text_gen import GenerativeModel, ddic, ddic_aux
 
-nlp = spacy.load('pt')
+nlp = spacy.load('pt_core_news_sm')
 
 
 def known_language_codes():

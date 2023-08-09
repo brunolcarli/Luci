@@ -2,6 +2,7 @@ import logging
 import sys
 from luci.settings import TOKEN, SETTINGS_MODULE, __version__
 from core.commands import client
+from core.training.text_gen import GenerativeModel, ddic, ddic_aux
 
 logging.basicConfig(level='INFO')
 log = logging.getLogger()
