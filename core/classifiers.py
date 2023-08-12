@@ -4,6 +4,7 @@ from core.intentions import Intentions
 from core.enums import GlobalIntentions
 from core.output_vectors import intention_responses
 from core.model_loader import IntentionClassifierModels
+from core.external_requests import Query
 
 
 def classifiers_map():
@@ -137,10 +138,14 @@ def naive_response(text, **kwargs):
 
 def get_intentions(text):
     """
-    Returns both global and specifi intentions from a text.
+    Returns both global and specific intentions from a text.
     """
+    # preprocess input text
+    text = Query.text_preprocess(text)
+
     # extracts the text vector
-    vector = get_text_vector(text)
+    vector = get_text_vector(text).toarray()
+
     # maps the possible intentions
     network = classifiers_map()
 

@@ -13,6 +13,22 @@ class Query:
     Groups GraphQl queries as static methods.
     """
     @staticmethod
+    def text_preprocess(text):
+        query = f'''
+        query {{
+            customPipeline(text: "{text}"  reducer:STEMMING preProcess: [REMOVE_STOPWORDS, REMOVE_PUNCTUATION]){{
+                output
+            }}
+        }}
+        '''
+        request = requests.post(LISA_URL, json={'query': query}).json()
+
+        if 'data' in request:
+            return ' '.join(request['data']['customPipeline']['output']).strip().lower()
+        return ' '
+
+
+    @staticmethod
     def get_text_offense(message):
         """
         Request LISA to verify if the text is offensive.

@@ -1,5 +1,5 @@
-from string import ascii_letters
 from typing import Optional
+from string import ascii_letters
 import re
 import base64
 import pickle
@@ -8,6 +8,7 @@ import spacy
 import wikipedia
 from redis import Redis
 from gql import Client
+from sklearn.feature_extraction.text import TfidfVectorizer
 from deep_translator import GoogleTranslator
 from gql.transport.requests import RequestsHTTPTransport
 from core.external_requests import Query
@@ -17,7 +18,7 @@ from core.types import CompressedDict
 from luci.settings import REDIS_HOST, REDIS_PORT
 from core.training.text_gen import GenerativeModel, ddic, ddic_aux
 
-nlp = spacy.load('pt_core_news_sm')
+# nlp = spacy.load('pt_core_news_sm')
 
 
 def known_language_codes():
@@ -115,7 +116,7 @@ def get_text_vector(text):
     """
     Receives a string text input and returns its vector.
     """
-    return nlp(text).vector
+    return TfidfVectorizer().fit_transform([text])
 
 
 def remove_id(string):
